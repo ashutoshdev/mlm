@@ -6,7 +6,7 @@ class admin extends CI_Controller {
         parent::__construct();
         $this->load->helper('url');
         $this->load->library('user_membership');
-        $this->load->library('controllerlist');
+        
     }
 
     public function index() {
@@ -21,7 +21,6 @@ class admin extends CI_Controller {
     }
 
     public function login($username, $password) {
-
         if ($this->user_membership->authenticate($username, $password))
             redirect('/admin/profile');
     }
@@ -32,7 +31,6 @@ class admin extends CI_Controller {
     }
 
     public function profile() {
-
         $this->load->view('admin/profile');
     }
 

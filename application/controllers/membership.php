@@ -45,7 +45,7 @@ class Membership extends CI_Controller {
         redirect('membership/index');
     }
 
-    /*public function users() {
+    public function users() {
 
         $data = array();
 
@@ -297,7 +297,7 @@ class Membership extends CI_Controller {
         }
 
         redirect('membership/index');
-    }*/
+    }
 
 }
 
