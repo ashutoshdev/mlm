@@ -1,6 +1,4 @@
-<?php
-$this->load->view('membership/header');
-?>
+
 
 
 <a href="<?php echo $this->config->item('base_url');?>index.php/membership/add_user">Add new user</a>&nbsp;
@@ -36,6 +34,4 @@ $this->load->view('membership/header');
 </tbody>
 </table>
 
-<?php
-$this->load->view('membership/footer');
-?>
+

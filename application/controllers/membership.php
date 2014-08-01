@@ -30,11 +30,12 @@ class Membership extends CI_Controller {
 
             $result = $this->user_membership->authenticate($username, $password);
 
-            if ($result) {
+            if ($result) :
                 redirect('membership/index');
-            } else {
+             else :
                 redirect('membership/login');
-            }
+            endif;
+            
         }
 
         $this->load->view('membership/login');
