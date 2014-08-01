@@ -241,20 +241,30 @@ class User_membership
 	 * @param string $rolename  Role name
 	 * @return nothing
 	 */
-	function create_role($rolename='')
+	function create_role($rolename='',$rolepermission=array())
 	{
 		if(!empty($rolename))
 		{
 			$data=array();
 			$data['name']=$rolename;
-		
+		        $role_id='';
+                        
 			$found_role=$this->find_role($rolename);
 		
 			if(!$found_role)
 			{		
 				$result=$this->CI->db->insert('app_roles',$data);
+                                $role_id=$this->CI->db->insert_id();
 			}
+                        
+                        
 		}
+                
+                foreach($rolepermission as $v){
+                    $sql="INSERT INTO `app_roles_action` SET `role_id`='".$role_id."', `actions`='".$v."' ";
+                    $this->CI->db->query($sql);
+                }
+                
 	}//function
 	
 	/** 
@@ -407,6 +417,9 @@ class User_membership
 		{	
 			$this->CI->db->where('id', $role_id);
 			$result=$this->CI->db->delete('app_roles');
+                        
+                        $this->CI->db->where('role_id',$role_id);
+                        $this->CI->db->delete('app_roles_action');
 
 			return $result;
 		}

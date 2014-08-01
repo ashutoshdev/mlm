@@ -4,8 +4,13 @@ class Roles extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
+        $this->load->database();
+        $this->load->model('modules/roles_model');
+        $this->load->model("modules/roles_action_model");
+        
         $this->load->helper('url');
-        $this->load->library('user_membership');        
+        $this->load->library('user_membership');  
+        $this->load->library('controllerlist');
     }
 
     public function index() {
@@ -20,10 +25,11 @@ class Roles extends CI_Controller {
         if ($this->input->server('REQUEST_METHOD') === 'POST') :
 
             $rolename = $this->input->post('name');
-            $this->user_membership->create_role($rolename);
+            $actions=$this->input->post('permission');
+            $this->user_membership->create_role($rolename,$actions);
             redirect('modules/roles');
         endif;
-        $this->load->view('modules/roles/create');
+        $this->load->view('modules/roles/create',array('clist' => $this->controllerlist->getControllers()));
     }
 
     public function retrieve() {
@@ -35,14 +41,16 @@ class Roles extends CI_Controller {
         if ($this->input->server('REQUEST_METHOD') === 'POST') :
 
             $sent = $this->input->post("sent");
-            $role_id = $this->input->post("role_id");
-
-            if (!empty($sent) && !empty($role_id)) :
-                $role_data = array();
-                $role_data['name'] = $this->input->post('name');
 
 
-                $this->user_membership->update_role($role_id, $role_data);
+            if (!empty($sent)) :
+                $role_name = $this->input->post('name');
+                $actions=$this->input->post('permission');
+
+                $this->roles_model->update($role_id,$role_name);
+                $this->roles_action_model->delete();
+                $this->roles_action_model->create($role_id,$actions);
+                
             endif;
 
             redirect('modules/roles');
@@ -50,8 +58,12 @@ class Roles extends CI_Controller {
 
 
         if (!empty($role_id)) :
+            
             $data = array();
             $data['role_data'] = $this->user_membership->get_role($role_id);
+            $data['role_actions']=$this->roles_action_model->retrive($role_id);
+            $data['clist']=$this->controllerlist->getControllers();
+
             $this->load->view('modules/roles/update', $data);
         endif;
     }
