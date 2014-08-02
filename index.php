@@ -2,7 +2,6 @@
 
 require_once './core/class.MySQL.php';
 
-
 class Model {
 
     public $db;
@@ -14,7 +13,7 @@ class Model {
 }
 
 class Ewallet_model extends Model {
-    
+
     public function __construct() {
         parent::__construct();
     }
@@ -41,13 +40,19 @@ class Ewallet_model extends Model {
 
 }
 
-class Members_model extends Model{
-    
-    public function login(){
-        $sql="";
-    }
-}
+class Members_model extends Model {
 
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function login($username, $password) {
+        $sql = "SELECT COUNT(*) AS count FROM user WHERE user_name='" . $username . "' and user_password='" . $password . "';";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result["count"]["0"];
+    }
+
+}
 
 class Users {
 
@@ -101,33 +106,45 @@ class Modules {
 
 }
 
-class Members{
-    
+class Members {
+
     public $model;
-    
+
     public function __construct() {
-//        $this->model=;
+        $this->model = new Members_model();
     }
 
-    public function login(){
-           
+    public function login() {
+
+        if (sizeof($_POST)) {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+
+            if ($this->model->login($username, $password))
+                header("Location: /modules/ewallet");
+        }
+
+
+        $page_template = "./views/members/login.php";
+        require_once './views/templates/masterPage.php';
     }
-    
-    public function logout(){
+
+    public function logout() {
         
     }
+
 }
 
 class Controller {
 
     public $members;
     public $modules;
-    
 
     public function __construct() {
-        $this->members=new Members();
+        $this->members = new Members();
         $this->modules = new Modules();
     }
+
 }
 
 $controller = new Controller();
@@ -140,6 +157,10 @@ $controller = new Controller();
 
 switch ($_SERVER["REQUEST_URI"]) {
 
+    case "/":
+        $controller->members->login();
+        break;
+
     case "/modules/users/create":
         $controller->modules->users->create();
         break;
@@ -147,8 +168,8 @@ switch ($_SERVER["REQUEST_URI"]) {
     case "/modules/users/retrieve":
         $controller->modules->users->retrieve();
         break;
-    
-    case "/modules/ewallet/retrieve":
+
+    case "/modules/ewallet/":
         $controller->modules->ewallet->retrieve();
         break;
 }
