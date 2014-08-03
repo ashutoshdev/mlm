@@ -17,8 +17,7 @@ class Ewallet_model extends Model {
     }
 
     public function create() {
-        $sql = "INSERT INTO ";
-        $this->db->ExecuteSQL($query);
+        
     }
 
     public function retrieve($userId) {
@@ -28,13 +27,11 @@ class Ewallet_model extends Model {
     }
 
     public function update() {
-        $sql = "";
-        $this->db->ExecuteSQL($query);
+        
     }
 
     public function delete() {
-        $sql = "";
-        $this->db->ExecuteSQL($query);
+
     }
 
 }
@@ -53,7 +50,7 @@ class Transaction_model extends Model {
         $sql="SELECT * FROM transaction_master WHERE transaction_id='".$transaction_id."'";
         $result["transaction_master"] = $this->db->ExecuteSQL($sql);
         $sql="SELECT * FROM transaction_details "
-                ."JOIN item_master ON transaction_details.item_id = item_master.item_id"
+                ."JOIN item_master ON transaction_details.item_id = item_master.item_id "
                 . "WHERE transaction_id='".$transaction_id."';";
         $result["transaction_details"]=  $this->db->executeSQL($sql);
         return $result;

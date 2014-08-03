@@ -9,7 +9,7 @@
     </tr>
 
     <?php
-    foreach ($result["transation_master"] as $value) {
+    foreach ($result["transaction_master"] as $value) {
         ?>
         <tr>
             <td><?php echo $value["transaction_id"] ?></td>
@@ -31,7 +31,7 @@
         <td>Item Price</td>
         <td>Note</td>
     </tr>
-    <?php foreach ($result["transation_details"] as $value) { ?>
+    <?php foreach ($result["transaction_details"] as $value) { ?>
         <tr>
             <td><?php echo $value["transaction_id"] ?></td>
             <td><?php echo $value[""] ?></td>
