@@ -143,7 +143,8 @@ class MySQL {
         
         $this->lastQuery = $query;
         $this->result = mysql_query($query, $this->databaseLink);
-
+        
+        
         
         if ($this->result) {
             if (gettype($this->result) === 'resource') {
@@ -303,9 +304,9 @@ class MySQL {
     // 'Arrays' multiple result
     public function arrayResults() {
 
-        if ($this->records == 1) {
+        /*if ($this->records == 1) {
             return $this->arrayResult();
-        }
+        }*/
 
         $this->arrayedResult = array();
         while ($data = mysql_fetch_assoc($this->result)) {

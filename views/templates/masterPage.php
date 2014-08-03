@@ -13,6 +13,9 @@
                         <td><a href="">E wallet</a></td>
                     </tr>
                     <tr>
+                        <td><a href="">Transaction</a></td>
+                    </tr>
+                    <tr>
                         <td><a href="">Logout</a></td>
                     </tr>
                 </table>
