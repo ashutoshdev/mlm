@@ -16,24 +16,11 @@ class Ewallet_model extends Model {
         parent::__construct();
     }
 
-    public function create() {
-        
-    }
-
     public function retrieve($userId) {
-        $sql = "SELECT * FROM e_wallet where user_id='" . $userId . "';";
+        $sql = "SELECT * FROM user_e_wallet where user_id='" . $userId . "';";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
-
-    public function update() {
-        
-    }
-
-    public function delete() {
-
-    }
-
 }
 
 class Transaction_model extends Model {
@@ -41,29 +28,44 @@ class Transaction_model extends Model {
     public function __construct() {
         parent::__construct();
     }
+
+    public function retrieve($transaction_id = NULL, $user_id = NULL) {
+
+        if ($transaction_id):
+            $sql = "SELECT * FROM company_transaction_master WHERE transaction_id='" . $transaction_id . "'";
+            $result["transaction_master"] = $this->db->ExecuteSQL($sql);
+            $sql = "SELECT * FROM company_transaction_details "
+                    . "JOIN item_master ON company_transaction_details.item_id = item_master.item_id "
+                    . "WHERE transaction_id='" . $transaction_id . "';";
+            $result["transaction_details"] = $this->db->executeSQL($sql);
+            return $result;
+
+        elseif ($user_id) :
+            $sql = "SELECT * FROM company_transaction_master WHERE transaction_id in (SELECT transaction_id FROM user_e_wallet WHERE user_id='" . $user_id . "')";
+            $result["transaction_master"] = $this->db->ExecuteSQL($sql);
+            $sql = "SELECT * FROM company_transaction_details "
+                    . "JOIN item_master ON company_transaction_details.item_id = item_master.item_id "
+                    . "WHERE transaction_id IN (SELECT transaction_id FROM user_e_wallet WHERE user_id='" . $user_id . "');";
+            $result["transaction_details"] = $this->db->executeSQL($sql);
+            return $result;
+
+        endif;
+    }
+}
+
+class Items_model extends Model{
     
-    public function create(){
-        
+    public function __construct() {
+        parent::__construct();
     }
     
-    public function retrieve($transaction_id){
-        $sql="SELECT * FROM transaction_master WHERE transaction_id='".$transaction_id."'";
-        $result["transaction_master"] = $this->db->ExecuteSQL($sql);
-        $sql="SELECT * FROM transaction_details "
-                ."JOIN item_master ON transaction_details.item_id = item_master.item_id "
-                . "WHERE transaction_id='".$transaction_id."';";
-        $result["transaction_details"]=  $this->db->executeSQL($sql);
+    public function retrieve(){
+        $sql="SELECT * FROM item_master;";
+        $result=$this->db->executeSQL($sql);
         return $result;
     }
     
-    public function update(){
-        
-    }
     
-    public function delete(){
-        
-    }
-
 }
 
 class Members_model extends Model {

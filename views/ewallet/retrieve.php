@@ -12,7 +12,7 @@
         ?>
         <tr>
             <td><?php echo $value["id"]; ?></td>
-            <td><?php echo $value["transaction_id"]; ?></td>
+            <td><a href="/transaction/retrieve?id=<?php echo $value["transaction_id"]; ?>"><?php echo $value["transaction_id"]; ?></a></td>
             <td><?php echo $value["debit"] ?></td>
             <td><?php echo $value["credit"] ?></td>
             <td><?php echo $value["note"] ?></td>

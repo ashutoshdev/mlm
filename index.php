@@ -5,25 +5,26 @@ include_once './models/class.Model.php';
 include_once './controllers/class.Controller.php';
 
 
-
 /*
  * 
  * Routing Engine
  */
 
 Class RouteEngine {
-    
+
     public $members;
     public $ewallet;
     public $transaction;
+    public $purchase;
+    public $items;
 
     public function __construct() {
-        $this->members=new Members();
-        $this->ewallet=new Ewallet();
-        $this->transaction=new Transaction();
+        $this->members = new Members();
+        $this->ewallet = new Ewallet();
+        $this->transaction = new Transaction();
+        $this->purchase = new purchase();
+        $this->items=new Items();
     }
-
-
 
     public function dispatch($requestURI) {
         switch (explode("?", $requestURI)[0]) {
@@ -35,14 +36,22 @@ Class RouteEngine {
             case "/ewallet/retrieve":
                 $this->ewallet->retrieve();
                 break;
-            
+
             case "/transaction/retrieve":
                 $this->transaction->retrieve();
+                break;
+
+            case "/purchase/create":
+                $this->purchase->create();
+                break;
+            
+            case "/items/retrieve":
+                $this->items->retrieve();
                 break;
         }
     }
 
 }
 
-$routeEngine=new RouteEngine();
+$routeEngine = new RouteEngine();
 $routeEngine->dispatch($_SERVER["REQUEST_URI"]);
