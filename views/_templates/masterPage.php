@@ -13,6 +13,12 @@
                         <td><a href="/ewallet/retrieve">E wallet</a></td>
                     </tr>
                     <tr>
+                        <td><a href="/ewallet/create">Apply Pin(payment)</a></td>
+                    </tr>
+                    <tr>
+                        <td><a href="/ewallet/acceptPayment">Accept Payment</a></td>
+                    </tr>
+                    <tr>
                         <td><a href="/transaction/retrieve">Transaction</a></td>
                     </tr>
                     <tr>

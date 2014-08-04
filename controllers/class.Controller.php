@@ -36,6 +36,7 @@ class Members extends Controller {
 
             if ($result[0]["count"]) {
                 $_SESSION["user_id"] = $result[0]["user_id"];
+                $_SESSION["user_role"] = $result[0]["user_role"];
                 header("Location: /ewallet/retrieve");
             }
         }
@@ -44,6 +45,7 @@ class Members extends Controller {
         $page_template = "./views/members/login.php";
         require_once './views/_templates/masterPage.php';
     }
+
 }
 
 class Ewallet extends Controller {
@@ -53,7 +55,14 @@ class Ewallet extends Controller {
     }
 
     public function create() {
-        require_once './views/modules/ewallet/create.php';
+
+        if (sizeof($_POST))
+            $this->ewallet_model->create($_SESSION['user_id'], $_POST['bank_tran_id'], $_POST['payment'], $_POST['note']);
+
+
+
+        $page_template = "./views/ewallet/create.php";
+        require_once './views/_templates/masterPage.php';
     }
 
     public function retrieve() {
@@ -62,6 +71,21 @@ class Ewallet extends Controller {
         $page_template = "./views/ewallet/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
+
+    public function update() {
+        //$result=  $this->ewallet_model->retrieve($userId);
+    }
+
+    public function acceptPayment() {
+
+        if (sizeof($_POST))
+            $this->ewallet_model->update($_POST["accept"]);
+
+        $result = $this->ewallet_model->retrieve();
+        $page_template = "./views/ewallet/acceptPayment.php";
+        require_once './views/_templates/masterPage.php';
+    }
+
 }
 
 class Transaction extends Controller {
@@ -82,6 +106,7 @@ class Transaction extends Controller {
         $page_template = "./views/transaction/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
+
 }
 
 class purchase extends Controller {
@@ -92,8 +117,11 @@ class purchase extends Controller {
 
     public function create() {
 
-        $items=new Items();
-        $html=$items->retrieve();
+
+
+
+        $items = new Items();
+        $html = $items->retrieve();
         $page_template = "./views/purchase/create.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -106,14 +134,17 @@ class Items extends Controller {
         parent::__construct();
     }
 
-    public function retrieve() {
+    public function retrieve($ajaxify = FALSE) {
         $item_set = $this->item_model->retrieve();
         $html = "<select name='items[]'>";
         foreach ($item_set as $value) {
             $html.="<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
         }
         $html.="</select>";
-        return $html;
+        if ($ajaxify)
+            echo $html;
+        else
+            return $html;
     }
 
 }
