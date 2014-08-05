@@ -19,6 +19,9 @@
                         <td><a href="/ewallet/acceptPayment">Accept Payment</a></td>
                     </tr>
                     <tr>
+                        <td><a href="/transaction/create">Transaction Create</a></td>
+                    </tr>
+                    <tr>
                         <td><a href="/transaction/retrieve">Transaction</a></td>
                     </tr>
                     <tr>
@@ -28,7 +31,7 @@
                         <td><a href="">Sale</a></td>
                     </tr>
                     <tr>
-                        <td><a href="">Register User</a></td>
+                        <td><a href="/users/create">Register User</a></td>
                     </tr>
                     <tr>
                         <td><a href="">Binary Commission</a></td>

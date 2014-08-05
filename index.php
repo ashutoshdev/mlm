@@ -1,9 +1,10 @@
 <?php
-
-include_once './_core/class.Controller.php';
 include_once './_core/class.MySQL.php';
+include_once './_core/class.Model.php';
+include_once './_core/class.Controller.php';
 
-include_once './models/class.Model.php';
+
+include_once './models/models.php';
 include_once './controllers/controllers.php';
 
 
@@ -14,14 +15,6 @@ include_once './controllers/controllers.php';
 
 Class RouteEngine {
 
-    public $members;
-    public $ewallet;
-    public $transaction;
-    public $purchase;
-    public $items;
-    public $payment;
-    public $users;
-
 
     public function __construct() {
         $this->members = new Members();
@@ -29,7 +22,8 @@ Class RouteEngine {
         $this->transaction = new Transaction();
         $this->purchase = new purchase();
         $this->items = new Items();
-        $this->users=new User();
+        $this->users=new Users();
+       
     }
     
     public function dispatch($requestURI) {
@@ -49,6 +43,10 @@ Class RouteEngine {
 
             case "/ewallet/acceptPayment":
                 $this->ewallet->acceptPayment();
+                break;
+            
+            case "/transaction/create":
+                $this->transaction->create();
                 break;
 
             case "/transaction/retrieve":

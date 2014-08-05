@@ -2,13 +2,11 @@
 
 session_start();
 
-
 class Members extends Controller {
 
     public function __construct() {
-        
+
         $this->model("Members_model");
-        
     }
 
     public function login() {
@@ -39,9 +37,8 @@ class Members extends Controller {
 class Ewallet extends Controller {
 
     public function __construct() {
-        
+
         $this->model("Ewallet_model");
-        
     }
 
     public function create() {
@@ -81,10 +78,21 @@ class Ewallet extends Controller {
 class Transaction extends Controller {
 
     public function __construct() {
-        
         $this->model("Transaction_model");
+        $this->model("Users");
+        $this->model("Items_Packages");
+    }
+
+    public function create() {
         
+        if(sizeof($_POST)){
+            
+        }
         
+        $html = $this->users->retrieve();
+        $items_html=$this->items_packages->retrieve();
+        $page_template = "./views/transaction/create.php";
+        require_once './views/_templates/masterPage.php';
     }
 
     public function retrieve() {
@@ -104,8 +112,6 @@ class Transaction extends Controller {
 
 class purchase extends Controller {
 
-    
-
     public function create() {
 
         $items = new Items();
@@ -119,9 +125,8 @@ class purchase extends Controller {
 class Items extends Controller {
 
     public function __construct() {
-        
+
         $this->model("Items_model");
-        
     }
 
     public function retrieve($ajaxify = FALSE) {
@@ -139,11 +144,43 @@ class Items extends Controller {
 
 }
 
-class User extends Controller {
+class Users extends Controller {
+
+    public function __construct() {
+        $this->model("Users_model");
+    }
 
     public function create() {
+
+        if (sizeof($_POST)) {
+            $username = $_POST["username"];
+            $useremail = $_POST["useremail"];
+            $password = $_POST["password"];
+            $introducer = $_POST["introducer"];
+            $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password);
+        }
+
+        $html = $this->retrieve();
         $page_template = "./views/users/create.php";
         require_once './views/_templates/masterPage.php';
     }
 
+    public function retrieve() {
+        return $this->users_model->retrieve();
+    }
+
 }
+
+class Items_Packages extends Controller{
+    
+    public function __construct() {
+        $this->model("Items_Packages_model");
+        
+    }
+    public function retrieve(){
+        return $this->items_packages_model->retrieve();
+    }   
+    
+}
+
+
