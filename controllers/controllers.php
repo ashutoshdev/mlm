@@ -2,29 +2,17 @@
 
 session_start();
 
-class Controller {
-
-    public $ewallet_model;
-    public $transaction_model;
-    public $item_model;
-    public $members_model;
-
-    public function __construct() {
-        $this->ewallet_model = new Ewallet_model();
-        $this->transaction_model = new Transaction_model();
-        $this->item_model = new Items_model();
-        $this->members_model = new Members_model();
-    }
-
-}
 
 class Members extends Controller {
 
     public function __construct() {
-        parent::__construct();
+        
+        $this->model("Members_model");
+        
     }
 
     public function login() {
+
 
         if (sizeof($_POST)) {
 
@@ -51,7 +39,9 @@ class Members extends Controller {
 class Ewallet extends Controller {
 
     public function __construct() {
-        parent::__construct();
+        
+        $this->model("Ewallet_model");
+        
     }
 
     public function create() {
@@ -77,7 +67,7 @@ class Ewallet extends Controller {
     }
 
     public function acceptPayment() {
-        
+
         if (sizeof($_POST))
             $this->update($_POST["accept"]);
 
@@ -91,7 +81,10 @@ class Ewallet extends Controller {
 class Transaction extends Controller {
 
     public function __construct() {
-        parent::__construct();
+        
+        $this->model("Transaction_model");
+        
+        
     }
 
     public function retrieve() {
@@ -111,9 +104,7 @@ class Transaction extends Controller {
 
 class purchase extends Controller {
 
-    public function __construct() {
-        parent::__construct();
-    }
+    
 
     public function create() {
 
@@ -128,11 +119,13 @@ class purchase extends Controller {
 class Items extends Controller {
 
     public function __construct() {
-        parent::__construct();
+        
+        $this->model("Items_model");
+        
     }
 
     public function retrieve($ajaxify = FALSE) {
-        $item_set = $this->item_model->retrieve();
+        $item_set = $this->items_model->retrieve();
         $html = "<select name='items[]'>";
         foreach ($item_set as $value) {
             $html.="<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
@@ -147,10 +140,6 @@ class Items extends Controller {
 }
 
 class User extends Controller {
-
-    public function __construct() {
-        parent::__construct();
-    }
 
     public function create() {
         $page_template = "./views/users/create.php";

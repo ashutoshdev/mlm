@@ -1,8 +1,10 @@
 <?php
 
+include_once './_core/class.Controller.php';
 include_once './_core/class.MySQL.php';
+
 include_once './models/class.Model.php';
-include_once './controllers/class.Controller.php';
+include_once './controllers/controllers.php';
 
 
 /*
@@ -29,7 +31,7 @@ Class RouteEngine {
         $this->items = new Items();
         $this->users=new User();
     }
-
+    
     public function dispatch($requestURI) {
         switch (explode("?", $requestURI)[0]) {
 
