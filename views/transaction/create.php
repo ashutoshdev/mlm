@@ -1,5 +1,5 @@
 <form method="POST">
-    <table>
+    <table id="transaction_table">
         <tr>
             <td>Transaction Type</td>
             <td>
@@ -8,6 +8,7 @@
                     <option value="1">PURCHASE</option>
                 </select>
             </td>
+            <td></td>
         </tr>
         <tr>
             <td>Users</td>
@@ -18,19 +19,14 @@
                     <?php } ?>
                 </select>
             </td>
+            <td></td>
         </tr>
-        <tr>
-            <td>Items</td>
-            <td>
-                <select name="items">
-                    <?php foreach ($items_html as $value) { ?>
-                      <option value="<?php echo $value["item_id"] ?>"><?php echo $value["item_name"] ?></option>
-                    <?php }?>
-                </select>
-            </td>
-        </tr>
+        <?php echo $items_html; ?>
+    </table>
+    <table>
         <tr>
             <td><button type="submit" >Submit</button></td>
+            <td></td>
             <td></td>
         </tr>
     </table>

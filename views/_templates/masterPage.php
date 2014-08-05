@@ -1,7 +1,7 @@
 <head>
-
 </head>
 <body>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <table>
         <tr>
             <td>
@@ -51,5 +51,5 @@
                 <?php require_once($page_template); ?>
             </td>
         </tr>
-    </table>
+    </table>    
 </body>

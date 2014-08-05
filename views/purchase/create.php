@@ -9,7 +9,6 @@
         <td><button id="another">add More items</button></td>
     </tr>
 </table>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
 <script type="text/javascript">
     $(document).ready(function(){
         $("#another").click(function(){

@@ -84,13 +84,13 @@ class Transaction extends Controller {
     }
 
     public function create() {
-        
-        if(sizeof($_POST)){
+
+        if (sizeof($_POST)) {
             
         }
-        
+
         $html = $this->users->retrieve();
-        $items_html=$this->items_packages->retrieve();
+        $items_html = $this->items_packages->retrieve();
         $page_template = "./views/transaction/create.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -171,16 +171,113 @@ class Users extends Controller {
 
 }
 
-class Items_Packages extends Controller{
-    
+class Items_Packages extends Controller {
+
     public function __construct() {
         $this->model("Items_Packages_model");
-        
     }
-    public function retrieve(){
-        return $this->items_packages_model->retrieve();
-    }   
-    
+
+    public function retrieve($ajaxify = NULL) {
+        $items_html = $this->items_packages_model->retrieve();
+
+        if (!$ajaxify) {
+            $option = "";
+
+            $html = "           
+           <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <table>
+                    <tr>
+                        <td>Item</td>
+                        <td>Price</td>
+                        <td>Qnty</td>
+                        <td>Tot Price</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select class='items' name='items'>
+                                <option value='0'>Select Item</option>";
+
+            foreach ($items_html as $value) {
+                $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
+            }
+            $html.="$option.</select>    
+                        </td>
+                        <td><input type='text' /></td>
+                        <td><input type='text' /></td>
+                        <td><input type='text' /></td>
+                        <td><a class='del' href='javascript:void(0);' style='text-decoration: none;'>x</a></td>
+                    </tr>
+                </table>
+              </td>
+            </tr>";
+            $html.='<script type="text/javascript">
+    $(document).ready(function() {
+        $(".items").on("change", function() {
+            $.ajax({
+                url: "/items_packages/retrieve/ajaxify",
+                type: "GET",
+                success: function(data) {
+                    $("#transaction_table").append(data);
+                }
+            });
+        });
+
+        $(".del").on("change", function() {
+
+        });
+    });
+</script>';
+            return $html;
+        } else {
+            $option = "";
+
+            $html = "           
+           <tr>
+            <td></td>
+            <td></td>
+            <td>
+                <table>
+                    <tr>
+                        <td>
+                            <select class='items' name='items'>
+                                <option value='0'>Select Item</option>";
+
+            foreach ($items_html as $value) {
+                $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
+            }
+            $html.="$option.</select>    
+                        </td>
+                        <td><input type='text' /></td>
+                        <td><input type='text' /></td>
+                        <td><input type='text' /></td>
+                        <td><a class='del' href='javascript:void(0);' style='text-decoration: none;'>x</a></td>
+                    </tr>
+                </table>
+              </td>
+            </tr>";
+            $html.='<script type="text/javascript">
+    $(document).ready(function() {
+        $(".items").on("change", function() {
+            $.ajax({
+                url: "/items_packages/retrieve/ajaxify",
+                type: "GET",
+                success: function(data) {
+                    $("#transaction_table").append(data);
+                }
+            });
+        });
+
+        $(".del").on("change", function() {
+
+        });
+    });
+</script>';
+            echo $html;
+        }
+    }
+
 }
-
-

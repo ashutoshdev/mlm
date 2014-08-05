@@ -23,7 +23,7 @@ Class RouteEngine {
         $this->purchase = new purchase();
         $this->items = new Items();
         $this->users=new Users();
-       
+        $this->items_packages=new Items_Packages();
     }
     
     public function dispatch($requestURI) {
@@ -59,6 +59,10 @@ Class RouteEngine {
 
             case "/items/retrieve/ajaxify":
                 $this->items->retrieve(TRUE);
+                break;
+            
+            case "/items_packages/retrieve/ajaxify":
+                $this->items_packages->retrieve(TRUE);
                 break;
             
             case "/users/create":
