@@ -18,13 +18,16 @@ Class RouteEngine {
     public $purchase;
     public $items;
     public $payment;
+    public $users;
+
 
     public function __construct() {
         $this->members = new Members();
         $this->ewallet = new Ewallet();
         $this->transaction = new Transaction();
         $this->purchase = new purchase();
-        $this->items=new Items();
+        $this->items = new Items();
+        $this->users=new User();
     }
 
     public function dispatch($requestURI) {
@@ -33,7 +36,7 @@ Class RouteEngine {
             case "/":
                 $this->members->login();
                 break;
-            
+
             case "/ewallet/create":
                 $this->ewallet->create();
                 break;
@@ -41,7 +44,7 @@ Class RouteEngine {
             case "/ewallet/retrieve":
                 $this->ewallet->retrieve();
                 break;
-            
+
             case "/ewallet/acceptPayment":
                 $this->ewallet->acceptPayment();
                 break;
@@ -53,10 +56,13 @@ Class RouteEngine {
             case "/purchase/create":
                 $this->purchase->create();
                 break;
-            
+
             case "/items/retrieve/ajaxify":
-                //echo "hello there";
                 $this->items->retrieve(TRUE);
+                break;
+            
+            case "/users/create":
+                $this->users->create();
                 break;
         }
     }

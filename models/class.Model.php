@@ -102,7 +102,8 @@ class Members_model extends Model {
     }
 
     public function login($username, $password) {
-        $sql = "SELECT COUNT(*) AS count,user_id,user_role FROM user WHERE user_name='" . $username . "' and user_password='" . $password . "';";
+        $sql = "SELECT COUNT(*) AS count,user_id,role FROM user WHERE user_name='" . $username . "' and user_password='" . $password . "';";
+        //echo $sql;
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }

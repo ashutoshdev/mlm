@@ -36,7 +36,7 @@ class Members extends Controller {
 
             if ($result[0]["count"]) {
                 $_SESSION["user_id"] = $result[0]["user_id"];
-                $_SESSION["user_role"] = $result[0]["user_role"];
+                $_SESSION["user_role"] = $result[0]["role"];
                 header("Location: /ewallet/retrieve");
             }
         }
@@ -72,14 +72,14 @@ class Ewallet extends Controller {
         require_once './views/_templates/masterPage.php';
     }
 
-    public function update() {
-        //$result=  $this->ewallet_model->retrieve($userId);
+    public function update($accept) {
+        $this->ewallet_model->update($accept);
     }
 
     public function acceptPayment() {
-
+        
         if (sizeof($_POST))
-            $this->ewallet_model->update($_POST["accept"]);
+            $this->update($_POST["accept"]);
 
         $result = $this->ewallet_model->retrieve();
         $page_template = "./views/ewallet/acceptPayment.php";
@@ -117,9 +117,6 @@ class purchase extends Controller {
 
     public function create() {
 
-
-
-
         $items = new Items();
         $html = $items->retrieve();
         $page_template = "./views/purchase/create.php";
@@ -145,6 +142,19 @@ class Items extends Controller {
             echo $html;
         else
             return $html;
+    }
+
+}
+
+class User extends Controller {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function create() {
+        $page_template = "./views/users/create.php";
+        require_once './views/_templates/masterPage.php';
     }
 
 }
