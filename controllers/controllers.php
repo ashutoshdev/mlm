@@ -159,7 +159,7 @@ class Transaction extends Controller {
         }
 
         $html = $this->users->retrieve();
-        $items_html = $this->items_packages->retrieve();
+        $items_html = $this->items_packages->retrieveItem();
         $page_template = "./views/transaction/create.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -212,17 +212,15 @@ class Items_Packages extends Controller {
         $this->model("Items_Packages_model");
     }
 
-    public function retrieve($ajaxify = NULL) {
-        $items_html = $this->items_packages_model->retrieve();
+    public function retrieveItem($ajaxify = NULL) {
+        $items_html = $this->items_packages_model->retrieveItem();
 
         if (!$ajaxify) {
             $option = "";
 
             $html = "           
            <tr>
-            <td></td>
-            <td></td>
-            <td>
+            <td colspan =2>
                 <table >
                     <tr>
                         <td>Item</td>
@@ -233,17 +231,16 @@ class Items_Packages extends Controller {
                     </tr>
                     <tr>
                         <td>
-                            <select class='items' name='items' onchange = 'return show_items();'>
+                            <select class='items' name='items' onchange = 'return show_items(this.value,1);'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
-                $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
+                $option.= "<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
             }
-            $html.="$option.</select>    
-                        </td>
-                        <td><input type='text' /></td>
-                        <td><input type='text' /></td>
-                        <td><input type='text' /></td>
+            $html.="$option.</select></td>   
+                        <td><input type='text' id = 'price_1' value = ''/></td>
+                        <td><input type='text' id = 'qnty_1' value = '1' onblur = 'return quantity(this.value,1);'/></td>
+                        <td><input type='text' id = 't_pr_1' value = ''/></td>
                         <td><a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
@@ -251,34 +248,42 @@ class Items_Packages extends Controller {
             </tr>";
             $html.='';
             return $html;
-        } else {
+        }else {
             $option = "";
 
             $html = "           
            <tr>
-            <td></td>
-            <td></td>
-            <td>
-                <table class='table table-bordered table-striped'>
+            <td colspan = 2>
+                <table >
                     <tr>
                         <td>
-                            <select class='items' name='items' onchange = 'return show_items();'>
+                            <select class='items' name='items' onchange = 'return show_items(this.value,".$_GET[id].");'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
-                $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
+                $option.= "<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
             }
-            $html.="$option.</select>    
-                        <input type='text' />
-                        <input type='text' />
-                        <input type='text' />
-                        <a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
+            $html.="$option.</select></td>
+                        <td><input type='text'  id = 'price_".$_GET[id]."' value = ''/></td>
+                        <td><input type='text'  id = 'qnty_".$_GET[id]."' value = '1' onblur = 'return quantity(this.value,".$_GET[id].");'/></td>
+                        <td><input type='text'  id = 't_pr_".$_GET[id]."' value = ''/></td>
+                        <td><a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
               </td>
             </tr>";
             $html.='';
+            
             echo $html;
+        }
+    }
+    
+    
+    public function retrieveItemPrice($ajaxify=NULL){
+        if($ajaxify){
+            $item_id = $_GET['id'];
+            $item_price=$this->items_packages_model->retrieveItemPrice($item_id);
+            echo $item_price;
         }
     }
 
