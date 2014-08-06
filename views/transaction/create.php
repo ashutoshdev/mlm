@@ -61,15 +61,14 @@
                         <h3 class="box-title">Transaction Details</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
-
                         <form method="POST">
                             <table id="transaction_table"  class="table table-bordered table-striped">
                                 <tr>
                                     <td width = "20%">Transaction Type</td>
                                     <td>
-                                        <select>
-                                            <option value="0">SALE</option>
-                                            <option value="1">PURCHASE</option>
+                                        <select name="transaction_type">
+                                            <option value="SALE">SALE</option>
+                                            <option value="PURCHASE">PURCHASE</option>
                                         </select>
                                     </td>
                                 </tr>
