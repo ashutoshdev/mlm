@@ -1,33 +1,72 @@
-<form method="POST">
-    <table>
-        <tr>
-            <td>Id</td>
-            <td>User Name</td>
-            <td>Debit</td>
-            <td>Credit</td>    
-            <td>Note</td>
-            <td>Accept</td>
-        </tr>
-        <?php
-        foreach ($result as $value) {
-            ?>
+<aside class="right-side">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            Data Tables
+            <small>advanced tables</small>
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li><a href="#">E-Wallet</a></li>
+            <li class="active">E-Wallet - Details</li>
+        </ol>
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">E-Wallet Details</h3>
+                    </div><!-- /.box-header -->
+                    <div class="box-body table-responsive">
+                    <form method="POST">
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>User Name</th>
+                                    <th>Debit</th>
+                                    <th>Credit</th>
+                                    <th>Note</th>
+                                    <th>Accept</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($result as $value) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $value["id"] ?></td>
+                                        <td><?php echo $value["user_name"] ?></td>
+                                        <td><?php echo $value["debit"] ?></td>
+                                        <td><?php echo $value["credit"] ?></td>
+                                        <td><?php echo $value["note"] ?></td>
+                                        <td><input type="checkbox" value="<?php echo $value["id"] ?>" name="accept[]" <?php if ($value["status"]) { ?> checked="true" <?php } ?>  /></td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
 
-            <tr>
-                <td><?php echo $value["id"] ?></td>
-                <td><?php echo $value["user_name"] ?></td>
-                <td><?php echo $value["debit"] ?></td>
-                <td><?php echo $value["credit"] ?></td>
-                <td><?php echo $value["note"] ?></td>
-                <td><input type="checkbox" value="<?php echo $value["id"] ?>" name="accept[]" <?php if ($value["status"]) { ?> checked="true" <?php } ?>  /></td>
-            </tr>
+                            </tbody>
+                            <tfoot>
 
-            <?php
-        }
-        ?>
-        <tr>
-            <td>
-                <button type="submit">Save</button>
-            </td>
-        </tr>
-    </table>
-</form>
+<!--                                <tr>
+                                    <th>Rendering engine</th>
+                                    <th>Browser</th>
+                                    <th>Platform(s)</th>
+                                    <th>Engine version</th>
+                                    <th>CSS grade</th>
+                                </tr>-->
+                            </tfoot>
+                        </table>
+                        
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-primary" name = "SUB">Ok</button>
+                        </div>
+                    </form>
+                    </div><!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </section>
+</aside><!-- /.right-side -->

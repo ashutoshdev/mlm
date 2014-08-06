@@ -2,15 +2,87 @@
 
 session_start();
 
+class Item extends Controller {
+
+    public function __construct() {
+        $this->model("Item_model");
+    }
+
+    public function create() {
+
+        if (sizeof($_POST)) {
+            $id = $this->item_model->create($_POST['product_name']);
+            $this->item_model->createPackage('1', $id, $_POST['price']);
+        }
+
+
+
+        $page_template = "./views/item/create.php";
+        require_once './views/_templates/masterPage.php';
+    }
+
+    public function retrieve() {
+
+
+        $result = $this->item_model->retrieve();
+
+        $page_template = "./views/item/retrieve.php";
+        require_once './views/_templates/masterPage.php';
+    }
+
+}
+
+class Package extends Controller {
+
+    public function __construct() {
+        $this->model("Package_model");
+    }
+
+    public function create() {
+
+        $product = $this->package_model->showItem();
+        if (sizeof($_POST)) {
+            $id = $this->package_model->create($_POST['product_name']);
+            $p_item = $_POST['product'];
+            $price = $_POST['price'];
+            foreach ($p_item as $key => $item) {
+                $this->package_model->createPackage($id, $item, $price[$key]);
+            }
+        }
+
+        $page_template = "./views/package/create.php";
+        require_once './views/_templates/masterPage.php';
+    }
+
+    public function retrieve($ajaxify = NULL) {
+
+        if (!$ajaxify) {
+            $result = $this->package_model->retrieve();
+            $page_template = "./views/package/retrieve.php";
+            require_once './views/_templates/masterPage.php';
+        } else {
+            $product = $this->package_model->showItem();
+            $html = "<b>Select Product:</b><select name ='product[]'>";
+
+            foreach ($product as $pro) {
+                $html .= "<option value = '" . $pro['item_id'] . "'>" . $pro['item_name'] . "</option>";
+            }
+
+            $html .= "</select>";
+            $html .= "<b style = 'padding-left:38px;'>Product Price:</b><input type='text' name = 'price[]'  class = 'price'/></br>";
+            echo($html);
+        }
+    }
+
+}
+
 class Members extends Controller {
 
     public function __construct() {
-
         $this->model("Members_model");
     }
 
     public function login() {
-
 
         if (sizeof($_POST)) {
 
@@ -22,14 +94,12 @@ class Members extends Controller {
 
             if ($result[0]["count"]) {
                 $_SESSION["user_id"] = $result[0]["user_id"];
-                $_SESSION["user_role"] = $result[0]["role"];
                 header("Location: /ewallet/retrieve");
             }
         }
 
 
-        $page_template = "./views/members/login.php";
-        require_once './views/_templates/masterPage.php';
+        require_once './views/_templates/login.php';
     }
 
 }
@@ -37,7 +107,6 @@ class Members extends Controller {
 class Ewallet extends Controller {
 
     public function __construct() {
-
         $this->model("Ewallet_model");
     }
 
@@ -59,14 +128,14 @@ class Ewallet extends Controller {
         require_once './views/_templates/masterPage.php';
     }
 
-    public function update($accept) {
-        $this->ewallet_model->update($accept);
+    public function update() {
+        //$result=  $this->ewallet_model->retrieve($userId);
     }
 
     public function acceptPayment() {
 
         if (sizeof($_POST))
-            $this->update($_POST["accept"]);
+            $this->ewallet_model->update($_POST["accept"]);
 
         $result = $this->ewallet_model->retrieve();
         $page_template = "./views/ewallet/acceptPayment.php";
@@ -106,40 +175,6 @@ class Transaction extends Controller {
 
         $page_template = "./views/transaction/retrieve.php";
         require_once './views/_templates/masterPage.php';
-    }
-
-}
-
-class purchase extends Controller {
-
-    public function create() {
-
-        $items = new Items();
-        $html = $items->retrieve();
-        $page_template = "./views/purchase/create.php";
-        require_once './views/_templates/masterPage.php';
-    }
-
-}
-
-class Items extends Controller {
-
-    public function __construct() {
-
-        $this->model("Items_model");
-    }
-
-    public function retrieve($ajaxify = FALSE) {
-        $item_set = $this->items_model->retrieve();
-        $html = "<select name='items[]'>";
-        foreach ($item_set as $value) {
-            $html.="<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
-        }
-        $html.="</select>";
-        if ($ajaxify)
-            echo $html;
-        else
-            return $html;
     }
 
 }
@@ -188,7 +223,7 @@ class Items_Packages extends Controller {
             <td></td>
             <td></td>
             <td>
-                <table>
+                <table >
                     <tr>
                         <td>Item</td>
                         <td>Price</td>
@@ -198,7 +233,7 @@ class Items_Packages extends Controller {
                     </tr>
                     <tr>
                         <td>
-                            <select class='items' name='items'>
+                            <select class='items' name='items' onchange = 'return show_items();'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
@@ -209,28 +244,12 @@ class Items_Packages extends Controller {
                         <td><input type='text' /></td>
                         <td><input type='text' /></td>
                         <td><input type='text' /></td>
-                        <td><a class='del' href='javascript:void(0);' style='text-decoration: none;'>x</a></td>
+                        <td><a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
               </td>
             </tr>";
-            $html.='<script type="text/javascript">
-    $(document).ready(function() {
-        $(".items").on("change", function() {
-            $.ajax({
-                url: "/items_packages/retrieve/ajaxify",
-                type: "GET",
-                success: function(data) {
-                    $("#transaction_table").append(data);
-                }
-            });
-        });
-
-        $(".del").on("change", function() {
-
-        });
-    });
-</script>';
+            $html.='';
             return $html;
         } else {
             $option = "";
@@ -240,42 +259,25 @@ class Items_Packages extends Controller {
             <td></td>
             <td></td>
             <td>
-                <table>
+                <table class='table table-bordered table-striped'>
                     <tr>
                         <td>
-                            <select class='items' name='items'>
+                            <select class='items' name='items' onchange = 'return show_items();'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
                 $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
             }
             $html.="$option.</select>    
-                        </td>
-                        <td><input type='text' /></td>
-                        <td><input type='text' /></td>
-                        <td><input type='text' /></td>
-                        <td><a class='del' href='javascript:void(0);' style='text-decoration: none;'>x</a></td>
+                        <input type='text' />
+                        <input type='text' />
+                        <input type='text' />
+                        <a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
               </td>
             </tr>";
-            $html.='<script type="text/javascript">
-    $(document).ready(function() {
-        $(".items").on("change", function() {
-            $.ajax({
-                url: "/items_packages/retrieve/ajaxify",
-                type: "GET",
-                success: function(data) {
-                    $("#transaction_table").append(data);
-                }
-            });
-        });
-
-        $(".del").on("change", function() {
-
-        });
-    });
-</script>';
+            $html.='';
             echo $html;
         }
     }
