@@ -23,7 +23,7 @@ class Ewallet_model extends Model {
             return $result;
 
         else :
-          
+
             $sql = "SELECT * FROM user_e_wallet JOIN user ON user.user_id = user_e_wallet.user_id;";
             $result = $this->db->ExecuteSQL($sql);
             return $result;
@@ -33,8 +33,54 @@ class Ewallet_model extends Model {
     public function update($accept) {
 
         foreach ($accept as $value) {
-            $sql="UPDATE user_e_wallet SET status ='1' WHERE id='".$value."';";
+            $sql = "UPDATE user_e_wallet SET status ='1' WHERE id='" . $value . "';";
             $this->db->ExecuteSQL($sql);
+        }
+    }
+
+}
+
+class Transaction_master extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, $note) {
+        $sql = "INSERT INTO company_transaction_master SET "
+                . "transaction_id='" . $transaction_id . "' , "
+                . "transaction_date='" . $transaction_date . "' , "
+                . "head_account_id='" . $head_account . "' , "
+                . "client_account_id='" . $client_account_id . "' , "
+                . "debit='" . $debit . "' , "
+                . "credit='" . $credit . "' , "
+                . "note='" . $note . "' ; ";
+        $this->db->ExecuteSQL($sql);
+    }
+
+}
+
+class Transaction_details extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function create($transaction_id, $transaction_date, $items, $stock_debit, $stock_credit, $item_price, $note) {
+
+        
+        for ($i = 0; $i < count($items); $i++) {
+            if ($items[$i]) {
+                $sql = "INSERT INTO company_transaction_details SET "
+                        . "transaction_id = '" . $transaction_id . "' , "
+                        . "transaction_date = '" . $transaction_date . "' , "
+                        . "item_id = '" . $items[$i] . "' , "
+                        . "stock_debit = '$stock_debit[$i]' , "
+                        . "stock_credit = '" . $stock_credit[$i] . "' , "
+                        . "item_unit_price ='" . $item_price[$i] . "' , "
+                        . "note = '" . $note . "';";
+                $this->db->ExecuteSQL($sql);
+            }
         }
     }
 
@@ -46,10 +92,10 @@ class Transaction_model extends Model {
         parent::__construct();
     }
 
-    public function create() {
-        
-        
-        
+    public function createId() {
+        $sql = "SELECT IF(ISNULL(MAX(transaction_id)),1,MAX(transaction_id)+1) AS id FROM company_transaction_master";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result[0]['id'];
     }
 
     public function retrieve($transaction_id = NULL, $user_id = NULL) {
@@ -132,8 +178,6 @@ class Users_model extends Model {
 
 }
 
-
-
 class Item_model extends Model {
 
     public function __construct() {
@@ -142,22 +186,21 @@ class Item_model extends Model {
 
     public function create($product) {
         $sql = "INSERT INTO `item_master` SET `item_id` = NULL, `item_name` = '$product'";
-        
+
         $this->db->executeSQL($sql);
         return $this->db->lastInsertID();
     }
-    
-    public function createPackage($pck_id,$pid,$price) {
+
+    public function createPackage($pck_id, $pid, $price) {
         $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
-        
         $this->db->executeSQL($sql);
     }
-    
+
     public function retrieve() {
         $sql = "SELECT i.*, p.	item_price FROM item_master i
             LEFT JOIN package_details p ON i.item_id = p.item_id
             WHERE p.package_id = 1";
-        
+
         $result = $this->db->executeSQL($sql);
         return $result;
     }
@@ -172,22 +215,21 @@ class Package_model extends Model {
 
     public function create($package) {
         $sql = "INSERT INTO `package_master` SET `package_name` = '$package'";
-        //echo $sql;
         $this->db->executeSQL($sql);
         return $this->db->lastInsertID();
     }
-    
-    public function createPackage($pck_id,$pid,$price) {
+
+    public function createPackage($pck_id, $pid, $price) {
         $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
         $this->db->executeSQL($sql);
     }
-    
+
     public function showItem() {
         $sql = "SELECT * FROM item_master";
         $result = $this->db->executeSQL($sql);
         return $result;
     }
-    
+
     public function retrieve() {
         $sql = "SELECT * FROM `package_master`";
         //echo $sql;
@@ -210,6 +252,3 @@ class Members_model extends Model {
     }
 
 }
-
-
-

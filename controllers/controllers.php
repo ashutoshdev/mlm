@@ -1,9 +1,9 @@
 <?php
-
 session_start();
 
-class Item extends Controller {
 
+class Item extends Controller {
+    
     public function __construct() {
         $this->model("Item_model");
     }
@@ -148,6 +148,8 @@ class Transaction extends Controller {
 
     public function __construct() {
         $this->model("Transaction_model");
+        $this->model("Transaction_master");
+        $this->model("Transaction_details");
         $this->model("Users");
         $this->model("Items_Packages");
     }
@@ -155,6 +157,40 @@ class Transaction extends Controller {
     public function create() {
 
         if (sizeof($_POST)) {
+            $trsnsaction_type=$_POST['transaction_type'];
+            
+            $transaction_date=date("Y-m-d");  
+            $head_account=$_SESSION["user_id"];
+            $client_account_id=$_POST["users"];
+            $items=$_POST["items"];
+            /*foreach ($_POST["items"] as $value) {
+                foreach (split(",", $value) as $v) {
+                 if($v) $items[]=$v;    
+                }
+            }*/           
+            $item_unit_price=$_POST["price"];
+            
+            
+            $totprice=0;
+            foreach ($_POST["totprice"] as $value) {
+                $totprice=$totprice+$value;
+            }
+            $debit= $trsnsaction_type=="SALE" ? $totprice : 0;
+            $credit=$trsnsaction_type=="PURCHASE"? $totprice :0;
+            
+            
+            
+            $stock_debit=array();
+            $stock_credit=array();
+            $quantity=$_POST['qnty'];
+            foreach ($quantity as $v){
+                $stock_debit[]  =$trsnsaction_type=="SALE" ? 0 : $v;
+                $stock_credit[] =$trsnsaction_type=="PURCHASE"? 0 :$v;
+            }
+            
+            $transaction_id=$this->transaction_model->createId();
+            $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "");
+            $this->transaction_details->create($transaction_id,$transaction_date,$items, $stock_debit, $stock_credit, $item_unit_price, "");
             
         }
 
@@ -233,17 +269,17 @@ class Items_Packages extends Controller {
                     </tr>
                     <tr>
                         <td>
-                            <select class='items' name='items' onchange = 'return show_items();'>
+                            <select class='items' name='items[]' onchange = 'return show_items();'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
-                $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
+                $option.= "<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
             }
             $html.="$option.</select>    
                         </td>
-                        <td><input type='text' /></td>
-                        <td><input type='text' /></td>
-                        <td><input type='text' /></td>
+                        <td><input type='text' name='price[]' /></td>
+                        <td><input type='text' name='qnty[]' /></td>
+                        <td><input type='text' name='totprice[]' /></td>
                         <td><a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
@@ -262,16 +298,16 @@ class Items_Packages extends Controller {
                 <table class='table table-bordered table-striped'>
                     <tr>
                         <td>
-                            <select class='items' name='items' onchange = 'return show_items();'>
+                            <select class='items' name='items[]' onchange = 'return show_items();'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
-                $option.= "<option value='" . $value["item-id"] . "'>" . $value["item_name"] . "</option>";
+                $option.= "<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
             }
             $html.="$option.</select>    
-                        <input type='text' />
-                        <input type='text' />
-                        <input type='text' />
+                        <input type='text' name='price[]' />
+                        <input type='text' name='qnty[]' />
+                        <input type='text' name='totprice[]' />
                         <a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
