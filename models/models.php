@@ -129,26 +129,51 @@ class Items_Packages_model extends Model {
         parent::__construct();
     }
 
-    public function retrieve() {
-        $sql = "SELECT item_master.item_id,item_name,item_price 
-FROM package_details
-JOIN package_master
-ON package_master.package_id=package_details.package_id
-JOIN item_master
-ON package_details.item_id=item_master.item_id
-WHERE package_name='DEFAULT'
-UNION ALL
-SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price
-FROM package_details
-JOIN package_master
-ON package_master.package_id=package_details.package_id
-JOIN item_master
-ON package_details.item_id=item_master.item_id
-WHERE package_name != 'DEFAULT'
-GROUP BY package_name";
+    public function retrieveItem() {
+        $sql = "SELECT item_master.item_id,item_name,item_price
+        FROM package_details
+        JOIN package_master
+        ON package_master.package_id=package_details.package_id
+        JOIN item_master
+        ON package_details.item_id=item_master.item_id
+        WHERE package_name='DEFAULT'
+        UNION ALL
+        SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price
+        FROM package_details
+        JOIN package_master
+        ON package_master.package_id=package_details.package_id
+        JOIN item_master
+        ON package_details.item_id=item_master.item_id
+        WHERE package_name != 'DEFAULT'
+        GROUP BY package_name";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
+    
+    public function retrieveItemPrice($item_id){
+        $sql = "SELECT * FROM (
+
+        SELECT item_master.item_id,item_name,item_price
+                FROM package_details
+                JOIN package_master
+                ON package_master.package_id=package_details.package_id
+                JOIN item_master
+                ON package_details.item_id=item_master.item_id
+                WHERE package_name='DEFAULT'
+                UNION ALL
+                SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price
+                FROM package_details
+                JOIN package_master
+                ON package_master.package_id=package_details.package_id
+                JOIN item_master
+                ON package_details.item_id=item_master.item_id
+                WHERE package_name != 'DEFAULT'
+                GROUP BY package_name
+        )x WHERE x.item_id ='".$item_id."'";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result[0]["item_price"];
+    }
+    
 
 }
 

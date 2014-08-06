@@ -74,7 +74,11 @@ Class RouteEngine {
                 break;
             
             case "/items_packages/retrieve/ajaxify":
-                $this->items_packages->retrieve(TRUE);
+                $this->items_packages->retrieveItem(TRUE);
+                break;
+            
+            case "/items_packages/retrieveItemPrice/ajaxify":
+                $this->items_packages->retrieveItemPrice(TRUE);
                 break;
             
             case "/users/create":
