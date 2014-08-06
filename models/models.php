@@ -23,7 +23,7 @@ class Ewallet_model extends Model {
             return $result;
 
         else :
-
+          
             $sql = "SELECT * FROM user_e_wallet JOIN user ON user.user_id = user_e_wallet.user_id;";
             $result = $this->db->ExecuteSQL($sql);
             return $result;
@@ -33,7 +33,7 @@ class Ewallet_model extends Model {
     public function update($accept) {
 
         foreach ($accept as $value) {
-            $sql = "UPDATE user_e_wallet SET status ='1' WHERE id='" . $value . "';";
+            $sql="UPDATE user_e_wallet SET status ='1' WHERE id='".$value."';";
             $this->db->ExecuteSQL($sql);
         }
     }
@@ -47,6 +47,8 @@ class Transaction_model extends Model {
     }
 
     public function create() {
+        
+        
         
     }
 
@@ -71,60 +73,6 @@ class Transaction_model extends Model {
             return $result;
 
         endif;
-    }
-
-}
-
-class Items_model extends Model {
-
-    public function __construct() {
-        parent::__construct();
-    }
-
-    public function retrieve() {
-        $sql = "SELECT * FROM item_master;";
-        $result = $this->db->executeSQL($sql);
-        return $result;
-    }
-
-}
-
-class Members_model extends Model {
-
-    public function __construct() {
-        parent::__construct();
-    }
-
-    public function login($username, $password) {
-        $sql = "SELECT COUNT(*) AS count,user_id,role FROM user WHERE user_name='" . $username . "' and user_password='" . $password . "';";
-        $result = $this->db->ExecuteSQL($sql);
-        return $result;
-    }
-
-}
-
-class Users_model extends Model {
-
-    public function __construct() {
-        parent::__construct();
-    }
-
-    public function create($introducer_id, $created_by, $user_name, $user_email, $user_password) {
-        $sql = "INSERT INTO user SET introducer_id='" . $introducer_id . "', "
-                . "created_by='" . $created_by . "' ,"
-                . "role='2' , "
-                . "user_left_right_index='0' ,"
-                . "user_name='" . $user_name . "' ,"
-                . "user_email='" . $user_email . "' ,"
-                . "user_password='" . $user_password . "'";
-
-        $this->db->ExecuteSQL($sql);
-    }
-
-    public function retrieve() {
-        $sql = "SELECT * FROM user";
-        $result = $this->db->ExecuteSQL($sql);
-        return $result;
     }
 
 }
@@ -157,3 +105,111 @@ GROUP BY package_name";
     }
 
 }
+
+class Users_model extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function create($introducer_id, $created_by, $user_name, $user_email, $user_password) {
+        $sql = "INSERT INTO user SET introducer_id='" . $introducer_id . "', "
+                . "created_by='" . $created_by . "' ,"
+                . "role='2' , "
+                . "user_left_right_index='0' ,"
+                . "user_name='" . $user_name . "' ,"
+                . "user_email='" . $user_email . "' ,"
+                . "user_password='" . $user_password . "'";
+
+        $this->db->ExecuteSQL($sql);
+    }
+
+    public function retrieve() {
+        $sql = "SELECT * FROM user";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
+    }
+
+}
+
+
+
+class Item_model extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function create($product) {
+        $sql = "INSERT INTO `item_master` SET `item_id` = NULL, `item_name` = '$product'";
+        
+        $this->db->executeSQL($sql);
+        return $this->db->lastInsertID();
+    }
+    
+    public function createPackage($pck_id,$pid,$price) {
+        $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
+        
+        $this->db->executeSQL($sql);
+    }
+    
+    public function retrieve() {
+        $sql = "SELECT i.*, p.	item_price FROM item_master i
+            LEFT JOIN package_details p ON i.item_id = p.item_id
+            WHERE p.package_id = 1";
+        
+        $result = $this->db->executeSQL($sql);
+        return $result;
+    }
+
+}
+
+class Package_model extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function create($package) {
+        $sql = "INSERT INTO `package_master` SET `package_name` = '$package'";
+        //echo $sql;
+        $this->db->executeSQL($sql);
+        return $this->db->lastInsertID();
+    }
+    
+    public function createPackage($pck_id,$pid,$price) {
+        $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
+        $this->db->executeSQL($sql);
+    }
+    
+    public function showItem() {
+        $sql = "SELECT * FROM item_master";
+        $result = $this->db->executeSQL($sql);
+        return $result;
+    }
+    
+    public function retrieve() {
+        $sql = "SELECT * FROM `package_master`";
+        //echo $sql;
+        $result = $this->db->executeSQL($sql);
+        return $result;
+    }
+
+}
+
+class Members_model extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function login($username, $password) {
+        $sql = "SELECT COUNT(*) AS count,user_id FROM user WHERE user_name='" . $username . "' and user_password='" . $password . "';";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
+    }
+
+}
+
+
+
