@@ -5,7 +5,8 @@ session_start();
 class Item extends Controller {
 
     public function __construct() {
-        $this->model("ItemMaster_model");
+        parent::__construct();
+        $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
@@ -33,8 +34,10 @@ class Item extends Controller {
 class OpeningStock extends Controller {
     
     public function __construct() {
-        $this->model("ItemMaster_model");
-        $this->model("OpeningStock_model");
+        
+        parent::__construct();
+        $this->load->_CLASS("ItemMaster_model");
+        $this->load->_CLASS("OpeningStock_model");
     }
 
     public function create() {
@@ -60,6 +63,10 @@ class OpeningStock extends Controller {
 }
 
 class Stock extends Controller {
+    
+    public function __construct() {
+        parent::__construct();
+    }
 
     public function retrieve() {
         
@@ -70,9 +77,12 @@ class Stock extends Controller {
 class Package extends Controller {
 
     public function __construct() {
-        $this->model("PackageMaster_model");
-        $this->model("PackageDetails_model");
-        $this->model("ItemMaster_model");
+        
+        parent::__construct();
+        
+        $this->load->_CLASS("PackageMaster_model");
+        $this->load->_CLASS("PackageDetails_model");
+        $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
@@ -120,7 +130,8 @@ class Package extends Controller {
 class Members extends Controller {
 
     public function __construct() {
-        $this->model("Members_model");
+        parent::__construct();
+        $this->load->_CLASS("Members_model");
     }
 
     public function login() {
@@ -148,7 +159,8 @@ class Members extends Controller {
 class Ewallet extends Controller {
 
     public function __construct() {
-        $this->model("Ewallet_model");
+        parent::__construct();
+        $this->load->_CLASS("Ewallet_model");
     }
 
     public function create() {
@@ -188,11 +200,14 @@ class Ewallet extends Controller {
 class Transaction extends Controller {
 
     public function __construct() {
-        $this->model("Transaction_model");
-        $this->model("Transaction_master");
-        $this->model("Transaction_details");
-        $this->model("Users");
-        $this->model("Items_Packages");
+        parent::__construct();
+        
+        $this->load->_CLASS("Users");
+        
+        $this->load->_CLASS("Transaction_model");
+        $this->load->_CLASS("Transaction_master");
+        $this->load->_CLASS("Transaction_details");
+        $this->load->_CLASS("Items_Packages");
     }
 
     public function create() {
@@ -258,7 +273,8 @@ class Transaction extends Controller {
 class Users extends Controller {
 
     public function __construct() {
-        $this->model("Users_model");
+        parent::__construct();
+        $this->load->_CLASS("Users_model");
     }
 
     public function create() {
@@ -285,7 +301,8 @@ class Users extends Controller {
 class Items_Packages extends Controller {
 
     public function __construct() {
-        $this->model("Items_Packages_model");
+        parent::__construct();
+        $this->load->_CLASS("Items_Packages_model");
     }
 
     public function retrieveItem($ajaxify = NULL) {
