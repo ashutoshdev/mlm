@@ -24,6 +24,7 @@ Class RouteEngine {
         $this->package=new Package();
         $this->users=new Users();
         $this->items_packages=new Items_Packages();
+        $this->openingstock=new OpeningStock();
     }
     
     public function dispatch($requestURI) {
@@ -32,11 +33,11 @@ Class RouteEngine {
             case "/":
                 $this->members->login();
                 break;
-
+                
             case "/ewallet/create":
                 $this->ewallet->create();
                 break;
-
+                
             case "/ewallet/retrieve":
                 $this->ewallet->retrieve();
                 break;
@@ -84,9 +85,13 @@ Class RouteEngine {
             case "/users/create":
                 $this->users->create();
                 break;
+            
+            case "/openingstock/create":
+                $this->openingstock->create();
+                break;
 
 
-        }
+         }
     }
 
 }

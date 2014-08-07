@@ -326,6 +326,24 @@
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>
+                                <span>Opening Stock </span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>                            
+                        </li>
+                        
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <span>Stock </span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>                            
+                        </li>
+                        
+                        
+                        
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-bar-chart-o"></i>
                                 <span>Product </span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
