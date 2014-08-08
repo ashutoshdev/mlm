@@ -1,23 +1,3 @@
-<script src="./../assets/jquery-1.10.1.min.js" type="text/javascript"></script>
-<script type="text/javascript">
-//    $(document).ready(function(){
-//        $("#another").click(function(){
-//            $.ajax({
-//                type: "POST",
-//                data: "1",
-//                url: "/package/items/retieve/ajaxify",
-//                success: function(result)
-//                {
-//                    $(".another_select").append(result);
-//                }
-//            });
-//
-//        });
-//
-//
-//
-//    });
-</script>
 <aside class="right-side">
 
     <section class="content-header">
