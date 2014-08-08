@@ -32,11 +32,17 @@ class Item extends Controller {
 
     public function retrieve() {
 
+        if($_GET["packageId"]){
 
+            $result = $this->itemmaster_model->retrieve($_GET["packageId"]);
+        }
+        else{
+             $result = $this->itemmaster_model->retrieve();
 
-        $result = $this->itemmaster_model->retrieve();
+        }
         $page_template = "./views/item/retrieve.php";
         require_once './views/_templates/masterPage.php';
+       
     }
 
 }
@@ -112,7 +118,7 @@ class Package extends Controller {
         if (!$_SESSION['user_id']) {
             header("location: /members/logout/");
         }
-
+        $this->load->_CLASS("Package_model");
         $this->load->_CLASS("PackageMaster_model");
         $this->load->_CLASS("packageDetails_model");
         $this->load->_CLASS("ItemMaster_model");
@@ -143,30 +149,17 @@ class Package extends Controller {
         require_once './views/_templates/masterPage.php';
     }
 
-    public function retrieve($ajaxify = NULL) {
-
-        if (!$ajaxify) {
+    public function retrieve() {
 
             $result = $this->package_model->retrieve();
-            foreach ($result as $val) {
-                if ($val['package_id'] != 1) {
-                    $item_res[$val['package_id']] = $this->package_model->retrievePackageItem($val['package_id']);
-                }
-            };
-            //$result = $this->packagemaster_model->retrieve();
+            
+            /*foreach ($result as $val) {
+                $item_res[$val['package_id']] = $this->packageDetails_model->retrievePackageItem($val['package_id']);
+                print_r($item_res); die;
+            }*/           
             $page_template = "./views/package/retrieve.php";
             require_once './views/_templates/masterPage.php';
-        } else {
-            $product = $this->itemmaster_model->retrieve();
-            $html = "<b>Select Product:</b><select name ='product[]'>";
 
-            foreach ($product as $pro) {
-                $html .= "<option value = '" . $pro['item_id'] . "'>" . $pro['item_name'] . "</option>";
-            }
-
-            $html .= "</select>";
-            echo($html);
-        }
     }
 
 }
@@ -190,6 +183,7 @@ class Members extends Controller {
 
             if ($result[0]["count"]) {
                 $_SESSION["user_id"] = $result[0]["user_id"];
+                $_SESSION["user_role"] = $result[0]["role_name"];
                 header("Location: /ewallet/retrieve");
             }
         }
@@ -275,7 +269,7 @@ class Transaction extends Controller {
             $client_account_id = $_POST["users"];
             $items = $_POST["items"];
             $item_unit_price = $_POST["price"];
-
+            
 
             $totprice = 0;
             foreach ($_POST["totprice"] as $value) {
@@ -297,6 +291,7 @@ class Transaction extends Controller {
             $transaction_id = $this->transaction_model->createId();
             $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "");
             foreach ($items as $item_key => $item) {
+              
                 if ($item)
                     $this->transaction_details->create($transaction_id, $transaction_date, $item, $stock_debit[$item_key], $stock_credit[$item_key], $item_unit_price[$item_key], "");
             }

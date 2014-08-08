@@ -322,16 +322,28 @@
                             <ul class="treeview-menu">
                                 <li><a href="/ewallet/retrieve"><i class="fa fa-angle-double-right"></i> E wallet</a></li>
                                 <li><a href="/ewallet/create"><i class="fa fa-angle-double-right"></i> Apply Pin(payment)</a></li>
+                <?php
+                    if($_SESSION['user_role'] == "ADMIN"){
+                ?>    
                                 <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
+                <?php
+                    }
+                ?>
+                            
                             </ul>
                         </li>
-                        
+                <?php
+                    if($_SESSION['user_role'] == "ADMIN"){
+                ?>
+                    
                         <li>
                             <a href="/openingstock/create">
                                 <i class="fa fa-dashboard"></i> <span>opening stock</span>
                             </a>
                         </li>
-                        
+                <?php
+                    }
+                ?>
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>
@@ -340,7 +352,9 @@
                             </a>                            
                         </li>
                         
-                        
+                <?php
+                    if($_SESSION['user_role'] == "ADMIN"){
+                ?>        
                         
                         <li class="treeview">
                             <a href="#">
@@ -365,7 +379,9 @@
                                 <li><a href="/package/retrieve"><i class="fa fa-angle-double-right"></i> Show Package</a></li>
                             </ul>
                         </li>
-                        
+                <?php
+                    }
+                ?>
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>

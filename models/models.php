@@ -86,10 +86,10 @@ class Transaction_details extends Model {
         $sql = "INSERT INTO company_transaction_details SET "
                 . "transaction_id = '" . $transaction_id . "' , "
                 . "transaction_date = '" . $transaction_date . "' , "
-                . "item_id = '" . $items[$i] . "' , "
-                . "stock_debit = '$stock_debit[$i]' , "
-                . "stock_credit = '" . $stock_credit[$i] . "' , "
-                . "item_unit_price ='" . $item_price[$i] . "' , "
+                . "item_id = '" . $items . "' , "
+                . "stock_debit = '$stock_debit' , "
+                . "stock_credit = '" . $stock_credit . "' , "
+                . "item_unit_price ='" . $item_price . "' , "
                 . "note = '" . $note . "';";
         $this->db->ExecuteSQL($sql);
     }
@@ -243,8 +243,15 @@ class ItemMaster_model extends Model {
         $this->db->ExecuteSQL($sql);
     }
 
-    public function retrieve() {
-        $sql = "SELECT * FROM item_master";
+    public function retrieve($pid=NULL) {
+        if(!$pid){
+            $sql = "SELECT * FROM item_master";
+        }
+        else{
+            $sql="select i.* from item_master i "
+                . "LEFT JOIN  package_details p on i.item_id = p.item_id "
+                . "WHERE p.package_id = '".$pid."' ";
+        }
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
@@ -337,14 +344,30 @@ class packageDetails_model extends Model {
     }
 
     public function retrievePackageItem($pid) {
-        $sql = "select p.*, i.item_name from package_details p
-            left join item_master i on p.item_id = i.item_id
-            WHERE p.package_id = $pid";
+        $sql = "select p.*, i.item_name from package_details p"
+                . "LEFT JOIN item_master i on i.item_id = p.item_id"
+                . "WHERE p.package_id = '".$pid."' ";
+        echo $sql;
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
 
 }
+
+class Package_model extends Model {
+
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function retrieve() {
+        $sql = "SELECT * FROM `package_master`";
+        $result = $this->db->executeSQL($sql);
+        return $result;
+    }
+
+}
+
 
 class Members_model extends Model {
 
@@ -353,7 +376,9 @@ class Members_model extends Model {
     }
 
     public function login($username, $password) {
-        $sql = "SELECT COUNT(*) AS count,user_id FROM user WHERE user_name='" . $username . "' and user_password='" . $password . "';";
+        $sql = "SELECT COUNT( * ) AS count, u.user_id, r.role_name FROM user u
+                LEFT JOIN user_role r ON r.role_id = u.role 
+                WHERE u.user_name='" . $username . "' and u.user_password='" . $password . "' ";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
