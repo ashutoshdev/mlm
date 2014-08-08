@@ -283,11 +283,6 @@ class Transaction extends Controller {
             $head_account = $_SESSION["user_id"];
             $client_account_id = $_POST["users"];
             $items = $_POST["items"];
-            /* foreach ($_POST["items"] as $value) {
-              foreach (split(",", $value) as $v) {
-              if($v) $items[]=$v;
-              }
-              } */
             $item_unit_price = $_POST["price"];
 
 

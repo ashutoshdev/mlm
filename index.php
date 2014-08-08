@@ -98,9 +98,7 @@ Class RouteEngine extends Core {
             case "/package/items/retieve/ajaxify":
                 $this->load->_CLASS("Package");
                 $this->package->retrieve(TRUE);
-                break;
-            
-            
+                break;           
             
             case "/package/retrieve":
                 $this->load->_CLASS("Package");
