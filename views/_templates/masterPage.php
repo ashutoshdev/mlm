@@ -268,7 +268,7 @@
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="/members/logout/" class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -326,12 +326,10 @@
                             </ul>
                         </li>
                         
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>Opening Stock </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>                            
+                        <li>
+                            <a href="/openingstock/create">
+                                <i class="fa fa-dashboard"></i> <span>opening stock</span>
+                            </a>
                         </li>
                         
                         <li class="treeview">

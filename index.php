@@ -44,6 +44,11 @@ Class RouteEngine extends Core {
                 $this->load->_CLASS("Members");
                 $this->members->login();
                 break;
+            
+            case "/members/logout/":
+                $this->load->_CLASS("Members");
+                $this->members->logout();
+                break;
                 
             case "/ewallet/create":
                 $this->load->_CLASS("Ewallet");
