@@ -12,15 +12,12 @@ class Item extends Controller {
     public function create() {
 
         if (sizeof($_POST)) {
-<<<<<<< HEAD
-            $id = $this->item_model->create($_POST['product_name'],$_POST['item_type']);
-            $this->item_model->createPackage('1', $id, $_POST['price']);
-=======
+
             $item_name = $_POST['product_name'];
             $item_type = $_POST["item_type"];
             $item_price = $_POST['price'];
             $this->itemmaster_model->create($item_name, $item_type, $item_price);
->>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
+
         }
 
         $page_template = "./views/item/create.php";
@@ -95,7 +92,7 @@ class Package extends Controller {
         parent::__construct();
         
         $this->load->_CLASS("PackageMaster_model");
-        $this->load->_CLASS("PackageDetails_model");
+        $this->load->_CLASS("packageDetails_model");
         $this->load->_CLASS("ItemMaster_model");
     }
 
@@ -105,11 +102,12 @@ class Package extends Controller {
         if (sizeof($_POST)) :
             $package_name = $_POST["package_name"];
             $package_price = $_POST["package_price"];
+            
             $id = $this->packagemaster_model->create($package_name, $package_price);
             $p_item = $_POST['product'];
 
             foreach ($p_item as $item):
-                $this->packagedeail_model->create($iitem);
+                $this->packagedetails_model->create($id,$item);
             endforeach;
 
 
@@ -123,16 +121,14 @@ class Package extends Controller {
     public function retrieve($ajaxify = NULL) {
 
         if (!$ajaxify) {
-<<<<<<< HEAD
+
             $result = $this->package_model->retrieve();
             foreach($result as $val){
                 if($val['package_id'] != 1){
                     $item_res[$val['package_id']] = $this->package_model->retrievePackageItem($val['package_id']);
                 }
             };
-=======
-            $result = $this->packagemaster_model->retrieve();
->>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
+            //$result = $this->packagemaster_model->retrieve();
             $page_template = "./views/package/retrieve.php";
             require_once './views/_templates/masterPage.php';
         } else {

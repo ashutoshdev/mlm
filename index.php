@@ -5,7 +5,7 @@ define('BASE_PATH', dirname(__FILE__));
 // DB login info
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'bonnie');
+define('DB_PASSWORD', 'Numerico_2013');
 define('DB_DBASE', 'db_mlm');
 
 
@@ -27,15 +27,6 @@ Class RouteEngine extends Core {
     public function __construct() {        
         parent::__construct();
         
-        $this->load->_CLASS("Members");
-        $this->load->_CLASS("Ewallet");
-        $this->load->_CLASS("Transaction");
-        $this->load->_CLASS("Item");
-        $this->load->_CLASS("Package");
-        $this->load->_CLASS("Users");
-        $this->load->_CLASS("Items_Packages");
-        $this->load->_CLASS("OpeningStock");
-        
         /*$this->members = new Members();
         $this->ewallet = new Ewallet();
         $this->transaction = new Transaction();
@@ -50,68 +41,84 @@ Class RouteEngine extends Core {
         switch (explode("?", $requestURI)[0]) {
 
             case "/":
+                $this->load->_CLASS("Members");
                 $this->members->login();
                 break;
                 
             case "/ewallet/create":
+                $this->load->_CLASS("Ewallet");
                 $this->ewallet->create();
                 break;
                 
             case "/ewallet/retrieve":
+                $this->load->_CLASS("Ewallet");
                 $this->ewallet->retrieve();
                 break;
 
             case "/ewallet/acceptPayment":
+                $this->load->_CLASS("Ewallet");
                 $this->ewallet->acceptPayment();
                 break;
             
             case "/transaction/create":
+                $this->load->_CLASS("Transaction");
                 $this->transaction->create();
                 break;
 
             case "/transaction/retrieve":
+                $this->load->_CLASS("Transaction");
                 $this->transaction->retrieve();
                 break;
             
             case "/item/create":
+                $this->load->_CLASS("Item");
                 $this->item->create();
                 break;
             
             case "/item/retrieve":
+                $this->load->_CLASS("Item");
                 $this->item->retrieve();
                 break;
             
             case "/item/edit":
+                $this->load->_CLASS("Item");
                 $this->item->edit();
                 break;
             
             case "/package/create":
+                $this->load->_CLASS("Package");
                 $this->package->create();
                 break;
             
             case "/package/items/retieve/ajaxify":
+                $this->load->_CLASS("Package");
                 $this->package->retrieve(TRUE);
                 break;
             
             
             
             case "/package/retrieve":
+                $this->load->_CLASS("Package");
                 $this->package->retrieve();
                 break;
             
             case "/items_packages/retrieve/ajaxify":
+                $this->load->_CLASS("Items_Packages");
                 $this->items_packages->retrieveItem(TRUE);
                 break;
             
             case "/items_packages/retrieveItemPrice/ajaxify":
+                $this->load->_CLASS("Items_Packages");
                 $this->items_packages->retrieveItemPrice(TRUE);
                 break;
             
             case "/users/create":
+                $this->load->_CLASS("Users");
                 $this->users->create();
                 break;
             
             case "/openingstock/create":
+                $this->load->_CLASS("OpeningStock");
                 $this->openingstock->create();
                 break;
 

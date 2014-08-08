@@ -224,21 +224,8 @@ class ItemMaster_model extends Model {
     public function __construct() {
         parent::__construct();
     }
-
-<<<<<<< HEAD
-    public function create($product, $category) {
-        $sql = "INSERT INTO `item_master` SET `item_id` = NULL, `item_category` = '$category', `item_name` = '$product'";
-
-        $this->db->executeSQL($sql);
-        return $this->db->lastInsertID();
-    }
-
-    public function createPackage($pck_id, $pid, $price) {
-        $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
-=======
     public function create($product, $item_type, $item_price) {
         $sql = "INSERT INTO `item_master` SET `item_name` = '$product' , `item_category` = '" . $item_type . "' , `item_price`='" . $item_price . "' ";
->>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
         $this->db->executeSQL($sql);
     }
 
@@ -279,8 +266,10 @@ class packageMaster_model extends Model {
         parent::__construct();
     }
 
-    public function create($package_name) {
-        $sql = "INSERT INTO `package_master` SET `package_name` = '$package_name'";
+    public function create($package_name,$package_price) {
+        $sql = "INSERT INTO `package_master` SET "
+                . "`package_name` = '$package_name' , "
+                . "`package_price`='".$package_price."'";
         $this->db->executeSQL($sql);
         return $this->db->lastInsertID();
     }
@@ -293,33 +282,12 @@ class packageDetails_model extends Model {
         parent::__construct();
     }
 
-<<<<<<< HEAD
-    public function retrieve() {
-        $sql = "SELECT item_master.item_id,item_name,item_price,package_master.package_id
-        FROM package_details
-        JOIN package_master
-        ON package_master.package_id=package_details.package_id
-        JOIN item_master
-        ON package_details.item_id=item_master.item_id
-        WHERE package_name='DEFAULT'
-        UNION ALL
-        SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price,package_details.package_id
-        FROM package_details
-        JOIN package_master
-        ON package_master.package_id=package_details.package_id
-        JOIN item_master
-        ON package_details.item_id=item_master.item_id
-        WHERE package_name != 'DEFAULT'
-        GROUP BY package_name";
-        //echo $sql;
-        $result = $this->db->executeSQL($sql);
-        return $result;
-=======
+
     public function create($package_id, $item_id) {
         $sql = "INSERT INTO `package_details` SET `package_id` = '" . $package_id . "' , "
                 . "`item_id` = '" . $item_id . "';";
         $this->db->executeSQL($sql);
->>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
+
     }
     
     public function retrievePackageItem($pid) {
