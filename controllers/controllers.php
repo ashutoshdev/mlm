@@ -263,7 +263,7 @@ class Transaction extends Controller {
             $client_account_id = $_POST["users"];
             $items = $_POST["items"];
             $item_unit_price = $_POST["price"];
-
+            
 
             $totprice = 0;
             foreach ($_POST["totprice"] as $value) {
@@ -285,6 +285,7 @@ class Transaction extends Controller {
             $transaction_id = $this->transaction_model->createId();
             $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "");
             foreach ($items as $item_key => $item) {
+              
                 if ($item)
                     $this->transaction_details->create($transaction_id, $transaction_date, $item, $stock_debit[$item_key], $stock_credit[$item_key], $item_unit_price[$item_key], "");
             }
