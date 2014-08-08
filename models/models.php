@@ -243,8 +243,15 @@ class ItemMaster_model extends Model {
         $this->db->ExecuteSQL($sql);
     }
 
-    public function retrieve() {
-        $sql = "SELECT * FROM item_master";
+    public function retrieve($pid=NULL) {
+        if(!$pid){
+            $sql = "SELECT * FROM item_master";
+        }
+        else{
+            $sql="select i.* from item_master i "
+                . "LEFT JOIN  package_details p on i.item_id = p.item_id "
+                . "WHERE p.package_id = '".$pid."' ";
+        }
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }

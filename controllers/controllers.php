@@ -32,11 +32,17 @@ class Item extends Controller {
 
     public function retrieve() {
 
+        if($_GET["packageId"]){
 
+            $result = $this->itemmaster_model->retrieve($_GET["packageId"]);
+        }
+        else{
+             $result = $this->itemmaster_model->retrieve();
 
-        $result = $this->itemmaster_model->retrieve();
+        }
         $page_template = "./views/item/retrieve.php";
         require_once './views/_templates/masterPage.php';
+       
     }
 
 }
