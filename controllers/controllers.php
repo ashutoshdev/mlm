@@ -6,12 +6,20 @@ class Item extends Controller {
 
     public function __construct() {
         parent::__construct();
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
+
         $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
 
+
+
         if (sizeof($_POST)) {
+
             $item_name = $_POST['product_name'];
             $item_type = $_POST["item_type"];
             $item_price = $_POST['price'];
@@ -24,6 +32,8 @@ class Item extends Controller {
 
     public function retrieve() {
 
+
+
         $result = $this->itemmaster_model->retrieve();
         $page_template = "./views/item/retrieve.php";
         require_once './views/_templates/masterPage.php';
@@ -32,40 +42,59 @@ class Item extends Controller {
 }
 
 class OpeningStock extends Controller {
-    
+
     public function __construct() {
-        
+
         parent::__construct();
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
         $this->load->_CLASS("ItemMaster_model");
         $this->load->_CLASS("OpeningStock_model");
     }
 
     public function create() {
-        
-        if(sizeof($_POST)){
-            
-            $itemId=$_POST["itemId"];
-            $qnty=$_POST["qnty"];
-            $date= date("Y-m-d");
-            
-            foreach ($itemId as $k=>$v){
-                $this->openingstock_model->create($v,$qnty[$k],$date);
+
+
+
+        if (sizeof($_POST)) {
+
+            $itemId = $_POST["itemId"];
+            $qnty = $_POST["qnty"];
+            $date = date("Y-m-d");
+
+            foreach ($itemId as $k => $v) {
+                $this->openingstock_model->create($v, $qnty[$k], $date);
             }
-            
-            
         }
-        
+
         $result = $this->itemmaster_model->retrieve();
         $page_template = "./views/openingstock/create.php";
+        require_once './views/_templates/masterPage.php';
+    }
+
+    public function edit() {
+
+
+
+        $eid = $_GET['eid'];
+        $result = $this->item_model->retrieveEdit($eid);
+
+        $page_template = "./views/item/retrieve_edit.php";
         require_once './views/_templates/masterPage.php';
     }
 
 }
 
 class Stock extends Controller {
-    
+
     public function __construct() {
         parent::__construct();
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
     }
 
     public function retrieve() {
@@ -77,25 +106,36 @@ class Stock extends Controller {
 class Package extends Controller {
 
     public function __construct() {
-        
+
         parent::__construct();
-        
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
+
         $this->load->_CLASS("PackageMaster_model");
-        $this->load->_CLASS("PackageDetails_model");
+        $this->load->_CLASS("packageDetails_model");
         $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
 
 
+
+
         if (sizeof($_POST)) :
+            
             $package_name = $_POST["package_name"];
             $package_price = $_POST["package_price"];
-            $id = $this->packagemaster_model->create($package_name, $package_price);
-            $p_item = $_POST['product'];
-
-            foreach ($p_item as $item):
-                $this->packagedeail_model->create($iitem);
+            $p_item = $_POST['item'];
+            $p_quantity = $_POST['quantity'];
+            
+            if ($package_name) {
+                $id = $this->packagemaster_model->create($package_name, $package_price);
+            }
+            
+            foreach ($p_item as $key => $item):
+                $this->packagedetails_model->create($id, $key, $p_quantity[$key]);
             endforeach;
 
 
@@ -109,7 +149,14 @@ class Package extends Controller {
     public function retrieve($ajaxify = NULL) {
 
         if (!$ajaxify) {
-            $result = $this->packagemaster_model->retrieve();
+
+            $result = $this->package_model->retrieve();
+            foreach ($result as $val) {
+                if ($val['package_id'] != 1) {
+                    $item_res[$val['package_id']] = $this->package_model->retrievePackageItem($val['package_id']);
+                }
+            };
+            //$result = $this->packagemaster_model->retrieve();
             $page_template = "./views/package/retrieve.php";
             require_once './views/_templates/masterPage.php';
         } else {
@@ -154,12 +201,21 @@ class Members extends Controller {
         require_once './views/_templates/login.php';
     }
 
+    public function logout() {
+        session_destroy();
+        header("location: /");
+    }
+
 }
 
 class Ewallet extends Controller {
 
     public function __construct() {
         parent::__construct();
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
         $this->load->_CLASS("Ewallet_model");
     }
 
@@ -201,9 +257,13 @@ class Transaction extends Controller {
 
     public function __construct() {
         parent::__construct();
-        
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
+
         $this->load->_CLASS("Users");
-        
+
         $this->load->_CLASS("Transaction_model");
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
@@ -212,6 +272,10 @@ class Transaction extends Controller {
 
     public function create() {
 
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
+
         if (sizeof($_POST)) {
             $trsnsaction_type = $_POST['transaction_type'];
 
@@ -219,11 +283,6 @@ class Transaction extends Controller {
             $head_account = $_SESSION["user_id"];
             $client_account_id = $_POST["users"];
             $items = $_POST["items"];
-            /* foreach ($_POST["items"] as $value) {
-              foreach (split(",", $value) as $v) {
-              if($v) $items[]=$v;
-              }
-              } */
             $item_unit_price = $_POST["price"];
 
 
@@ -274,6 +333,10 @@ class Users extends Controller {
 
     public function __construct() {
         parent::__construct();
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
         $this->load->_CLASS("Users_model");
     }
 
@@ -302,6 +365,10 @@ class Items_Packages extends Controller {
 
     public function __construct() {
         parent::__construct();
+
+        if (!$_SESSION['user_id']) {
+            header("location: /members/logout/");
+        }
         $this->load->_CLASS("Items_Packages_model");
     }
 

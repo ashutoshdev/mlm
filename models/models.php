@@ -147,46 +147,22 @@ class Items_Packages_model extends Model {
     }
 
     public function retrieveItem() {
-        $sql = "SELECT item_master.item_id,item_name,item_price
-        FROM package_details
-        JOIN package_master
-        ON package_master.package_id=package_details.package_id
-        JOIN item_master
-        ON package_details.item_id=item_master.item_id
-        WHERE package_name='DEFAULT'
+
+        $sql = "SELECT item_id , item_name FROM item_master
         UNION ALL
-        SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price
-        FROM package_details
-        JOIN package_master
-        ON package_master.package_id=package_details.package_id
-        JOIN item_master
-        ON package_details.item_id=item_master.item_id
-        WHERE package_name != 'DEFAULT'
-        GROUP BY package_name";
+        SELECT package_id AS 'item_id' , package_name AS 'item_name'  FROM package_master";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
 
     public function retrieveItemPrice($item_id) {
+        
+       
         $sql = "SELECT * FROM (
-
-        SELECT item_master.item_id,item_name,item_price
-                FROM package_details
-                JOIN package_master
-                ON package_master.package_id=package_details.package_id
-                JOIN item_master
-                ON package_details.item_id=item_master.item_id
-                WHERE package_name='DEFAULT'
-                UNION ALL
-                SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price
-                FROM package_details
-                JOIN package_master
-                ON package_master.package_id=package_details.package_id
-                JOIN item_master
-                ON package_details.item_id=item_master.item_id
-                WHERE package_name != 'DEFAULT'
-                GROUP BY package_name
-        )x WHERE x.item_id ='" . $item_id . "'";
+        SELECT item_id , item_price FROM item_master
+        UNION ALL
+        SELECT package_id AS 'item_id' , package_price AS 'item_price' FROM package_master)x
+        WHERE item_id='".$item_id."' ";
         $result = $this->db->ExecuteSQL($sql);
         return $result[0]["item_price"];
     }
@@ -224,31 +200,72 @@ class ItemMaster_model extends Model {
     public function __construct() {
         parent::__construct();
     }
+    
+    public function getItemId(){
+        $sql="SELECT item_id FROM item_master ORDER BY item_id DESC LIMIT 0,1 ;";
+        $result=$this->db->ExecuteSQL($sql);
+        return $result[0]["item_id"];
+    }
+    
+    public function createItemId($lastItemId){
+        
+        $recent_id = $lastItemId[1].$lastItemId[2].$lastItemId[3].$lastItemId[4].$lastItemId[5].$lastItemId[6];
+        $fid = $recent_id + 1;
+        $lid = strlen($fid);
+        if($lid == 1){
+            $id = "I00000".$fid;
+        }else if($lid == 2){
+            $id = "I0000".$fid;
+        }else if($lid == 3){
+            $id = "I000".$fid;
+        }else if($lid == 4){
+            $id = "I00".$fid;
+        }else if($lid == 5){
+            $id = "I0".$fid;
+        }else{
+            $id = "I".$fid;
+        }
+        
+        return $id;               
+    }
+
 
     public function create($product, $item_type, $item_price) {
-        $sql = "INSERT INTO `item_master` SET `item_name` = '$product' , `item_category` = '" . $item_type . "' , `item_price`='" . $item_price . "' ";
-        $this->db->executeSQL($sql);
+        
+        $lastItemId=  $this->getItemId();
+        
+        
+        if(!$lastItemId):
+            $sql = "INSERT INTO `item_master` SET "
+                . "`item_id`='I000001' , "
+                . "`item_name` = '$product' , "
+                . "`item_category` = '" . $item_type . "' , "
+                . "`item_price`='" . $item_price . "' ";
+        else:
+            $sql = "INSERT INTO `item_master` SET "
+                . "`item_id`='".$this->createItemId($lastItemId) ."' , "
+                . "`item_name` = '$product' , "
+                . "`item_category` = '" . $item_type . "' , "
+                . "`item_price`='" . $item_price . "' ";
+        endif;
+        $this->db->ExecuteSQL($sql);
     }
 
     public function retrieve() {
         $sql = "SELECT * FROM item_master";
-        $result = $this->db->executeSQL($sql);
+        $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
+    
+    public function retrieveEdit($id) {
+        $sql = "SELECT i.*, p.	item_price FROM item_master i
+            LEFT JOIN package_details p ON i.item_id = p.item_id
+            WHERE p.package_id = 1
+            AND i.item_id = '".$id."'";
 
-    /* public function createPackage($pck_id, $pid, $price) {
-      $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
-      $this->db->executeSQL($sql);
-      } */
-
-    /* public function retrieve() {
-      $sql = "SELECT i.*, p.	item_price FROM item_master i
-      LEFT JOIN package_details p ON i.item_id = p.item_id
-      WHERE p.package_id = 1";
-
-      $result = $this->db->executeSQL($sql);
-      return $result;
-      } */
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
+    }
 }
 
 class packageMaster_model extends Model {
@@ -257,10 +274,60 @@ class packageMaster_model extends Model {
         parent::__construct();
     }
 
-    public function create($package_name) {
-        $sql = "INSERT INTO `package_master` SET `package_name` = '$package_name'";
-        $this->db->executeSQL($sql);
-        return $this->db->lastInsertID();
+    public function getPackageId(){
+        $sql="SELECT package_id FROM package_master ORDER BY package_id DESC LIMIT 0,1 ;";
+        $result=$this->db->ExecuteSQL($sql);
+        return $result[0]["package_id"];
+    }
+    
+    public function createPackageId($lastItemId){
+        
+        $recent_id = $lastItemId[1].$lastItemId[2].$lastItemId[3].$lastItemId[4].$lastItemId[5].$lastItemId[6];
+        $fid = $recent_id + 1;
+        $lid = strlen($fid);
+        if($lid == 1){
+            $id = "P00000".$fid;
+        }else if($lid == 2){
+            $id = "P0000".$fid;
+        }else if($lid == 3){
+            $id = "P000".$fid;
+        }else if($lid == 4){
+            $id = "P00".$fid;
+        }else if($lid == 5){
+            $id = "P0".$fid;
+        }else{
+            $id = "P".$fid;
+        }
+        
+        return $id;               
+    }
+    
+    
+    public function create($package_name,$package_price) {
+        
+        $lastPackageId=  $this->getPackageId();
+        $package_id="P000001";
+        
+        if(!$lastPackageId):
+            
+            $sql = "INSERT INTO `package_master` SET "
+                . "`package_id` = '".$package_id."' , "
+                . "`package_name` = '$package_name' , "
+                . "`package_price`='".$package_price."'";
+        else:
+            
+            $package_id=$this->createPackageId($lastPackageId);          
+            $sql = "INSERT INTO `package_master` SET "
+                . "`package_id` = '".$package_id."' , "
+                . "`package_name` = '$package_name' , "
+                . "`package_price`='".$package_price."'";
+            
+        endif;
+        $this->db->ExecuteSQL($sql);
+        
+        
+        
+        return $package_id;
     }
 
 }
@@ -271,10 +338,20 @@ class packageDetails_model extends Model {
         parent::__construct();
     }
 
-    public function create($package_id, $item_id) {
+
+    public function create($package_id, $item_id, $quantity) {
         $sql = "INSERT INTO `package_details` SET `package_id` = '" . $package_id . "' , "
-                . "`item_id` = '" . $item_id . "';";
-        $this->db->executeSQL($sql);
+                . "`item_id` = '" . $item_id . "', `quantity` = '" . $quantity . "'";
+        $this->db->ExecuteSQL($sql);
+
+    }
+    
+    public function retrievePackageItem($pid) {
+        $sql = "select p.*, i.item_name from package_details p
+            left join item_master i on p.item_id = i.item_id
+            WHERE p.package_id = $pid";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
     }
 
 }

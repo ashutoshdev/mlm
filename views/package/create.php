@@ -1,22 +1,22 @@
 <script src="./../assets/jquery-1.10.1.min.js" type="text/javascript"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $("#another").click(function(){
-            $.ajax({
-                type: "POST",
-                data: "1",
-                url: "/package/items/retieve/ajaxify",
-                success: function(result)
-                {
-                    $(".another_select").append(result);
-                }
-            });
-
-        });
-
-
-
-    });
+//    $(document).ready(function(){
+//        $("#another").click(function(){
+//            $.ajax({
+//                type: "POST",
+//                data: "1",
+//                url: "/package/items/retieve/ajaxify",
+//                success: function(result)
+//                {
+//                    $(".another_select").append(result);
+//                }
+//            });
+//
+//        });
+//
+//
+//
+//    });
 </script>
 <aside class="right-side">
 
@@ -53,32 +53,30 @@
                                 <label>Package Price</label>
                                 <input type="text" class="form-control" placeholder="Package Price .." name = "package_price"/>
                             </div>
-                            <ul class = "display_ul_list" style = "padding:0px;margin:0px; display:inline-block;">
-                                <li style="display:inline-block;">
-                                    <div class="form-group">
-                                        <label>Select Product:</label>
-                                        <select name ="product[]" >
-                                            <?php
-                                            foreach ($product as $pro) {
-                                                echo "<option value = '" . $pro['item_id'] . "'>" . $pro['item_name'] . "</option>";
-                                            }
-                                            ?>       
-                                        </select>
-                                    </div>
-                                </li>
-
-                                <li style="padding-left:30px; display:inline-block;">
-                                    <div class="form-group">
-                                        <label>Product Price</label>
-                                        <input type="text" placeholder="Price .." name = "price[]"/>
-                                    </div>
-                                </li>
-                            </ul>
-                            <div class ="another_select">
-
-                            </div>
-                            <input type="button" value = "Add another" id = "another"></br></br>
-
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                    <th></th>
+                                </tr>
+                                
+                                    
+                                    
+                            <?php
+                                $td = 0;
+                                    foreach ($product as $pro) {
+                                        echo "<tr><td>".$pro['item_name']."</td>"
+                                                . "<td><input type='text' value ='1' name = 'quantity[".$pro['item_id']."]' size = 2 /></td>"
+                                                . "<td><input type='checkbox' name = 'item[".$pro['item_id']."]' size = 2 /></td></tr>";
+                                    
+                                   
+                                    }
+                                        ?>
+                                    
+                              
+                            </table>
+                            
+                            
                         </div><!-- /.box-body -->
 
                         <div class="box-footer">
