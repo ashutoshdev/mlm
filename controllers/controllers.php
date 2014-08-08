@@ -120,20 +120,17 @@ class Package extends Controller {
 
     public function create() {
 
-
-
-
         if (sizeof($_POST)) :
-            
+
             $package_name = $_POST["package_name"];
             $package_price = $_POST["package_price"];
             $p_item = $_POST['item'];
             $p_quantity = $_POST['quantity'];
-            
+
             if ($package_name) {
                 $id = $this->packagemaster_model->create($package_name, $package_price);
             }
-            
+
             foreach ($p_item as $key => $item):
                 $this->packagedetails_model->create($id, $key, $p_quantity[$key]);
             endforeach;
@@ -224,8 +221,6 @@ class Ewallet extends Controller {
         if (sizeof($_POST))
             $this->ewallet_model->create($_SESSION['user_id'], $_POST['bank_tran_id'], $_POST['payment'], $_POST['note']);
 
-
-
         $page_template = "./views/ewallet/create.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -235,10 +230,6 @@ class Ewallet extends Controller {
         $result = $this->ewallet_model->retrieve($userId);
         $page_template = "./views/ewallet/retrieve.php";
         require_once './views/_templates/masterPage.php';
-    }
-
-    public function update() {
-        //$result=  $this->ewallet_model->retrieve($userId);
     }
 
     public function acceptPayment() {
@@ -305,7 +296,10 @@ class Transaction extends Controller {
 
             $transaction_id = $this->transaction_model->createId();
             $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "");
-            $this->transaction_details->create($transaction_id, $transaction_date, $items, $stock_debit, $stock_credit, $item_unit_price, "");
+            foreach ($items as $item_key => $item) {
+                if ($item)
+                    $this->transaction_details->create($transaction_id, $transaction_date, $item, $stock_debit[$item_key], $stock_credit[$item_key], $item_unit_price[$item_key], "");
+            }
         }
 
         $html = $this->users->retrieve();
