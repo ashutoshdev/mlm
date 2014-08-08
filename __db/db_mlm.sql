@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 08, 2014 at 12:53 AM
+-- Generation Time: Aug 08, 2014 at 03:44 PM
 -- Server version: 5.5.38-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.3
 
@@ -66,22 +66,21 @@ CREATE TABLE IF NOT EXISTS `company_transaction_master` (
 --
 
 CREATE TABLE IF NOT EXISTS `item_master` (
-  `item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `item_id` varchar(7) NOT NULL,
   `item_category` enum('PRODUCT','PIN') NOT NULL,
   `item_name` text NOT NULL,
   `item_price` decimal(10,0) NOT NULL,
   PRIMARY KEY (`item_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `item_master`
 --
 
 INSERT INTO `item_master` (`item_id`, `item_category`, `item_name`, `item_price`) VALUES
-(9, 'PRODUCT', 'item1', 100),
-(10, 'PRODUCT', 'item2', 200),
-(11, 'PRODUCT', 'item3', 300),
-(12, 'PIN', 'pin1', 3500);
+('I000001', 'PRODUCT', 'p1', 1000),
+('I000002', 'PRODUCT', 'p2', 200),
+('I000003', 'PRODUCT', 'p3', 300);
 
 -- --------------------------------------------------------
 
@@ -96,17 +95,19 @@ CREATE TABLE IF NOT EXISTS `opening_stock` (
   `stock_date` date NOT NULL,
   PRIMARY KEY (`id`,`item_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
 
 --
 -- Dumping data for table `opening_stock`
 --
 
 INSERT INTO `opening_stock` (`id`, `item_id`, `quantity`, `stock_date`) VALUES
-(1, 9, 1, '2014-08-07'),
-(2, 10, 2, '2014-08-07'),
-(3, 11, 3, '2014-08-07'),
-(4, 12, 4, '2014-08-07');
+(5, 0, 1, '2014-08-08'),
+(6, 0, 2, '2014-08-08'),
+(7, 0, 3, '2014-08-08'),
+(8, 0, 5, '2014-08-08'),
+(9, 0, 6, '2014-08-08'),
+(10, 0, 7, '2014-08-08');
 
 -- --------------------------------------------------------
 
@@ -115,11 +116,20 @@ INSERT INTO `opening_stock` (`id`, `item_id`, `quantity`, `stock_date`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `package_details` (
-  `package_id` int(11) NOT NULL,
-  `item_id` int(11) NOT NULL,
+  `package_id` varchar(7) NOT NULL,
+  `item_id` varchar(7) NOT NULL,
+  `quantity` int(11) NOT NULL,
   PRIMARY KEY (`package_id`,`item_id`),
   KEY `item_id` (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `package_details`
+--
+
+INSERT INTO `package_details` (`package_id`, `item_id`, `quantity`) VALUES
+('P000001', 'I000001', 1),
+('P000001', 'I000002', 2);
 
 -- --------------------------------------------------------
 
@@ -128,11 +138,18 @@ CREATE TABLE IF NOT EXISTS `package_details` (
 --
 
 CREATE TABLE IF NOT EXISTS `package_master` (
-  `package_id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_id` varchar(7) NOT NULL,
   `package_name` text NOT NULL,
   `package_price` decimal(10,0) NOT NULL,
   PRIMARY KEY (`package_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `package_master`
+--
+
+INSERT INTO `package_master` (`package_id`, `package_name`, `package_price`) VALUES
+('P000001', 'package 1', 200);
 
 -- --------------------------------------------------------
 
@@ -217,12 +234,6 @@ ALTER TABLE `company_transaction_details`
 ALTER TABLE `company_transaction_master`
   ADD CONSTRAINT `company_transaction_master_ibfk_1` FOREIGN KEY (`head_account_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `company_transaction_master_ibfk_2` FOREIGN KEY (`client_account_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `opening_stock`
---
-ALTER TABLE `opening_stock`
-  ADD CONSTRAINT `opening_stock_ibfk_1` FOREIGN KEY (`item_id`) REFERENCES `item_master` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `package_details`
