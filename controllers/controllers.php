@@ -1,21 +1,27 @@
 <?php
+
 session_start();
 
-
 class Item extends Controller {
-    
+
     public function __construct() {
-        $this->model("Item_model");
+        parent::__construct();
+        $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
 
         if (sizeof($_POST)) {
+<<<<<<< HEAD
             $id = $this->item_model->create($_POST['product_name'],$_POST['item_type']);
             $this->item_model->createPackage('1', $id, $_POST['price']);
+=======
+            $item_name = $_POST['product_name'];
+            $item_type = $_POST["item_type"];
+            $item_price = $_POST['price'];
+            $this->itemmaster_model->create($item_name, $item_type, $item_price);
+>>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
         }
-
-
 
         $page_template = "./views/item/create.php";
         require_once './views/_templates/masterPage.php';
@@ -23,10 +29,39 @@ class Item extends Controller {
 
     public function retrieve() {
 
-
-        $result = $this->item_model->retrieve();
-
+        $result = $this->itemmaster_model->retrieve();
         $page_template = "./views/item/retrieve.php";
+        require_once './views/_templates/masterPage.php';
+    }
+
+}
+
+class OpeningStock extends Controller {
+    
+    public function __construct() {
+        
+        parent::__construct();
+        $this->load->_CLASS("ItemMaster_model");
+        $this->load->_CLASS("OpeningStock_model");
+    }
+
+    public function create() {
+        
+        if(sizeof($_POST)){
+            
+            $itemId=$_POST["itemId"];
+            $qnty=$_POST["qnty"];
+            $date= date("Y-m-d");
+            
+            foreach ($itemId as $k=>$v){
+                $this->openingstock_model->create($v,$qnty[$k],$date);
+            }
+            
+            
+        }
+        
+        $result = $this->itemmaster_model->retrieve();
+        $page_template = "./views/openingstock/create.php";
         require_once './views/_templates/masterPage.php';
     }
     
@@ -41,24 +76,46 @@ class Item extends Controller {
 
 }
 
+class Stock extends Controller {
+    
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function retrieve() {
+        
+    }
+
+}
+
 class Package extends Controller {
 
     public function __construct() {
-        $this->model("Package_model");
+        
+        parent::__construct();
+        
+        $this->load->_CLASS("PackageMaster_model");
+        $this->load->_CLASS("PackageDetails_model");
+        $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
 
-        $product = $this->package_model->showItem();
-        if (sizeof($_POST)) {
-            $id = $this->package_model->create($_POST['product_name']);
-            $p_item = $_POST['product'];
-            $price = $_POST['price'];
-            foreach ($p_item as $key => $item) {
-                $this->package_model->createPackage($id, $item, $price[$key]);
-            }
-        }
 
+        if (sizeof($_POST)) :
+            $package_name = $_POST["package_name"];
+            $package_price = $_POST["package_price"];
+            $id = $this->packagemaster_model->create($package_name, $package_price);
+            $p_item = $_POST['product'];
+
+            foreach ($p_item as $item):
+                $this->packagedeail_model->create($iitem);
+            endforeach;
+
+
+        endif;
+
+        $product = $this->itemmaster_model->retrieve();
         $page_template = "./views/package/create.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -66,16 +123,20 @@ class Package extends Controller {
     public function retrieve($ajaxify = NULL) {
 
         if (!$ajaxify) {
+<<<<<<< HEAD
             $result = $this->package_model->retrieve();
             foreach($result as $val){
                 if($val['package_id'] != 1){
                     $item_res[$val['package_id']] = $this->package_model->retrievePackageItem($val['package_id']);
                 }
             };
+=======
+            $result = $this->packagemaster_model->retrieve();
+>>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
             $page_template = "./views/package/retrieve.php";
             require_once './views/_templates/masterPage.php';
         } else {
-            $product = $this->package_model->showItem();
+            $product = $this->itemmaster_model->retrieve();
             $html = "<b>Select Product:</b><select name ='product[]'>";
 
             foreach ($product as $pro) {
@@ -83,7 +144,6 @@ class Package extends Controller {
             }
 
             $html .= "</select>";
-            $html .= "<b style = 'padding-left:38px;'>Product Price:</b><input type='text' name = 'price[]'  class = 'price'/></br>";
             echo($html);
         }
     }
@@ -93,7 +153,8 @@ class Package extends Controller {
 class Members extends Controller {
 
     public function __construct() {
-        $this->model("Members_model");
+        parent::__construct();
+        $this->load->_CLASS("Members_model");
     }
 
     public function login() {
@@ -121,7 +182,8 @@ class Members extends Controller {
 class Ewallet extends Controller {
 
     public function __construct() {
-        $this->model("Ewallet_model");
+        parent::__construct();
+        $this->load->_CLASS("Ewallet_model");
     }
 
     public function create() {
@@ -161,51 +223,53 @@ class Ewallet extends Controller {
 class Transaction extends Controller {
 
     public function __construct() {
-        $this->model("Transaction_model");
-        $this->model("Transaction_master");
-        $this->model("Transaction_details");
-        $this->model("Users");
-        $this->model("Items_Packages");
+        parent::__construct();
+        
+        $this->load->_CLASS("Users");
+        
+        $this->load->_CLASS("Transaction_model");
+        $this->load->_CLASS("Transaction_master");
+        $this->load->_CLASS("Transaction_details");
+        $this->load->_CLASS("Items_Packages");
     }
 
     public function create() {
 
         if (sizeof($_POST)) {
-            $trsnsaction_type=$_POST['transaction_type'];
-            
-            $transaction_date=date("Y-m-d");  
-            $head_account=$_SESSION["user_id"];
-            $client_account_id=$_POST["users"];
-            $items=$_POST["items"];
-            /*foreach ($_POST["items"] as $value) {
-                foreach (split(",", $value) as $v) {
-                 if($v) $items[]=$v;    
-                }
-            }*/           
-            $item_unit_price=$_POST["price"];
-            
-            
-            $totprice=0;
+            $trsnsaction_type = $_POST['transaction_type'];
+
+            $transaction_date = date("Y-m-d");
+            $head_account = $_SESSION["user_id"];
+            $client_account_id = $_POST["users"];
+            $items = $_POST["items"];
+            /* foreach ($_POST["items"] as $value) {
+              foreach (split(",", $value) as $v) {
+              if($v) $items[]=$v;
+              }
+              } */
+            $item_unit_price = $_POST["price"];
+
+
+            $totprice = 0;
             foreach ($_POST["totprice"] as $value) {
-                $totprice=$totprice+$value;
+                $totprice = $totprice + $value;
             }
-            $debit= $trsnsaction_type=="SALE" ? $totprice : 0;
-            $credit=$trsnsaction_type=="PURCHASE"? $totprice :0;
-            
-            
-            
-            $stock_debit=array();
-            $stock_credit=array();
-            $quantity=$_POST['qnty'];
-            foreach ($quantity as $v){
-                $stock_debit[]  =$trsnsaction_type=="SALE" ? 0 : $v;
-                $stock_credit[] =$trsnsaction_type=="PURCHASE"? 0 :$v;
+            $debit = $trsnsaction_type == "SALE" ? $totprice : 0;
+            $credit = $trsnsaction_type == "PURCHASE" ? $totprice : 0;
+
+
+
+            $stock_debit = array();
+            $stock_credit = array();
+            $quantity = $_POST['qnty'];
+            foreach ($quantity as $v) {
+                $stock_debit[] = $trsnsaction_type == "SALE" ? 0 : $v;
+                $stock_credit[] = $trsnsaction_type == "PURCHASE" ? 0 : $v;
             }
-            
-            $transaction_id=$this->transaction_model->createId();
+
+            $transaction_id = $this->transaction_model->createId();
             $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "");
-            $this->transaction_details->create($transaction_id,$transaction_date,$items, $stock_debit, $stock_credit, $item_unit_price, "");
-            
+            $this->transaction_details->create($transaction_id, $transaction_date, $items, $stock_debit, $stock_credit, $item_unit_price, "");
         }
 
         $html = $this->users->retrieve();
@@ -232,7 +296,8 @@ class Transaction extends Controller {
 class Users extends Controller {
 
     public function __construct() {
-        $this->model("Users_model");
+        parent::__construct();
+        $this->load->_CLASS("Users_model");
     }
 
     public function create() {
@@ -259,7 +324,8 @@ class Users extends Controller {
 class Items_Packages extends Controller {
 
     public function __construct() {
-        $this->model("Items_Packages_model");
+        parent::__construct();
+        $this->load->_CLASS("Items_Packages_model");
     }
 
     public function retrieveItem($ajaxify = NULL) {
@@ -298,7 +364,7 @@ class Items_Packages extends Controller {
             </tr>";
             $html.='';
             return $html;
-        }else {
+        } else {
             $option = "";
 
             $html = "           
@@ -307,32 +373,31 @@ class Items_Packages extends Controller {
                 <table >
                     <tr>
                         <td>
-                            <select class='items' name='items[]' onchange = 'return show_items(this.value,".$_GET[id].");'>
+                            <select class='items' name='items[]' onchange = 'return show_items(this.value," . $_GET[id] . ");'>
                                 <option value='0'>Select Item</option>";
 
             foreach ($items_html as $value) {
                 $option.= "<option value='" . $value["item_id"] . "'>" . $value["item_name"] . "</option>";
             }
             $html.="$option.</select></td>
-                        <td><input type='text' name='price[]'  id = 'price_".$_GET[id]."' value = ''/></td>
-                        <td><input type='text' name='qnty[]'  id = 'qnty_".$_GET[id]."' value = '1' onblur = 'return quantity(this.value,".$_GET[id].");'/></td>
-                        <td><input type='text' name='totprice[]'  id = 't_pr_".$_GET[id]."' value = ''/></td>
+                        <td><input type='text' name='price[]'  id = 'price_" . $_GET[id] . "' value = ''/></td>
+                        <td><input type='text' name='qnty[]'  id = 'qnty_" . $_GET[id] . "' value = '1' onblur = 'return quantity(this.value," . $_GET[id] . ");'/></td>
+                        <td><input type='text' name='totprice[]'  id = 't_pr_" . $_GET[id] . "' value = ''/></td>
                         <td><a class='del' href='javascript:void(0);' style='text-decoration: none;' onclick='return remove_service(this);'>x</a></td>
                     </tr>
                 </table>
               </td>
             </tr>";
             $html.='';
-            
+
             echo $html;
         }
     }
-    
-    
-    public function retrieveItemPrice($ajaxify=NULL){
-        if($ajaxify){
+
+    public function retrieveItemPrice($ajaxify = NULL) {
+        if ($ajaxify) {
             $item_id = $_GET['id'];
-            $item_price=$this->items_packages_model->retrieveItemPrice($item_id);
+            $item_price = $this->items_packages_model->retrieveItemPrice($item_id);
             echo $item_price;
         }
     }

@@ -1,9 +1,17 @@
 <?php
 
-include_once './_core/class.MySQL.php';
-include_once './_core/class.Model.php';
-include_once './_core/class.Controller.php';
+define('BASE_PATH', dirname(__FILE__));
 
+// DB login info
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASSWORD', 'bonnie');
+define('DB_DBASE', 'db_mlm');
+
+
+
+include_once './_core/class.Core.php'; '';
+include_once './_core/class.MySQL.php';
 
 include_once './models/models.php';
 include_once './controllers/controllers.php';
@@ -12,18 +20,30 @@ include_once './controllers/controllers.php';
 
 
 
-Class RouteEngine {
+Class RouteEngine extends Core {
    
 
 
-    public function __construct() {
-        $this->members = new Members();
+    public function __construct() {        
+        parent::__construct();
+        
+        $this->load->_CLASS("Members");
+        $this->load->_CLASS("Ewallet");
+        $this->load->_CLASS("Transaction");
+        $this->load->_CLASS("Item");
+        $this->load->_CLASS("Package");
+        $this->load->_CLASS("Users");
+        $this->load->_CLASS("Items_Packages");
+        $this->load->_CLASS("OpeningStock");
+        
+        /*$this->members = new Members();
         $this->ewallet = new Ewallet();
         $this->transaction = new Transaction();
         $this->item=new Item();
         $this->package=new Package();
         $this->users=new Users();
         $this->items_packages=new Items_Packages();
+        $this->openingstock=new OpeningStock();*/
     }
     
     public function dispatch($requestURI) {
@@ -32,11 +52,11 @@ Class RouteEngine {
             case "/":
                 $this->members->login();
                 break;
-
+                
             case "/ewallet/create":
                 $this->ewallet->create();
                 break;
-
+                
             case "/ewallet/retrieve":
                 $this->ewallet->retrieve();
                 break;
@@ -90,9 +110,13 @@ Class RouteEngine {
             case "/users/create":
                 $this->users->create();
                 break;
+            
+            case "/openingstock/create":
+                $this->openingstock->create();
+                break;
 
 
-        }
+         }
     }
 
 }

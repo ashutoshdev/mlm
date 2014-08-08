@@ -1,5 +1,22 @@
 <?php
 
+class OpeningStock_model extends Model{
+    
+    public function __construct() {
+        parent::__construct();
+    }
+    
+    public function create($item_id,$qnty,$date){
+        $sql="INSERT INTO opening_stock SET item_id='".$item_id."' , "
+                . "quantity= '".$qnty."' , "
+                . "stock_date = '".$date."' ;";
+        $this->db->ExecuteSQL($sql);
+    }
+    
+    
+}
+
+
 class Ewallet_model extends Model {
 
     public function __construct() {
@@ -68,7 +85,7 @@ class Transaction_details extends Model {
 
     public function create($transaction_id, $transaction_date, $items, $stock_debit, $stock_credit, $item_price, $note) {
 
-        
+
         for ($i = 0; $i < count($items); $i++) {
             if ($items[$i]) {
                 $sql = "INSERT INTO company_transaction_details SET "
@@ -149,8 +166,8 @@ class Items_Packages_model extends Model {
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
-    
-    public function retrieveItemPrice($item_id){
+
+    public function retrieveItemPrice($item_id) {
         $sql = "SELECT * FROM (
 
         SELECT item_master.item_id,item_name,item_price
@@ -169,11 +186,10 @@ class Items_Packages_model extends Model {
                 ON package_details.item_id=item_master.item_id
                 WHERE package_name != 'DEFAULT'
                 GROUP BY package_name
-        )x WHERE x.item_id ='".$item_id."'";
+        )x WHERE x.item_id ='" . $item_id . "'";
         $result = $this->db->ExecuteSQL($sql);
         return $result[0]["item_price"];
     }
-    
 
 }
 
@@ -203,12 +219,13 @@ class Users_model extends Model {
 
 }
 
-class Item_model extends Model {
+class ItemMaster_model extends Model {
 
     public function __construct() {
         parent::__construct();
     }
 
+<<<<<<< HEAD
     public function create($product, $category) {
         $sql = "INSERT INTO `item_master` SET `item_id` = NULL, `item_category` = '$category', `item_name` = '$product'";
 
@@ -218,14 +235,15 @@ class Item_model extends Model {
 
     public function createPackage($pck_id, $pid, $price) {
         $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
+=======
+    public function create($product, $item_type, $item_price) {
+        $sql = "INSERT INTO `item_master` SET `item_name` = '$product' , `item_category` = '" . $item_type . "' , `item_price`='" . $item_price . "' ";
+>>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
         $this->db->executeSQL($sql);
     }
 
     public function retrieve() {
-        $sql = "SELECT i.*, p.	item_price FROM item_master i
-            LEFT JOIN package_details p ON i.item_id = p.item_id
-            WHERE p.package_id = 1";
-
+        $sql = "SELECT * FROM item_master";
         $result = $this->db->executeSQL($sql);
         return $result;
     }
@@ -240,31 +258,42 @@ class Item_model extends Model {
         return $result;
     }
 
+    /* public function createPackage($pck_id, $pid, $price) {
+      $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
+      $this->db->executeSQL($sql);
+      } */
+
+    /* public function retrieve() {
+      $sql = "SELECT i.*, p.	item_price FROM item_master i
+      LEFT JOIN package_details p ON i.item_id = p.item_id
+      WHERE p.package_id = 1";
+
+      $result = $this->db->executeSQL($sql);
+      return $result;
+      } */
 }
 
-class Package_model extends Model {
+class packageMaster_model extends Model {
 
     public function __construct() {
         parent::__construct();
     }
 
-    public function create($package) {
-        $sql = "INSERT INTO `package_master` SET `package_name` = '$package'";
+    public function create($package_name) {
+        $sql = "INSERT INTO `package_master` SET `package_name` = '$package_name'";
         $this->db->executeSQL($sql);
         return $this->db->lastInsertID();
     }
 
-    public function createPackage($pck_id, $pid, $price) {
-        $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
-        $this->db->executeSQL($sql);
+}
+
+class packageDetails_model extends Model {
+
+    public function __construct() {
+        parent::__construct();
     }
 
-    public function showItem() {
-        $sql = "SELECT * FROM item_master";
-        $result = $this->db->executeSQL($sql);
-        return $result;
-    }
-
+<<<<<<< HEAD
     public function retrieve() {
         $sql = "SELECT item_master.item_id,item_name,item_price,package_master.package_id
         FROM package_details
@@ -285,6 +314,12 @@ class Package_model extends Model {
         //echo $sql;
         $result = $this->db->executeSQL($sql);
         return $result;
+=======
+    public function create($package_id, $item_id) {
+        $sql = "INSERT INTO `package_details` SET `package_id` = '" . $package_id . "' , "
+                . "`item_id` = '" . $item_id . "';";
+        $this->db->executeSQL($sql);
+>>>>>>> 89e29283e45e8e60d236fe3fa034c1a4925d6676
     }
     
     public function retrievePackageItem($pid) {
@@ -296,6 +331,32 @@ class Package_model extends Model {
     }
 
 }
+
+/* class Package_model extends Model {
+
+  public function __construct() {
+  parent::__construct();
+  }
+
+  public function create($package) {
+  $sql = "INSERT INTO `package_master` SET `package_name` = '$package'";
+  $this->db->executeSQL($sql);
+  return $this->db->lastInsertID();
+  }
+
+  public function createPackage($pck_id, $pid, $price) {
+  $sql = "INSERT INTO `package_details` SET `package_id` = '$pck_id' , `item_id` = '$pid', `item_price` = '$price'";
+  $this->db->executeSQL($sql);
+  }
+
+
+  public function retrieve() {
+  $sql = "SELECT * FROM `package_master`";
+  $result = $this->db->executeSQL($sql);
+  return $result;
+  }
+
+  } */
 
 class Members_model extends Model {
 

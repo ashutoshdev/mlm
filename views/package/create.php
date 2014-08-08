@@ -2,14 +2,12 @@
 <script type="text/javascript">
     $(document).ready(function(){
         $("#another").click(function(){
-            //alert("hi");
             $.ajax({
                 type: "POST",
                 data: "1",
                 url: "/package/items/retieve/ajaxify",
                 success: function(result)
                 {
-                    //alert(result);
                     $(".another_select").append(result);
                 }
             });
@@ -49,7 +47,11 @@
                         <div class="box-body">
                             <div class="form-group">
                                 <label>Package Name</label>
-                                <input type="text" class="form-control" placeholder="Product .." name = "product_name"/>
+                                <input type="text" class="form-control" placeholder="Package Name .." name = "package_name"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Package Price</label>
+                                <input type="text" class="form-control" placeholder="Package Price .." name = "package_price"/>
                             </div>
                             <ul class = "display_ul_list" style = "padding:0px;margin:0px; display:inline-block;">
                                 <li style="display:inline-block;">
