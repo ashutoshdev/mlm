@@ -11,7 +11,7 @@ class Item extends Controller {
     public function create() {
 
         if (sizeof($_POST)) {
-            $id = $this->item_model->create($_POST['product_name']);
+            $id = $this->item_model->create($_POST['product_name'],$_POST['item_type']);
             $this->item_model->createPackage('1', $id, $_POST['price']);
         }
 
@@ -27,6 +27,15 @@ class Item extends Controller {
         $result = $this->item_model->retrieve();
 
         $page_template = "./views/item/retrieve.php";
+        require_once './views/_templates/masterPage.php';
+    }
+    
+    public function edit() {
+
+        $eid = $_GET['eid'];
+        $result = $this->item_model->retrieveEdit($eid);
+
+        $page_template = "./views/item/retrieve_edit.php";
         require_once './views/_templates/masterPage.php';
     }
 
@@ -58,6 +67,11 @@ class Package extends Controller {
 
         if (!$ajaxify) {
             $result = $this->package_model->retrieve();
+            foreach($result as $val){
+                if($val['package_id'] != 1){
+                    $item_res[$val['package_id']] = $this->package_model->retrievePackageItem($val['package_id']);
+                }
+            };
             $page_template = "./views/package/retrieve.php";
             require_once './views/_templates/masterPage.php';
         } else {

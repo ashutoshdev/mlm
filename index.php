@@ -61,6 +61,10 @@ Class RouteEngine {
                 $this->item->retrieve();
                 break;
             
+            case "/item/edit":
+                $this->item->edit();
+                break;
+            
             case "/package/create":
                 $this->package->create();
                 break;
@@ -68,6 +72,8 @@ Class RouteEngine {
             case "/package/items/retieve/ajaxify":
                 $this->package->retrieve(TRUE);
                 break;
+            
+            
             
             case "/package/retrieve":
                 $this->package->retrieve();

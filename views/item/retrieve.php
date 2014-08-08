@@ -24,8 +24,9 @@
                                 <tr>
                                     <th>Id</th>
                                     <th>Product Name</th>
+                                    <th>Category</th>
                                     <th>Price</th>
-<!--                                    <th>Action</th>-->
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,8 +36,9 @@
                                     <tr>
                                         <td><?php echo $value["item_id"]; ?></td>
                                         <td><?php echo $value["item_name"] ?></td>
+                                        <td><?php echo $value["item_category"] ?></td>
                                         <td><?php echo $value["item_price"] ?></td>
-<!--                                        <td><a href = "">Edit</a> <a href = "">Delete</a></td>-->
+                                        <td><a href="/item/edit?eid=<?php echo $value["item_id"]; ?>">Edit</a> <a href = "/item/delete/?del=<?php echo $value["item_id"]; ?>">Delete</a></td>
                                     </tr>
                                     <?php
                                 }

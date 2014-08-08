@@ -1,3 +1,10 @@
+<script type="text/javascript">
+    function details_show(count){
+        $("#details_item_"+count).toggle("slow");    
+    }
+    
+</script>
+
 <aside class="right-side">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -25,18 +32,40 @@
                                     <th>Id</th>
                                     <th>Package Name</th>
                                     <th>Price</th>
+                                    <th>Action</th>
+
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
                                 foreach ($result as $value) {
+                                    $c++;
                                     ?>
-                                    <tr>
-                                        <td><?php echo $value["package_id"]; ?></td>
-                                        <td><?php echo $value["package_name"] ?></td>
+                                    <tr onclick = "return details_show(<?php echo $c; ?>);" <?php if($value["package_id"] != 1){ echo "style = 'cursor: pointer;'"; } ?>>
+                                        <td><?php echo $c; ?></td>
+                                        <td><?php echo $value["item_name"] ?></td>
                                         <td><?php echo $value["item_price"] ?></td>
+                                        <td><a href="/package/edit/?eid=<?php echo $value["item_id"]; ?>">Edit</a> <a href = "/package/delete/?del=<?php echo $value["item_id"]; ?>">Delete</a></td>
                                     </tr>
                                     <?php
+                                    if($value["package_id"] != 1){
+                                    ?>
+                                    <tr><td colspan="4">
+                                       <table id = "details_item_<?php echo $c; ?>" style = "display: none;"  class="table table-bordered table-striped">
+                                    <?php
+                                        foreach ($item_res[$value["package_id"]] as $item){
+                                    
+                                    ?>
+                                    <tr>
+                                        <td></td>
+                                        <td><?php echo $item["item_name"] ?></td>
+                                        <td><?php echo $item["item_price"] ?></td>
+                                    </tr>
+                                <?php
+                                        }
+                                        echo "</table>
+                                        </td></tr>";
+                                    }
                                 }
                                 ?>
 

@@ -79,7 +79,7 @@
                                             <?php foreach ($html as $v) { ?>
                                                 <option value="<?php echo $v["user_id"] ?>"><?php echo $v["user_name"] ?></option>
                                             <?php } ?>
-                                        </select><input type='text' id ="hid_param" value = '1'/>
+                                        </select><input type='hidden' id ="hid_param" value = '1'/>
                                     </td>
                                 </tr>
                                 <?php echo $items_html; ?>

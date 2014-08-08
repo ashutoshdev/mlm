@@ -11,10 +11,13 @@
         <link href="./../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- font Awesome -->
         <link href="./../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        
+        <link href="./../assets/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <!-- DATA TABLES -->
         <link href="./../css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
         <!-- Ionicons -->
         <link href="./../assets/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+        <link href="./../assets/css/ionicons.css" rel="stylesheet" type="text/css" />
         <!-- Theme style -->
         <link href="./../assets/css/AdminLTE.css" rel="stylesheet" type="text/css" />
 
@@ -58,7 +61,7 @@
                                         <li><!-- start message -->
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./assets/img/avatar3.png" class="img-circle" alt="User Image"/>
+                                                    <img src="./../assets/img/avatar3.png" class="img-circle" alt="User Image"/>
                                                 </div>
                                                 <h4>
                                                     Support Team
@@ -70,7 +73,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./assets/img/avatar2.png" class="img-circle" alt="user image"/>
+                                                    <img src="./../assets/img/avatar2.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     AdminLTE Design Team
@@ -82,7 +85,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./assets/img/avatar.png" class="img-circle" alt="user image"/>
+                                                    <img src="./../assets/img/avatar.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     Developers
@@ -94,7 +97,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./assets/img/avatar2.png" class="img-circle" alt="user image"/>
+                                                    <img src="./../assets/img/avatar2.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     Sales Department
@@ -106,7 +109,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./assets/img/avatar.png" class="img-circle" alt="user image"/>
+                                                    <img src="./../assets/img/avatar.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     Reviewers
@@ -241,7 +244,7 @@
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header bg-light-blue">
-                                    <img src="./assets/img/avatar3.png" class="img-circle" alt="User Image" />
+                                    <img src="./../assets/img/avatar3.png" class="img-circle" alt="User Image" />
                                     <p>
                                         Jane Doe - Web Developer
                                         <small>Member since Nov. 2012</small>
@@ -285,7 +288,7 @@
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="./assets/img/avatar3.png" class="img-circle" alt="User Image" />
+                            <img src="./../assets/img/avatar3.png" class="img-circle" alt="User Image" />
                         </div>
                         <div class="pull-left info">
                             <p>Hello, Jane</p>

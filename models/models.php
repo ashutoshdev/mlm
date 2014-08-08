@@ -209,8 +209,8 @@ class Item_model extends Model {
         parent::__construct();
     }
 
-    public function create($product) {
-        $sql = "INSERT INTO `item_master` SET `item_id` = NULL, `item_name` = '$product'";
+    public function create($product, $category) {
+        $sql = "INSERT INTO `item_master` SET `item_id` = NULL, `item_category` = '$category', `item_name` = '$product'";
 
         $this->db->executeSQL($sql);
         return $this->db->lastInsertID();
@@ -225,6 +225,16 @@ class Item_model extends Model {
         $sql = "SELECT i.*, p.	item_price FROM item_master i
             LEFT JOIN package_details p ON i.item_id = p.item_id
             WHERE p.package_id = 1";
+
+        $result = $this->db->executeSQL($sql);
+        return $result;
+    }
+    
+    public function retrieveEdit($id) {
+        $sql = "SELECT i.*, p.	item_price FROM item_master i
+            LEFT JOIN package_details p ON i.item_id = p.item_id
+            WHERE p.package_id = 1
+            AND i.item_id = '".$id."'";
 
         $result = $this->db->executeSQL($sql);
         return $result;
@@ -256,8 +266,31 @@ class Package_model extends Model {
     }
 
     public function retrieve() {
-        $sql = "SELECT * FROM `package_master`";
+        $sql = "SELECT item_master.item_id,item_name,item_price,package_master.package_id
+        FROM package_details
+        JOIN package_master
+        ON package_master.package_id=package_details.package_id
+        JOIN item_master
+        ON package_details.item_id=item_master.item_id
+        WHERE package_name='DEFAULT'
+        UNION ALL
+        SELECT GROUP_CONCAT(item_master.item_id SEPARATOR ',') AS item_id,package_name AS 'item_name',SUM(item_price) AS item_price,package_details.package_id
+        FROM package_details
+        JOIN package_master
+        ON package_master.package_id=package_details.package_id
+        JOIN item_master
+        ON package_details.item_id=item_master.item_id
+        WHERE package_name != 'DEFAULT'
+        GROUP BY package_name";
         //echo $sql;
+        $result = $this->db->executeSQL($sql);
+        return $result;
+    }
+    
+    public function retrievePackageItem($pid) {
+        $sql = "select p.*, i.item_name from package_details p
+            left join item_master i on p.item_id = i.item_id
+            WHERE p.package_id = $pid";
         $result = $this->db->executeSQL($sql);
         return $result;
     }
