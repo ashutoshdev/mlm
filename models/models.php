@@ -83,20 +83,15 @@ class Transaction_details extends Model {
 
     public function create($transaction_id, $transaction_date, $items, $stock_debit, $stock_credit, $item_price, $note) {
 
-
-        for ($i = 0; $i < count($items); $i++) {
-            if ($items[$i]) {
-                $sql = "INSERT INTO company_transaction_details SET "
-                        . "transaction_id = '" . $transaction_id . "' , "
-                        . "transaction_date = '" . $transaction_date . "' , "
-                        . "item_id = '" . $items[$i] . "' , "
-                        . "stock_debit = '$stock_debit[$i]' , "
-                        . "stock_credit = '" . $stock_credit[$i] . "' , "
-                        . "item_unit_price ='" . $item_price[$i] . "' , "
-                        . "note = '" . $note . "';";
-                $this->db->ExecuteSQL($sql);
-            }
-        }
+        $sql = "INSERT INTO company_transaction_details SET "
+                . "transaction_id = '" . $transaction_id . "' , "
+                . "transaction_date = '" . $transaction_date . "' , "
+                . "item_id = '" . $items[$i] . "' , "
+                . "stock_debit = '$stock_debit[$i]' , "
+                . "stock_credit = '" . $stock_credit[$i] . "' , "
+                . "item_unit_price ='" . $item_price[$i] . "' , "
+                . "note = '" . $note . "';";
+        $this->db->ExecuteSQL($sql);
     }
 
 }
@@ -365,6 +360,7 @@ class Package_model extends Model {
     }
 
 }
+
 
 class Members_model extends Model {
 
