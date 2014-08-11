@@ -23,7 +23,7 @@
                             <thead>
                                 <tr>
                                     <th>Transaction ID</th>
-                                    <th>Transaction Dtae</th>
+                                    <th>Transaction Date</th>
                                     <th>Debit</th>
                                     <th>Credit</th>
                                     <th>Note</th>

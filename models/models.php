@@ -33,7 +33,12 @@ class Ewallet_model extends Model {
     public function retrieve($userId = NULL) {
 
         if ($userId):
-            $sql = "SELECT * FROM user_e_wallet WHERE user_id='" . $userId . "' AND status = 1;";
+            $sql = "SELECT user_name,transaction_id,transaction_date,debit,credit,note ,transaction_type
+FROM company_transaction_master
+JOIN user
+ON user.user_id = company_transaction_master.client_account_id
+where head_account_id='".$userId."';
+;";
             $result = $this->db->ExecuteSQL($sql);
             return $result;
 
@@ -61,7 +66,7 @@ class Transaction_master extends Model {
         parent::__construct();
     }
 
-    public function create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, $note) {
+    public function create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, $note,$transaction_type="TRANSACTION") {
         $sql = "INSERT INTO company_transaction_master SET "
                 . "transaction_id='" . $transaction_id . "' , "
                 . "transaction_date='" . $transaction_date . "' , "
@@ -69,7 +74,8 @@ class Transaction_master extends Model {
                 . "client_account_id='" . $client_account_id . "' , "
                 . "debit='" . $debit . "' , "
                 . "credit='" . $credit . "' , "
-                . "note='" . $note . "' ; ";
+                . "note='" . $note . "' , "
+                . "transaction_type='".$transaction_type."' ; ";
         $this->db->ExecuteSQL($sql);
     }
 
@@ -178,6 +184,7 @@ class Users_model extends Model {
                 . "user_password='" . $user_password . "'";
 
         $this->db->ExecuteSQL($sql);
+        return $this->db->lastInsertID();
     }
 
     public function retrieve() {
@@ -244,27 +251,36 @@ class ItemMaster_model extends Model {
         $this->db->ExecuteSQL($sql);
     }
 
-    public function retrieve($pid=NULL) {
-        if(!$pid){
+    public function retrieve($pid = NULL) {
+        if (!$pid) {
             $sql = "SELECT * FROM item_master";
-        }
-        else{
-            $sql="select i.* from item_master i "
-                . "LEFT JOIN  package_details p on i.item_id = p.item_id "
-                . "WHERE p.package_id = '".$pid."' ";
+        } else {
+            $sql = "select i.* from item_master i "
+                    . "LEFT JOIN  package_details p on i.item_id = p.item_id "
+                    . "WHERE p.package_id = '" . $pid . "' ";
         }
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
 
-    public function retrieveEdit($id) {
-        $sql = "SELECT i.*, p.	item_price FROM item_master i
-            LEFT JOIN package_details p ON i.item_id = p.item_id
-            WHERE p.package_id = 1 
-            AND i.item_id = '" . $id . "'";
 
+    /*
+      
+     public function retrieveEdit($id) {
+        $sql = "SELECT i.*, p.	item_price FROM item_master i
+        LEFT JOIN package_details p ON i.item_id = p.item_id
+        WHERE p.package_id = 1
+        AND i.item_id = '" . $id . "'";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
+    } 
+
+       */
+
+    public function retrievePin() {
+        $sql="SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";
+        $result=$this->db->ExecuteSQL($sql);
+        return $result[0];
     }
 
 }
@@ -347,7 +363,7 @@ class packageDetails_model extends Model {
     public function retrievePackageItem($pid) {
         $sql = "select p.*, i.item_name from package_details p"
                 . "LEFT JOIN item_master i on i.item_id = p.item_id"
-                . "WHERE p.package_id = '".$pid."' ";
+                . "WHERE p.package_id = '" . $pid . "' ";
         echo $sql;
         $result = $this->db->ExecuteSQL($sql);
         return $result;
@@ -368,7 +384,6 @@ class Package_model extends Model {
     }
 
 }
-
 
 class Members_model extends Model {
 

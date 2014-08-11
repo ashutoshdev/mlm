@@ -248,7 +248,6 @@ class Transaction extends Controller {
         }
 
         $this->load->_CLASS("Users");
-
         $this->load->_CLASS("Transaction_model");
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
@@ -327,17 +326,35 @@ class Users extends Controller {
             header("location: /members/logout/");
         }
         $this->load->_CLASS("Users_model");
+        $this->load->_CLASS("Transaction_model");
+        $this->load->_CLASS("Transaction_master");
+        $this->load->_CLASS("Transaction_details");
+        $this->load->_CLASS("ItemMaster_model");
     }
 
     public function create() {
 
         if (sizeof($_POST)) {
+        
             $username = $_POST["username"];
             $useremail = $_POST["useremail"];
             $password = $_POST["password"];
             $introducer = $_POST["introducer"];
-            $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password);
+            
+            $client_account_id =$this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password);           
+            $transaction_date = date("Y-m-d");
+            $head_account = $_SESSION["user_id"];
+            
+            $item=$this->itemmaster_model->retrievePin();
+            $transaction_id = $this->transaction_model->createId();
+            $debit=$item["item_price"];
+            $credit=0;             
+            
+            $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "","REGISTRATION");
+            $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");            
         }
+        
+        
 
         $html = $this->retrieve();
         $page_template = "./views/users/create.php";

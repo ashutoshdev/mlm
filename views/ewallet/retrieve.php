@@ -22,11 +22,13 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>USER NAME</th>
                                     <th>TRACTION ID</th>
+                                    <th>TRANSACTION DATE</th>
                                     <th>DEBIT</th>
                                     <th>CREDIT</th>
                                     <th>NOTE</th>
+                                    <th>TYPE</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -34,11 +36,14 @@
                                 foreach ($result as $value) {
                                     ?>
                                     <tr>
-                                        <td><?php echo $value["id"]; ?></td>
-                                        <td><a href="/transaction/retrieve?id=<?php echo $value["transaction_id"]; ?>"><?php echo $value["transaction_id"]; ?></a></td>
+                                        <td><?php echo $value["user_name"]; ?></td>
+                                        <td><?php echo $value["transaction_id"]; ?></td>
+                                        <!--<td><a href="/transaction/retrieve?id=<?php echo $value["transaction_id"]; ?>"><?php echo $value["transaction_id"]; ?></a></td> -->
+                                        <td><?php echo $value["transaction_date"]; ?></td>
                                         <td><?php echo $value["debit"] ?></td>
                                         <td><?php echo $value["credit"] ?></td>
                                         <td><?php echo $value["note"] ?></td>
+                                        <td><?php echo $value["transaction_type"] ?></td>
                                     </tr>
                                     <?php
                                 }
