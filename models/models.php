@@ -181,7 +181,8 @@ class Users_model extends Model {
     }
 
     public function retrieve() {
-        $sql = "SELECT * FROM user";
+        $sql = "SELECT u.*, n.user_name as name FROM user u "
+                . "left join user n on u.created_by = n.user_id";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
@@ -259,7 +260,7 @@ class ItemMaster_model extends Model {
     public function retrieveEdit($id) {
         $sql = "SELECT i.*, p.	item_price FROM item_master i
             LEFT JOIN package_details p ON i.item_id = p.item_id
-            WHERE p.package_id = 1
+            WHERE p.package_id = 1 
             AND i.item_id = '" . $id . "'";
 
         $result = $this->db->ExecuteSQL($sql);

@@ -111,6 +111,11 @@ Class RouteEngine extends Core {
                 $this->users->create();
                 break;
             
+            case "/users/retrieve":
+                $this->load->_CLASS("Users");
+                $this->users->retrieve();
+                break;
+            
             case "/openingstock/create":
                 $this->load->_CLASS("OpeningStock");
                 $this->openingstock->create();

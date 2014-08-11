@@ -345,7 +345,10 @@ class Users extends Controller {
     }
 
     public function retrieve() {
-        return $this->users_model->retrieve();
+        $result = $this->users_model->retrieve();
+        
+        $page_template = "./views/users/retrieve.php";
+        require_once './views/_templates/masterPage.php';
     }
 
 }

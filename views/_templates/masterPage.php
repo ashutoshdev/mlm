@@ -402,6 +402,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Register Users </a></li>
+                                <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Users Details </a></li>
                                 
                             </ul>
                         </li>
