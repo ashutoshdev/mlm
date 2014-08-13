@@ -37,7 +37,7 @@
                                         <td><?php echo $value["item_name"] ?></td>
                                         <td>
                                             <input type="hidden" name="itemId[]" value="<?php echo $value["item_id"]; ?>"/>
-                                            <input type="text" name="qnty[]" />
+                                            <input type="text" name="qnty[]" value ="<?php echo $value['quantity']; ?>" />
                                         </td>
                                     </tr>
                                     <?php

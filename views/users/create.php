@@ -32,6 +32,13 @@
                                 </select>
                             </div>
                             <div class="form-group">
+                                <label>Tree Position</label>
+                                <select name="position" class="form-control">
+                                        <option value="0">Left</option>
+                                        <option value="1">Right</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
                                 <label>User Name</label>
                                 <input type="text" class="form-control" placeholder=" .." name = "username"/>
                             </div>

@@ -349,7 +349,11 @@
                                 <i class="fa fa-bar-chart-o"></i>
                                 <span>Stock </span>
                                 <i class="fa fa-angle-left pull-right"></i>
-                            </a>                            
+                            </a> 
+                            <ul class="treeview-menu">
+                                <li><a href="/stock/productStock"><i class="fa fa-angle-double-right"></i> Product Quantity</a></li>
+                                
+                            </ul>
                         </li>
                         
                 <?php
@@ -402,6 +406,7 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Register Users </a></li>
+                                <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Users Details </a></li>
                                 
                             </ul>
                         </li>

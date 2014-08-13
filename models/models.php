@@ -12,6 +12,18 @@ class OpeningStock_model extends Model {
                 . "stock_date = '" . $date . "' ;";
         $this->db->ExecuteSQL($sql);
     }
+    
+    public function updateItemIdStock($item_id, $qnty, $date) {
+        $sql = "UPDATE `opening_stock` SET `quantity` = '".$qnty."',"
+                . "`stock_date` = '".$date."' WHERE `item_id` = '".$item_id."'";
+        $this->db->ExecuteSQL($sql);
+    }
+    
+    public function retrieveExist($item_id) {
+        $sql = "select id from opening_stock where item_id = '".$item_id."' ";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result[0][id];
+    }
 
 }
 
@@ -33,18 +45,30 @@ class Ewallet_model extends Model {
     public function retrieve($userId = NULL) {
 
         if ($userId):
-            $sql = "SELECT user_name,transaction_id,transaction_date,debit,credit,note ,transaction_type
-FROM company_transaction_master
-JOIN user
-ON user.user_id = company_transaction_master.client_account_id
-where head_account_id='".$userId."';
-;";
+                $sql = "SELECT user_name,transaction_id,transaction_date,debit,credit,note ,transaction_type
+                    FROM company_transaction_master
+                    JOIN user
+                    ON user.user_id = company_transaction_master.client_account_id
+                    where head_account_id = '".$userId."' AND status = '1' ";
+//            }
+//            else{
+//                $sql = "SELECT user_name,transaction_id,transaction_date,debit,credit,note ,transaction_type
+//                    FROM company_transaction_master
+//                    JOIN user
+//                    ON user.user_id = company_transaction_master.client_account_id
+//                    where client_account_id = '".$userId."' ";
+//            }
             $result = $this->db->ExecuteSQL($sql);
             return $result;
 
         else :
 
-            $sql = "SELECT * FROM user_e_wallet JOIN user ON user.user_id = user_e_wallet.user_id;";
+            $sql = "SELECT user_name,transaction_id,transaction_date,debit,credit,note ,transaction_type
+                    FROM company_transaction_master
+                    JOIN user
+                    ON user.user_id = company_transaction_master.client_account_id
+                    where status = '0' ";
+        
             $result = $this->db->ExecuteSQL($sql);
             return $result;
         endif;
@@ -53,11 +77,11 @@ where head_account_id='".$userId."';
     public function update($accept) {
 
         foreach ($accept as $value) {
-            $sql = "UPDATE user_e_wallet SET status ='1' WHERE id='" . $value . "';";
+            $sql = "UPDATE company_transaction_master SET status ='1' WHERE transaction_id='" . $value . "';";
             $this->db->ExecuteSQL($sql);
         }
     }
-
+   
 }
 
 class Transaction_master extends Model {
@@ -66,16 +90,18 @@ class Transaction_master extends Model {
         parent::__construct();
     }
 
-    public function create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, $note,$transaction_type="TRANSACTION") {
+    public function create($transaction_id, $transaction_date, $bank_tran_id = "0", $head_account, $client_account_id, $debit, $credit, $note,$transaction_type="TRANSACTION", $status = 1) {
         $sql = "INSERT INTO company_transaction_master SET "
                 . "transaction_id='" . $transaction_id . "' , "
                 . "transaction_date='" . $transaction_date . "' , "
+                . "bank_transaction_id = '" . $bank_tran_id . "' , "
                 . "head_account_id='" . $head_account . "' , "
                 . "client_account_id='" . $client_account_id . "' , "
                 . "debit='" . $debit . "' , "
                 . "credit='" . $credit . "' , "
                 . "note='" . $note . "' , "
-                . "transaction_type='".$transaction_type."' ; ";
+                . "transaction_type='".$transaction_type."', "
+                . "status='" . $status . "' ";
         $this->db->ExecuteSQL($sql);
     }
 
@@ -96,7 +122,7 @@ class Transaction_details extends Model {
                 . "stock_debit = '$stock_debit' , "
                 . "stock_credit = '" . $stock_credit . "' , "
                 . "item_unit_price ='" . $item_price . "' , "
-                . "note = '" . $note . "';";
+                . "note = '" . $note . "' ";
         $this->db->ExecuteSQL($sql);
     }
 
@@ -174,23 +200,31 @@ class Users_model extends Model {
         parent::__construct();
     }
 
-    public function create($introducer_id, $created_by, $user_name, $user_email, $user_password) {
+    public function create($introducer_id, $created_by, $user_name, $user_email, $user_password, $position) {
         $sql = "INSERT INTO user SET introducer_id='" . $introducer_id . "', "
                 . "created_by='" . $created_by . "' ,"
                 . "role='2' , "
-                . "user_left_right_index='0' ,"
+                . "user_left_right_index='".$position."' ,"
                 . "user_name='" . $user_name . "' ,"
                 . "user_email='" . $user_email . "' ,"
-                . "user_password='" . $user_password . "'";
+                . "user_password='" . $user_password . "',"
+                . "joining_date = '".date("Y-m-d")."'";
 
         $this->db->ExecuteSQL($sql);
         return $this->db->lastInsertID();
     }
 
     public function retrieve() {
-        $sql = "SELECT * FROM user";
+        $sql = "SELECT u.*, n.user_name as name FROM user u "
+                . "left join user n on u.created_by = n.user_id";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
+    }
+    
+    public function retrieveUserIndex($int) {
+        $sql = "SELECT	user_left_right_index FROM user where user_id = '".$int."' ";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result[0]['user_left_right_index'];
     }
 
 }
@@ -252,7 +286,8 @@ class ItemMaster_model extends Model {
 
     public function retrieve($pid = NULL) {
         if (!$pid) {
-            $sql = "SELECT * FROM item_master";
+            $sql = "select i.*, o.quantity from item_master i "
+                    . "LEFT JOIN  opening_stock o on i.item_id = o.item_id ";
         } else {
             $sql = "select i.* from item_master i "
                     . "LEFT JOIN  package_details p on i.item_id = p.item_id "
@@ -262,17 +297,17 @@ class ItemMaster_model extends Model {
         return $result;
     }
 
+
     /*
       
      public function retrieveEdit($id) {
-      $sql = "SELECT i.*, p.	item_price FROM item_master i
-      LEFT JOIN package_details p ON i.item_id = p.item_id
-      WHERE p.package_id = 1
-      AND i.item_id = '" . $id . "'";
-
-      $result = $this->db->ExecuteSQL($sql);
-      return $result;
-      } 
+        $sql = "SELECT i.*, p.	item_price FROM item_master i
+        LEFT JOIN package_details p ON i.item_id = p.item_id
+        WHERE p.package_id = 1
+        AND i.item_id = '" . $id . "'";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
+    } 
 
        */
 

@@ -2,13 +2,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Opening Stock
-            <small>Show Opening Stock details</small>
+            Users
+            <small>User Details</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Product</a></li>
-            <li class="active">Show product details</li>
+            <li><a href="#">User</a></li>
+            <li class="active">users Details</li>
         </ol>
     </section>
     <section class="content">
@@ -16,16 +16,16 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">Product Details</h3>
+                        <h3 class="box-title">Users Details</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
-                        <form method="POST">
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
-                                    <th>Product Name</th>
-                                    <th>Quantity</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Joining Date</th>
+                                    <th>Joined By</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -33,18 +33,19 @@
                                 foreach ($result as $value) {
                                     ?>
                                     <tr>
-                                        <td><?php echo $value["item_id"]; ?></td>
-                                        <td><?php echo $value["item_name"] ?></td>
-                                        <td><?php echo $value['quantity']; ?></td>
+                                        <td><?php echo $value["user_name"] ?></td>
+                                        <td><?php echo $value["user_email"] ?></td>
+                                        <td><?php echo $value["joining_date"] ?></td>
+                                        <td><?php echo $value["name"] ?></td>
                                     </tr>
                                     <?php
                                 }
-                                ?>                                    
+                                ?>
+
                             </tbody>
-                            
                         </table>
-                        </form>
                     </div><!-- /.box-body -->
+                    
                 </div>
             </div>
         </div>

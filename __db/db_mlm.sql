@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Aug 08, 2014 at 08:38 PM
+-- Generation Time: Aug 13, 2014 at 01:15 PM
 -- Server version: 5.5.38-0ubuntu0.14.04.1
 -- PHP Version: 5.5.9-1ubuntu4.3
 
@@ -38,15 +38,15 @@ CREATE TABLE IF NOT EXISTS `company_transaction_details` (
   PRIMARY KEY (`id`,`transaction_id`,`transaction_date`),
   KEY `item_id` (`item_id`),
   KEY `transaction_id` (`transaction_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=31 ;
 
 --
 -- Dumping data for table `company_transaction_details`
 --
 
 INSERT INTO `company_transaction_details` (`id`, `transaction_id`, `transaction_date`, `item_id`, `stock_debit`, `stock_credit`, `item_unit_price`, `note`) VALUES
-(14, 1, '2014-08-08', 'I000004', 0, 1, 3500, ''),
-(15, 2, '2014-08-08', 'I000004', 0, 1, 3500, '');
+(29, 1, '2014-08-13', 'I000004', 0, 1, 3500, ''),
+(30, 2, '2014-08-13', 'I000004', 0, 1, 3500, 'for test');
 
 -- --------------------------------------------------------
 
@@ -57,12 +57,14 @@ INSERT INTO `company_transaction_details` (`id`, `transaction_id`, `transaction_
 CREATE TABLE IF NOT EXISTS `company_transaction_master` (
   `transaction_id` int(11) NOT NULL,
   `transaction_date` date NOT NULL,
+  `bank_transaction_id` varchar(255) NOT NULL,
   `head_account_id` int(11) NOT NULL,
   `client_account_id` int(11) NOT NULL,
   `debit` double NOT NULL,
   `credit` double NOT NULL,
   `note` text NOT NULL,
   `transaction_type` enum('TRANSACTION','REGISTRATION') NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`transaction_id`,`transaction_date`,`head_account_id`,`client_account_id`),
   KEY `head_account_id` (`head_account_id`),
   KEY `client_account_id` (`client_account_id`)
@@ -72,9 +74,9 @@ CREATE TABLE IF NOT EXISTS `company_transaction_master` (
 -- Dumping data for table `company_transaction_master`
 --
 
-INSERT INTO `company_transaction_master` (`transaction_id`, `transaction_date`, `head_account_id`, `client_account_id`, `debit`, `credit`, `note`, `transaction_type`) VALUES
-(1, '2014-08-08', 1, 10, 3500, 0, '', 'REGISTRATION'),
-(2, '2014-08-08', 10, 11, 3500, 0, '', 'REGISTRATION');
+INSERT INTO `company_transaction_master` (`transaction_id`, `transaction_date`, `bank_transaction_id`, `head_account_id`, `client_account_id`, `debit`, `credit`, `note`, `transaction_type`, `status`) VALUES
+(1, '2014-08-13', '0', 1, 23, 3500, 0, '', 'REGISTRATION', 1),
+(2, '2014-08-13', 'sbi-45687755', 1, 23, 3500, 0, 'for test', '', 1);
 
 -- --------------------------------------------------------
 
@@ -98,7 +100,8 @@ INSERT INTO `item_master` (`item_id`, `item_category`, `item_name`, `item_price`
 ('I000001', 'PRODUCT', 'p1', 1000),
 ('I000002', 'PRODUCT', 'p2', 200),
 ('I000003', 'PRODUCT', 'p3', 300),
-('I000004', 'PIN', 'pinrer', 3500);
+('I000004', 'PIN', 'pinrer', 3500),
+('I000005', 'PRODUCT', 'item 5', 400);
 
 -- --------------------------------------------------------
 
@@ -113,7 +116,18 @@ CREATE TABLE IF NOT EXISTS `opening_stock` (
   `stock_date` date NOT NULL,
   PRIMARY KEY (`id`,`item_id`),
   KEY `item_id` (`item_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=15 ;
+
+--
+-- Dumping data for table `opening_stock`
+--
+
+INSERT INTO `opening_stock` (`id`, `item_id`, `quantity`, `stock_date`) VALUES
+(10, 'I000001', 4, '2014-08-13'),
+(11, 'I000002', 4, '2014-08-13'),
+(12, 'I000003', 4, '2014-08-13'),
+(13, 'I000004', 4, '2014-08-13'),
+(14, 'I000005', 4, '2014-08-13');
 
 -- --------------------------------------------------------
 
@@ -176,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `joining_date` date NOT NULL,
   PRIMARY KEY (`user_id`,`introducer_id`,`created_by`,`registration_transaction`),
   KEY `role` (`role`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=12 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=24 ;
 
 --
 -- Dumping data for table `user`
@@ -184,8 +198,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 INSERT INTO `user` (`user_id`, `introducer_id`, `created_by`, `registration_transaction`, `role`, `user_left_right_index`, `user_name`, `user_email`, `user_password`, `joining_date`) VALUES
 (1, 0, 0, 0, 1, 0, 'admin', 'admin', 'admin', '2014-08-04'),
-(10, 1, 1, 0, 2, 0, 'user1', 'u@u.com', 'user1', '0000-00-00'),
-(11, 10, 10, 0, 2, 0, 'user2', 'user2@u.com', 'user2', '0000-00-00');
+(23, 1, 1, 0, 2, 1, '1st', 'a@g.c', '123', '2014-08-13');
 
 -- --------------------------------------------------------
 
@@ -203,14 +216,7 @@ CREATE TABLE IF NOT EXISTS `user_e_wallet` (
   `status` int(11) NOT NULL,
   PRIMARY KEY (`id`,`user_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `user_e_wallet`
---
-
-INSERT INTO `user_e_wallet` (`id`, `user_id`, `bank_transaction_id`, `debit`, `credit`, `note`, `status`) VALUES
-(1, 1, 'ds', 2000, 0, 'note', 1);
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 -- --------------------------------------------------------
 
