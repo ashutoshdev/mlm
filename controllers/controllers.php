@@ -71,7 +71,14 @@ class OpeningStock extends Controller {
             $date = date("Y-m-d");
 
             foreach ($itemId as $k => $v) {
-                $this->openingstock_model->create($v, $qnty[$k], $date);
+                $exist = $this->openingstock_model->retrieveExist($v);
+                //print_r($exist); die;
+                if($exist){
+                    $this->openingstock_model->updateItemIdStock($v, $qnty[$k], $date);
+                }else{
+                    $this->openingstock_model->create($v, $qnty[$k], $date);
+                }
+                
             }
         }
 
@@ -101,9 +108,37 @@ class Stock extends Controller {
         if (!$_SESSION['user_id']) {
             header("location: /members/logout/");
         }
+        $this->load->_CLASS("ItemMaster_model");
+        $this->load->_CLASS("OpeningStock_model");
+        $this->load->_CLASS("Transaction_details");
     }
 
-    public function retrieve() {
+    public function productStock() {
+//        if (sizeof($_POST)) {
+//
+//            $itemId = $_POST["itemId"];
+//            $qnty = $_POST["qnty"];
+//            $date = date("Y-m-d");
+//
+//            foreach ($itemId as $k => $v) {
+//                $exist = $this->openingstock_model->retrieveExist($v);
+//                //print_r($exist); die;
+//                if($exist){
+//                    $this->openingstock_model->updateItemIdStock($v, $qnty[$k], $date);
+//                }else{
+//                    $this->openingstock_model->create($v, $qnty[$k], $date);
+//                }
+//                
+//            }
+//        }
+
+        $result = $this->itemmaster_model->retrieve();
+        //print_r($result); die;
+//        foreach($result as $value){
+//            $result = $this->Transaction_details->retrieveItem($value[]);
+//        }
+        $page_template = "./views/stock/retrive.php";
+        require_once './views/_templates/masterPage.php';
         
     }
 
@@ -208,12 +243,32 @@ class Ewallet extends Controller {
             header("location: /members/logout/");
         }
         $this->load->_CLASS("Ewallet_model");
+        $this->load->_CLASS("Transaction_model");
+        $this->load->_CLASS("Transaction_master");
+        $this->load->_CLASS("Transaction_details");
     }
 
     public function create() {
 
-        if (sizeof($_POST))
-            $this->ewallet_model->create($_SESSION['user_id'], $_POST['bank_tran_id'], $_POST['payment'], $_POST['note']);
+    if (sizeof($_POST)){
+            
+            $transaction_date = date("Y-m-d");
+            $head_account = 1;
+            $client_account_id = $_SESSION["user_id"];
+            $totprice = $_POST['payment'];
+            $debit = $totprice;
+            $credit = "0";
+            $note = $_POST['note'];
+            $transaction_type = "PURCHASE PIN";
+            $status = 0;
+            
+            $transaction_id = $this->transaction_model->createId();
+            
+            $this->transaction_master->create($transaction_id, $transaction_date, $_POST['bank_tran_id'], $head_account, $client_account_id, $debit, $credit, $note, $transaction_type, $status);
+            
+            $this->transaction_details->create($transaction_id, $transaction_date, "I000004", "0", "1", $totprice, $note);
+            
+        }
 
         $page_template = "./views/ewallet/create.php";
         require_once './views/_templates/masterPage.php';
@@ -256,9 +311,7 @@ class Transaction extends Controller {
 
     public function create() {
 
-        if (!$_SESSION['user_id']) {
-            header("location: /members/logout/");
-        }
+       
 
         if (sizeof($_POST)) {
             $trsnsaction_type = $_POST['transaction_type'];
@@ -288,7 +341,7 @@ class Transaction extends Controller {
             }
 
             $transaction_id = $this->transaction_model->createId();
-            $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "");
+            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", 1);
             foreach ($items as $item_key => $item) {
               
                 if ($item)
@@ -340,23 +393,27 @@ class Users extends Controller {
             $useremail = $_POST["useremail"];
             $password = $_POST["password"];
             $introducer = $_POST["introducer"];
+            $int_pos = $this->users_model->retrieveUserIndex($introducer);
+            $position = (2 * $int_pos) + $_POST["position"];
+            $client_account_id =$this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);           
             
-            $client_account_id =$this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password);           
             $transaction_date = date("Y-m-d");
-            $head_account = $_SESSION["user_id"];
+            $head_account = $introducer;
             
             $item=$this->itemmaster_model->retrievePin();
             $transaction_id = $this->transaction_model->createId();
-            $debit=$item["item_price"];
-            $credit=0;             
+                        $debit=$item["item_price"];
+$credit=0;             
             
-            $this->transaction_master->create($transaction_id, $transaction_date, $head_account, $client_account_id, $debit, $credit, "","REGISTRATION");
+            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "","REGISTRATION", "1");
             $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");            
+        
+            $html = $this->retrieve();
         }
         
         
 
-        $html = $this->retrieve();
+        $html = $this->users_model->retrieve();
         $page_template = "./views/users/create.php";
         require_once './views/_templates/masterPage.php';
     }

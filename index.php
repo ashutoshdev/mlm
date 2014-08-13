@@ -120,6 +120,11 @@ Class RouteEngine extends Core {
                 $this->load->_CLASS("OpeningStock");
                 $this->openingstock->create();
                 break;
+            
+            case "/stock/productStock":
+                $this->load->_CLASS("stock");
+                $this->stock->productStock();
+                break;
 
 
          }
