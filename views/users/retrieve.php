@@ -39,12 +39,12 @@
 
 
 
-                        function displayUser($result,$start, $tier, $flag) {
+                        function displayUser($result, $tier, $flag) {
 
-                            for ($i = $start; $i <= pow(2, $tier)-1; $i++):
+                            for ($i = pow(2, $tier); $i < pow(2, $tier+1); $i++):
 
-                                if ($i < count($result)) {
-                                    echo indent($tier). $result[$i]["user_name"]."<br/>";
+                                if ($i <= count($result)) {
+                                    echo indent($tier). $result[$i-1]["user_name"]."<br/>";
                                 } else {
                                     $flag = 1;
                                     break;
@@ -53,12 +53,12 @@
                             endfor;
                             
                             if (!$flag) {
-                                displayUser($result, pow(2, $tier) ,$tier + 1, $flag);
+                                displayUser($result ,$tier + 1, $flag);
                             }                           
                             
                         }
 
-                        displayUser($result, 0,0, 0);
+                        displayUser($result, 0, 0);
                         ?>
 
                     </div><!-- /.box-body -->                    
