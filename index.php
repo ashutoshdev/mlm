@@ -121,9 +121,9 @@ Class RouteEngine extends Core {
                 $this->openingstock->create();
                 break;
             
-            case "/stock/productStock":
+            case "/stock/retrieve":
                 $this->load->_CLASS("stock");
-                $this->stock->productStock();
+                $this->stock->retrieve();
                 break;
 
 

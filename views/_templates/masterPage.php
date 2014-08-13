@@ -349,11 +349,7 @@
                                 <i class="fa fa-bar-chart-o"></i>
                                 <span>Stock </span>
                                 <i class="fa fa-angle-left pull-right"></i>
-                            </a> 
-                            <ul class="treeview-menu">
-                                <li><a href="/stock/productStock"><i class="fa fa-angle-double-right"></i> Product Quantity</a></li>
-                                
-                            </ul>
+                            </a>                            
                         </li>
                         
                 <?php
