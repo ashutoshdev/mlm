@@ -32,17 +32,14 @@ class Item extends Controller {
 
     public function retrieve() {
 
-        if($_GET["packageId"]){
+        if ($_GET["packageId"]) {
 
             $result = $this->itemmaster_model->retrieve($_GET["packageId"]);
-        }
-        else{
-             $result = $this->itemmaster_model->retrieve();
-
+        } else {
+            $result = $this->itemmaster_model->retrieve();
         }
         $page_template = "./views/item/retrieve.php";
         require_once './views/_templates/masterPage.php';
-       
     }
 
 }
@@ -73,12 +70,11 @@ class OpeningStock extends Controller {
             foreach ($itemId as $k => $v) {
                 $exist = $this->openingstock_model->retrieveExist($v);
                 //print_r($exist); die;
-                if($exist){
+                if ($exist) {
                     $this->openingstock_model->updateItemIdStock($v, $qnty[$k], $date);
-                }else{
+                } else {
                     $this->openingstock_model->create($v, $qnty[$k], $date);
                 }
-                
             }
         }
 
@@ -139,7 +135,6 @@ class Stock extends Controller {
 //        }
         $page_template = "./views/stock/retrive.php";
         require_once './views/_templates/masterPage.php';
-        
     }
 
 }
@@ -186,15 +181,14 @@ class Package extends Controller {
 
     public function retrieve() {
 
-            $result = $this->package_model->retrieve();
-            
-            /*foreach ($result as $val) {
-                $item_res[$val['package_id']] = $this->packageDetails_model->retrievePackageItem($val['package_id']);
-                print_r($item_res); die;
-            }*/           
-            $page_template = "./views/package/retrieve.php";
-            require_once './views/_templates/masterPage.php';
+        $result = $this->package_model->retrieve();
 
+        /* foreach ($result as $val) {
+          $item_res[$val['package_id']] = $this->packageDetails_model->retrievePackageItem($val['package_id']);
+          print_r($item_res); die;
+          } */
+        $page_template = "./views/package/retrieve.php";
+        require_once './views/_templates/masterPage.php';
     }
 
 }
@@ -219,6 +213,7 @@ class Members extends Controller {
             if ($result[0]["count"]) {
                 $_SESSION["user_id"] = $result[0]["user_id"];
                 $_SESSION["user_role"] = $result[0]["role_name"];
+                $_SESSION["user_index"] = $result[0]["user_left_right_index"];
                 header("Location: /ewallet/retrieve");
             }
         }
@@ -250,8 +245,8 @@ class Ewallet extends Controller {
 
     public function create() {
 
-    if (sizeof($_POST)){
-            
+        if (sizeof($_POST)) {
+
             $transaction_date = date("Y-m-d");
             $head_account = 1;
             $client_account_id = $_SESSION["user_id"];
@@ -261,13 +256,12 @@ class Ewallet extends Controller {
             $note = $_POST['note'];
             $transaction_type = "PURCHASE PIN";
             $status = 0;
-            
+
             $transaction_id = $this->transaction_model->createId();
-            
+
             $this->transaction_master->create($transaction_id, $transaction_date, $_POST['bank_tran_id'], $head_account, $client_account_id, $debit, $credit, $note, $transaction_type, $status);
-            
+
             $this->transaction_details->create($transaction_id, $transaction_date, "I000004", "0", "1", $totprice, $note);
-            
         }
 
         $page_template = "./views/ewallet/create.php";
@@ -311,7 +305,7 @@ class Transaction extends Controller {
 
     public function create() {
 
-       
+
 
         if (sizeof($_POST)) {
             $trsnsaction_type = $_POST['transaction_type'];
@@ -321,7 +315,7 @@ class Transaction extends Controller {
             $client_account_id = $_POST["users"];
             $items = $_POST["items"];
             $item_unit_price = $_POST["price"];
-            
+
 
             $totprice = 0;
             foreach ($_POST["totprice"] as $value) {
@@ -343,7 +337,7 @@ class Transaction extends Controller {
             $transaction_id = $this->transaction_model->createId();
             $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", 1);
             foreach ($items as $item_key => $item) {
-              
+
                 if ($item)
                     $this->transaction_details->create($transaction_id, $transaction_date, $item, $stock_debit[$item_key], $stock_credit[$item_key], $item_unit_price[$item_key], "");
             }
@@ -372,6 +366,9 @@ class Transaction extends Controller {
 
 class Users extends Controller {
 
+    public $max_user_index;
+    public $index_arr;
+
     public function __construct() {
         parent::__construct();
 
@@ -383,46 +380,82 @@ class Users extends Controller {
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
         $this->load->_CLASS("ItemMaster_model");
+
+        //instantiating the instance variables
+        $this->max_user_index = 0;
+        $this->index_arr = array();
     }
 
     public function create() {
 
         if (sizeof($_POST)) {
-        
+
             $username = $_POST["username"];
             $useremail = $_POST["useremail"];
             $password = $_POST["password"];
             $introducer = $_POST["introducer"];
             $int_pos = $this->users_model->retrieveUserIndex($introducer);
             $position = (2 * $int_pos) + $_POST["position"];
-            $client_account_id =$this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);           
-            
+            $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
+
             $transaction_date = date("Y-m-d");
             $head_account = $introducer;
-            
-            $item=$this->itemmaster_model->retrievePin();
-            $transaction_id = $this->transaction_model->createId();
-                        $debit=$item["item_price"];
-$credit=0;             
-            
-            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "","REGISTRATION", "1");
-            $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");            
-        
-            $html = $this->retrieve();
-        }
-        
-        
 
-        $html = $this->users_model->retrieve();
+            $item = $this->itemmaster_model->retrievePin();
+            $transaction_id = $this->transaction_model->createId();
+            $debit = $item["item_price"];
+            $credit = 0;
+
+            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
+            $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
+
+            $this->retrieve();
+        }
+
+
+
+        /*
+          if($_SESSION["user_id"]== 1)
+          $html = $this->users_model->retrieve();
+          else
+          $html=$this->user_model->retrieve();
+
+
+         */
+
         $page_template = "./views/users/create.php";
         require_once './views/_templates/masterPage.php';
     }
 
     public function retrieve() {
-        $result = $this->users_model->retrieve();
+
+        $user_index=$_SESSION["user_index"]== 0 ? 1 : $_SESSION["user_index"];
+        $this->max_user_index = $this->users_model->getMaxUserIndex(); 
+
         
+        $this->index_arr[]=$user_index;
+        $this->generateUserIndex($user_index);       
+
+        $result = $this->users_model->retrieve($this->index_arr);
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
+    }
+
+    public function generateUserIndex($index) {
+
+        $left_index = $index * 2;
+        $right_index = $index * 2 + 1;
+
+        if (2 * $index <= $this->max_user_index){
+            $this->generateUserIndex($left_index);
+            $this->index_arr[] = $index * 2;
+        }
+            
+        if (2 * $index + 1 <= $this->max_user_index){
+            $this->generateUserIndex($right_index);
+            $this->index_arr[] = $index * 2 + 1;
+        }        
+        
     }
 
 }
