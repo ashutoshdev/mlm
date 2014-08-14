@@ -2,26 +2,13 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Admin | Dashboard</title>
+        <title>AdminLTE | Advanced form elements</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        
-        
-        
         <!-- bootstrap 3.0.2 -->
         <link href="./../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- font Awesome -->
         <link href="./../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-        
-        <link href="./../assets/css/font-awesome.css" rel="stylesheet" type="text/css" />
-        <!-- DATA TABLES -->
-        <link href="./../css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
         <!-- Ionicons -->
-        <link href="./../assets/css/ionicons.min.css" rel="stylesheet" type="text/css" />
-        <link href="./../assets/css/ionicons.css" rel="stylesheet" type="text/css" />
-        <!-- Theme style -->
-        <link href="./../assets/css/AdminLTE.css" rel="stylesheet" type="text/css" />
-
-        
         <link href="./../assets/css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <!-- daterange picker -->
         <link href="./../assets/css/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
@@ -31,7 +18,9 @@
         <link href="./../assets/css/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet"/>
         <!-- Bootstrap time Picker -->
         <link href="./../assets/css/timepicker/bootstrap-timepicker.min.css" rel="stylesheet"/>
-        
+        <!-- Theme style -->
+        <link href="./../assets/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -41,11 +30,10 @@
     </head>
     <body class="skin-blue">
         <!-- header logo: style can be found in header.less -->
-        
         <header class="header">
             <a href="../../index.html" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
-                Admin
+                AdminLTE
             </a>
             <!-- Header Navbar: style can be found in header.less -->
             <nav class="navbar navbar-static-top" role="navigation">
@@ -72,7 +60,7 @@
                                         <li><!-- start message -->
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./../assets/img/avatar3.png" class="img-circle" alt="User Image"/>
+                                                    <img src="../../img/avatar3.png" class="img-circle" alt="User Image"/>
                                                 </div>
                                                 <h4>
                                                     Support Team
@@ -84,7 +72,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./../assets/img/avatar2.png" class="img-circle" alt="user image"/>
+                                                    <img src="../../img/avatar2.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     AdminLTE Design Team
@@ -96,7 +84,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./../assets/img/avatar.png" class="img-circle" alt="user image"/>
+                                                    <img src="../../img/avatar.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     Developers
@@ -108,7 +96,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./../assets/img/avatar2.png" class="img-circle" alt="user image"/>
+                                                    <img src="../../img/avatar2.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     Sales Department
@@ -120,7 +108,7 @@
                                         <li>
                                             <a href="#">
                                                 <div class="pull-left">
-                                                    <img src="./../assets/img/avatar.png" class="img-circle" alt="user image"/>
+                                                    <img src="../../img/avatar.png" class="img-circle" alt="user image"/>
                                                 </div>
                                                 <h4>
                                                     Reviewers
@@ -255,7 +243,7 @@
                             <ul class="dropdown-menu">
                                 <!-- User image -->
                                 <li class="user-header bg-light-blue">
-                                    <img src="./../assets/img/avatar3.png" class="img-circle" alt="User Image" />
+                                    <img src="../../img/avatar3.png" class="img-circle" alt="User Image" />
                                     <p>
                                         Jane Doe - Web Developer
                                         <small>Member since Nov. 2012</small>
@@ -279,7 +267,7 @@
                                         <a href="#" class="btn btn-default btn-flat">Profile</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="/members/logout/" class="btn btn-default btn-flat">Sign out</a>
+                                        <a href="#" class="btn btn-default btn-flat">Sign out</a>
                                     </div>
                                 </li>
                             </ul>
@@ -288,18 +276,15 @@
                 </div>
             </nav>
         </header>
-        
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <!-- Left side column. contains the logo and sidebar -->
             <aside class="left-side sidebar-offcanvas">
-                
-                
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
-                            <img src="./../assets/img/avatar3.png" class="img-circle" alt="User Image" />
+                            <img src="../../img/avatar3.png" class="img-circle" alt="User Image" />
                         </div>
                         <div class="pull-left info">
                             <p>Hello, Jane</p>
@@ -320,130 +305,171 @@
                     <!-- sidebar menu: : style can be found in sidebar.less -->
                     <ul class="sidebar-menu">
                         <li>
-                            <a href=" ">
+                            <a href="../../index.html">
                                 <i class="fa fa-dashboard"></i> <span>Dashboard</span>
                             </a>
                         </li>
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>E wallet </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/ewallet/retrieve"><i class="fa fa-angle-double-right"></i> E wallet</a></li>
-                                <li><a href="/ewallet/create"><i class="fa fa-angle-double-right"></i> Apply Pin(payment)</a></li>
-                <?php
-                    if($_SESSION['user_role'] == "ADMIN"){
-                ?>    
-                                <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
-                <?php
-                    }
-                ?>
-                            
-                            </ul>
-                        </li>
-                <?php
-                    if($_SESSION['user_role'] == "ADMIN"){
-                ?>
-                    
                         <li>
-                            <a href="/openingstock/create">
-                                <i class="fa fa-dashboard"></i> <span>opening stock</span>
+                            <a href="../widgets.html">
+                                <i class="fa fa-th"></i> <span>Widgets</span> <small class="badge pull-right bg-green">new</small>
                             </a>
                         </li>
-                <?php
-                    }
-                ?>
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>
-                                <span>Stock </span>
+                                <span>Charts</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="/stock/retrieve"><i class="fa fa-angle-double-right"></i> Stock Details</a></li>
+                                <li><a href="../charts/morris.html"><i class="fa fa-angle-double-right"></i> Morris</a></li>
+                                <li><a href="../charts/flot.html"><i class="fa fa-angle-double-right"></i> Flot</a></li>
+                                <li><a href="../charts/inline.html"><i class="fa fa-angle-double-right"></i> Inline charts</a></li>
                             </ul>
                         </li>
-                        
-                <?php
-                    if($_SESSION['user_role'] == "ADMIN"){
-                ?>        
-                        
                         <li class="treeview">
                             <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>Product </span>
+                                <i class="fa fa-laptop"></i>
+                                <span>UI Elements</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="/item/create"><i class="fa fa-angle-double-right"></i> Add Product</a></li>
-                                <li><a href="/item/retrieve"><i class="fa fa-angle-double-right"></i> Show Product</a></li>
+                                <li><a href="../UI/general.html"><i class="fa fa-angle-double-right"></i> General</a></li>
+                                <li><a href="../UI/icons.html"><i class="fa fa-angle-double-right"></i> Icons</a></li>
+                                <li><a href="../UI/buttons.html"><i class="fa fa-angle-double-right"></i> Buttons</a></li>
+                                <li><a href="../UI/sliders.html"><i class="fa fa-angle-double-right"></i> Sliders</a></li>
+                                <li><a href="../UI/timeline.html"><i class="fa fa-angle-double-right"></i> Timeline</a></li>
                             </ul>
                         </li>
-                        
-                        <li class="treeview">
+                        <li class="treeview active">
                             <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>Package </span>
+                                <i class="fa fa-edit"></i> <span>Forms</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="/package/create"><i class="fa fa-angle-double-right"></i> Add Package</a></li>
-                                <li><a href="/package/retrieve"><i class="fa fa-angle-double-right"></i> Show Package</a></li>
+                                <li><a href="general.html"><i class="fa fa-angle-double-right"></i> General Elements</a></li>
+                                <li class="active"><a href="advanced.html"><i class="fa fa-angle-double-right"></i> Advanced Elements</a></li>
+                                <li><a href="editors.html"><i class="fa fa-angle-double-right"></i> Editors</a></li>
                             </ul>
                         </li>
-                <?php
-                    }
-                ?>
                         <li class="treeview">
                             <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>Transaction </span>
+                                <i class="fa fa-table"></i> <span>Tables</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="/transaction/create"><i class="fa fa-angle-double-right"></i> Create Transaction</a></li>
-                                
+                                <li><a href="../tables/simple.html"><i class="fa fa-angle-double-right"></i> Simple tables</a></li>
+                                <li><a href="../tables/data.html"><i class="fa fa-angle-double-right"></i> Data tables</a></li>
                             </ul>
                         </li>
-                        
+                        <li>
+                            <a href="../calendar.html">
+                                <i class="fa fa-calendar"></i> <span>Calendar</span>
+                                <small class="badge pull-right bg-red">3</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="../mailbox.html">
+                                <i class="fa fa-envelope"></i> <span>Mailbox</span>
+                                <small class="badge pull-right bg-yellow">12</small>
+                            </a>
+                        </li>
                         <li class="treeview">
                             <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span> Users </span>
+                                <i class="fa fa-folder"></i> <span>Examples</span>
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
-                                <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Register Users </a></li>
-                                <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Users Details </a></li>
-                                
+                                <li><a href="../examples/invoice.html"><i class="fa fa-angle-double-right"></i> Invoice</a></li>
+                                <li><a href="../examples/login.html"><i class="fa fa-angle-double-right"></i> Login</a></li>
+                                <li><a href="../examples/register.html"><i class="fa fa-angle-double-right"></i> Register</a></li>
+                                <li><a href="../examples/lockscreen.html"><i class="fa fa-angle-double-right"></i> Lockscreen</a></li>
+                                <li><a href="../examples/404.html"><i class="fa fa-angle-double-right"></i> 404 Error</a></li>
+                                <li><a href="../examples/500.html"><i class="fa fa-angle-double-right"></i> 500 Error</a></li>
+                                <li><a href="../examples/blank.html"><i class="fa fa-angle-double-right"></i> Blank Page</a></li>
                             </ul>
                         </li>
                     </ul>
                 </section>
                 <!-- /.sidebar -->
-                
-                
             </aside>
 
-            
-                <?php require_once($page_template); ?>
-                               
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side">
+                <!-- Content Header (Page header) -->
+                <section class="content-header">
+                    <h1>
+                        Advanced Form Elements
+                        <small>Preview</small>
+                    </h1>
+                    <ol class="breadcrumb">
+                        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                        <li><a href="#">Forms</a></li>
+                        <li class="active">Advanced Elements</li>
+                    </ol>
+                </section>
+
+                <!-- Main content -->
+                <section class="content">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="box box-primary">
+                                <div class="box-header">
+                                    <h3 class="box-title">Date picker</h3>
+                                </div>
+                                <div class="box-body">
+                                    <!-- Date range -->
+                                    <form role="form" method="POST">
+                                    <div class="form-group">
+                                        <label>Date range:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <i class="fa fa-calendar"></i>
+                                            </div>
+                                            <input type="text" class="form-control pull-right" id="reservation" name = "date_range"/>
+                                        </div><!-- /.input group -->
+                                    </div><!-- /.form group -->
+                                    <div class="box-footer">
+                                        <button type="submit" class="btn btn-primary" name = "SUB"> Ok </button>
+                                    </div>
+                                    </form>
+                        <table id="example1" class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Item Id</th>
+                                    <th>Item Name</th>
+                                    <th>Stock</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                foreach ($result as $value) {
+                                    ?>
+                                    <tr>
+                                        <td><?php echo $value["item_id"] ?></td>
+                                        <td><?php echo $value["item_name"] ?></td>
+                                        <td><?php echo $value["stock"] ?></td>
+                                    </tr>
+                                    <?php
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+
+                                </div><!-- /.box-body -->
+                            </div><!-- /.box -->
+                           
+                        </div><!-- /.col (left) -->
+                    </div><!-- /.row -->
+                </section><!-- /.content -->
+            </aside><!-- /.right-side -->
         </div><!-- ./wrapper -->
+
+
         <!-- jQuery 2.0.2 -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <!-- Bootstrap -->
         <script src="./../assets/js/bootstrap.min.js" type="text/javascript"></script>
-         <!-- DATA TABES SCRIPT -->
-        <script src="./../assets/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
-        <script src="./../assets/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
-        
-        <!-- AdminLTE App -->
-        <script src="./../assets/js/AdminLTE/app.js" type="text/javascript"></script>
-        <!-- AdminLTE for demo purposes -->
-        <script src="./../assets/js/AdminLTE/demo.js" type="text/javascript"></script>        
-        
+        <!-- InputMask -->
         <script src="./../assets/js/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
         <script src="./../assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js" type="text/javascript"></script>
         <script src="./../assets/js/plugins/input-mask/jquery.inputmask.extensions.js" type="text/javascript"></script>
@@ -453,7 +479,70 @@
         <script src="./../assets/js/plugins/colorpicker/bootstrap-colorpicker.min.js" type="text/javascript"></script>
         <!-- bootstrap time picker -->
         <script src="./../assets/js/plugins/timepicker/bootstrap-timepicker.min.js" type="text/javascript"></script>
-        
-        
+        <!-- AdminLTE App -->
+        <script src="./../assets/js/AdminLTE/app.js" type="text/javascript"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="./../assets/js/AdminLTE/demo.js" type="text/javascript"></script>
+        <!-- Page script -->
+        <script type="text/javascript">
+            $(function() {
+                //Datemask dd/mm/yyyy
+                $("#datemask").inputmask("dd/mm/yyyy", {"placeholder": "dd/mm/yyyy"});
+                //Datemask2 mm/dd/yyyy
+                $("#datemask2").inputmask("mm/dd/yyyy", {"placeholder": "mm/dd/yyyy"});
+                //Money Euro
+                $("[data-mask]").inputmask();
+
+                //Date range picker
+                $('#reservation').daterangepicker();
+                //Date range picker with time picker
+                $('#reservationtime').daterangepicker({timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A'});
+                //Date range as a button
+                $('#daterange-btn').daterangepicker(
+                        {
+                            ranges: {
+                                'Today': [moment(), moment()],
+                                'Yesterday': [moment().subtract('days', 1), moment().subtract('days', 1)],
+                                'Last 7 Days': [moment().subtract('days', 6), moment()],
+                                'Last 30 Days': [moment().subtract('days', 29), moment()],
+                                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                'Last Month': [moment().subtract('month', 1).startOf('month'), moment().subtract('month', 1).endOf('month')]
+                            },
+                            startDate: moment().subtract('days', 29),
+                            endDate: moment()
+                        },
+                function(start, end) {
+                    $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                }
+                );
+
+                //iCheck for checkbox and radio inputs
+                $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+                    checkboxClass: 'icheckbox_minimal',
+                    radioClass: 'iradio_minimal'
+                });
+                //Red color scheme for iCheck
+                $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+                    checkboxClass: 'icheckbox_minimal-red',
+                    radioClass: 'iradio_minimal-red'
+                });
+                //Flat red color scheme for iCheck
+                $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                    checkboxClass: 'icheckbox_flat-red',
+                    radioClass: 'iradio_flat-red'
+                });
+
+                //Colorpicker
+                $(".my-colorpicker1").colorpicker();
+                //color picker with addon
+                $(".my-colorpicker2").colorpicker();
+
+                //Timepicker
+                $(".timepicker").timepicker({
+                    showInputs: false
+                });
+            });
+        </script>
+
     </body>
 </html>

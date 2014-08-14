@@ -19,33 +19,49 @@
                         <h3 class="box-title">Users Details</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Joining Date</th>
-                                    <th>Joined By</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                foreach ($result as $value) {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $value["user_name"] ?></td>
-                                        <td><?php echo $value["user_email"] ?></td>
-                                        <td><?php echo $value["joining_date"] ?></td>
-                                        <td><?php echo $value["name"] ?></td>
-                                    </tr>
-                                    <?php
-                                }
-                                ?>
+          
+                        
 
-                            </tbody>
-                        </table>
-                    </div><!-- /.box-body -->
-                    
+                        <?php
+                        
+                        
+                        function indent($tier){
+                            
+                            $str="";
+                            
+                            for($i=0;$i<=$tier;$i++){
+                                $str.="----";
+                            }
+                            
+                            return $str;
+                            
+                        }
+
+
+
+                        function displayUser($result,$start, $tier, $flag) {
+
+                            for ($i = $start; $i <= pow(2, $tier)-1; $i++):
+
+                                if ($i < count($result)) {
+                                    echo indent($tier). $result[$i]["user_name"]."<br/>";
+                                } else {
+                                    $flag = 1;
+                                    break;
+                                }
+
+                            endfor;
+                            
+                            if (!$flag) {
+                                displayUser($result, pow(2, $tier) ,$tier + 1, $flag);
+                            }                           
+                            
+                        }
+
+                        displayUser($result, 0,0, 0);
+                        ?>
+
+                    </div><!-- /.box-body -->                    
                 </div>
             </div>
         </div>

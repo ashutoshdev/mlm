@@ -1,15 +1,52 @@
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
-<aside class="right-side">
+<!-- bootstrap 3.0.2 -->
+        <link href="./../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+        <!-- font Awesome -->
+        <link href="./../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+        <!-- Ionicons -->
+        <link href="./../assets/css/ionicons.min.css" rel="stylesheet" type="text/css" />
+        <!-- daterange picker -->
+        <link href="./../assets/css/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
+        <!-- iCheck for checkboxes and radio inputs -->
+        <link href="./../assets/css/iCheck/all.css" rel="stylesheet" type="text/css" />
+        <!-- Bootstrap Color Picker -->
+        <link href="./../assets/css/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet"/>
+        <!-- Bootstrap time Picker -->
+        <link href="./../assets/css/timepicker/bootstrap-timepicker.min.css" rel="stylesheet"/>
+        <!-- Theme style -->
+        <link href="./../assets/css/AdminLTE.css" rel="stylesheet" type="text/css" />
 
+        <!-- jQuery 2.0.2 -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
+        <!-- Bootstrap -->
+        <script src="./../assets/js/bootstrap.min.js" type="text/javascript"></script>
+        <!-- InputMask -->
+        <script src="./../assets/js/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
+        <script src="./../assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js" type="text/javascript"></script>
+        <script src="./../assets/js/plugins/input-mask/jquery.inputmask.extensions.js" type="text/javascript"></script>
+        <!-- date-range-picker -->
+        <script src="./../assets/js/plugins/daterangepicker/daterangepicker.js" type="text/javascript"></script>
+        <!-- bootstrap color picker -->
+        <script src="./../assets/js/plugins/colorpicker/bootstrap-colorpicker.min.js" type="text/javascript"></script>
+        <!-- bootstrap time picker -->
+        <script src="./../assets/js/plugins/timepicker/bootstrap-timepicker.min.js" type="text/javascript"></script>
+        <!-- AdminLTE App -->
+        <script src="./../assets/js/AdminLTE/app.js" type="text/javascript"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="./../assets/js/AdminLTE/demo.js" type="text/javascript"></script>
+        <!-- Page script -->
+
+
+<aside class="right-side">
+    <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Register Users
-            <small>Register Users</small>
+            Advanced Form Elements
+            <small>Preview</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#"> Register Users </a></li>
-            <li class="active"> Register Users </li>
+            <li><a href="#">Forms</a></li>
+            <li class="active">Advanced Elements</li>
         </ol>
     </section>
 
@@ -19,75 +56,54 @@
             <div class="col-md-6">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title"> Register Users </h3>
+                        <h3 class="box-title">Date picker</h3>
                     </div>
-                    <!-- form start -->
-                    <form role="form" method="POST">
-                        <div class="box-body">
-                            <div class="form-group">
-                                <label>Date From:</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask name = "from" placeholder="yyyy-mm-dd"/>
-                                </div><!-- /.input group -->
-                            </div>
-                            <div class="form-group">
-                                <label>Date To:</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    <input type="text" class="form-control" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask name = "to" placeholder="yyyy-mm-dd"/>
-                                </div><!-- /.input group -->
-                            </div>
-                        </div>
+                    <div class="box-body">
+                        <!-- Date range -->
+                        <form role="form" method="POST">
+                        <div class="form-group">
+                            <label>Date range:</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" class="form-control pull-right" id="reservation" name = "date_range"/>
+                            </div><!-- /.input group -->
+                        </div><!-- /.form group -->
                         <div class="box-footer">
                             <button type="submit" class="btn btn-primary" name = "SUB"> Ok </button>
                         </div>
-                    </form>
-                </div>                
-            </div>
-        </div> 
-    </section>
-        <section class="content">
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="box">
-                    <div class="box-header">
-                        <h3 class="box-title">Stock Details</h3>
-                    </div><!-- /.box-header -->
-                    <div class="box-body table-responsive">
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Item Id</th>
-                                    <th>Item Name</th>
-                                    <th>Stock</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php
-                                foreach ($result as $value) {
-                                    ?>
-                                    <tr>
-                                        <td><?php echo $value["item_id"] ?></td>
-                                        <td><?php echo $value["item_name"] ?></td>
-                                        <td><?php echo $value["stock"] ?></td>
-                                    </tr>
-                                    <?php
-                                }
-                                ?>
-                            </tbody>
-                        </table>
+                        </form>
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Item Id</th>
+                        <th>Item Name</th>
+                        <th>Stock</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($result as $value) {
+                        ?>
+                        <tr>
+                            <td><?php echo $value["item_id"] ?></td>
+                            <td><?php echo $value["item_name"] ?></td>
+                            <td><?php echo $value["stock"] ?></td>
+                        </tr>
+                        <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+
                     </div><!-- /.box-body -->
-                    
-                </div>
-            </div>
-        </div>
-    </section>
-</aside>
+                </div><!-- /.box -->
+
+            </div><!-- /.col (left) -->
+        </div><!-- /.row -->
+    </section><!-- /.content -->
+</aside><!-- /.right-side -->
 
 <script type="text/javascript">
     $(function() {
@@ -148,4 +164,3 @@
         });
     });
 </script>
-

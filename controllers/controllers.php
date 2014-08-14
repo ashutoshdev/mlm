@@ -107,18 +107,56 @@ class Stock extends Controller {
         $this->load->_CLASS("Stock_model");
     }
 
+
     public function retrieve() {
         
         $result=array();
         
         if (sizeof($_POST)) {
-            $from_date = $_POST['from'];
-            $to_date = $_POST['to'];
-            $result = $this->stock_model->retrieve($from_date,$to_date);
+            $date_range = $_POST['date_range'];
+            $exp_date = explode(" ", $date_range);
+            
+            $from_date = $exp_date[0];
+            $to_date = $exp_date[2];
+            
+            $exp_from = explode("/", $from_date);
+            $f_from = $exp_from[2]."-".$exp_from[0]."-".$exp_from[1];
+            $exp_to = explode("/", $to_date);
+            $f_to = $exp_to[2]."-".$exp_to[0]."-".$exp_to[1];
+            //print_r($f_to); die;
+            $result = $this->stock_model->retrieve($f_from,$f_to);
             
         }
-        
         $page_template = "./views/stock/retrieve.php";
+        require_once './views/_templates/masterPage.php';
+        //require_once './views/_templates/dateRange.php';
+    }
+
+    public function productStock() {
+//        if (sizeof($_POST)) {
+//
+//            $itemId = $_POST["itemId"];
+//            $qnty = $_POST["qnty"];
+//            $date = date("Y-m-d");
+//
+//            foreach ($itemId as $k => $v) {
+//                $exist = $this->openingstock_model->retrieveExist($v);
+//                //print_r($exist); die;
+//                if($exist){
+//                    $this->openingstock_model->updateItemIdStock($v, $qnty[$k], $date);
+//                }else{
+//                    $this->openingstock_model->create($v, $qnty[$k], $date);
+//                }
+//                
+//            }
+//        }
+
+        $result = $this->itemmaster_model->retrieve();
+        //print_r($result); die;
+//        foreach($result as $value){
+//            $result = $this->Transaction_details->retrieveItem($value[]);
+//        }
+        $page_template = "./views/stock/retrive.php";
         require_once './views/_templates/masterPage.php';
     }
 
@@ -198,6 +236,7 @@ class Members extends Controller {
             if ($result[0]["count"]) {
                 $_SESSION["user_id"] = $result[0]["user_id"];
                 $_SESSION["user_role"] = $result[0]["role_name"];
+                $_SESSION["user_index"] = $result[0]["user_left_right_index"];
                 header("Location: /ewallet/retrieve");
             }
         }
@@ -350,6 +389,9 @@ class Transaction extends Controller {
 
 class Users extends Controller {
 
+    public $max_user_index;
+    public $index_arr;
+
     public function __construct() {
         parent::__construct();
 
@@ -361,6 +403,10 @@ class Users extends Controller {
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
         $this->load->_CLASS("ItemMaster_model");
+
+        //instantiating the instance variables
+        $this->max_user_index = 0;
+        $this->index_arr = array();
     }
 
     public function create() {
@@ -386,21 +432,56 @@ class Users extends Controller {
             $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
             $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
 
-            $html = $this->retrieve();
+
+
+            $this->retrieve();
         }
 
 
 
-        $html = $this->users_model->retrieve();
+        /*
+          if($_SESSION["user_id"]== 1)
+          $html = $this->users_model->retrieve();
+          else
+          $html=$this->user_model->retrieve();
+
+
+         */
+
         $page_template = "./views/users/create.php";
         require_once './views/_templates/masterPage.php';
     }
 
     public function retrieve() {
-        $result = $this->users_model->retrieve();
 
+
+        $user_index=$_SESSION["user_index"]== 0 ? 1 : $_SESSION["user_index"];
+        $this->max_user_index = $this->users_model->getMaxUserIndex(); 
+
+        
+        $this->index_arr[]=$user_index;
+        $this->generateUserIndex($user_index);       
+
+        $result = $this->users_model->retrieve($this->index_arr);
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
+    }
+
+    public function generateUserIndex($index) {
+
+        $left_index = $index * 2;
+        $right_index = $index * 2 + 1;
+
+        if (2 * $index <= $this->max_user_index){
+            $this->generateUserIndex($left_index);
+            $this->index_arr[] = $index * 2;
+        }
+            
+        if (2 * $index + 1 <= $this->max_user_index){
+            $this->generateUserIndex($right_index);
+            $this->index_arr[] = $index * 2 + 1;
+        }        
+        
     }
 
 }
