@@ -47,7 +47,7 @@
                             <tfoot>
                                 <tr>
                                    <td>
-                                       <button type="submit">Save</button>
+                                       <button class="btn btn-primary" type="submit">Save</button>
                                    </td>
                                 </tr>
                             </tfoot>

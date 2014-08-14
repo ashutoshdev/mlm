@@ -69,7 +69,6 @@ class OpeningStock extends Controller {
 
             foreach ($itemId as $k => $v) {
                 $exist = $this->openingstock_model->retrieveExist($v);
-                //print_r($exist); die;
                 if ($exist) {
                     $this->openingstock_model->updateItemIdStock($v, $qnty[$k], $date);
                 } else {
@@ -82,18 +81,6 @@ class OpeningStock extends Controller {
         $page_template = "./views/openingstock/create.php";
         require_once './views/_templates/masterPage.php';
     }
-
-    public function edit() {
-
-
-
-        $eid = $_GET['eid'];
-        $result = $this->item_model->retrieveEdit($eid);
-
-        $page_template = "./views/item/retrieve_edit.php";
-        require_once './views/_templates/masterPage.php';
-    }
-
 }
 
 class Stock extends Controller {
@@ -121,40 +108,13 @@ class Stock extends Controller {
             $exp_from = explode("/", $from_date);
             $f_from = $exp_from[2] . "-" . $exp_from[0] . "-" . $exp_from[1];
             $exp_to = explode("/", $to_date);
-            $f_to = $exp_to[2] . "-" . $exp_to[0] . "-" . $exp_to[1];
-            //print_r($f_to); die;
-            $result = $this->stock_model->retrieve($f_from, $f_to);
+
+            $f_to = $exp_to[2]."-".$exp_to[0]."-".$exp_to[1];
+            $result = $this->stock_model->retrieve($f_from,$f_to);
+
         }
+        
         $page_template = "./views/stock/retrieve.php";
-        require_once './views/_templates/masterPage.php';
-        //require_once './views/_templates/dateRange.php';
-    }
-
-    public function productStock() {
-//        if (sizeof($_POST)) {
-//
-//            $itemId = $_POST["itemId"];
-//            $qnty = $_POST["qnty"];
-//            $date = date("Y-m-d");
-//
-//            foreach ($itemId as $k => $v) {
-//                $exist = $this->openingstock_model->retrieveExist($v);
-//                //print_r($exist); die;
-//                if($exist){
-//                    $this->openingstock_model->updateItemIdStock($v, $qnty[$k], $date);
-//                }else{
-//                    $this->openingstock_model->create($v, $qnty[$k], $date);
-//                }
-//                
-//            }
-//        }
-
-        $result = $this->itemmaster_model->retrieve();
-        //print_r($result); die;
-//        foreach($result as $value){
-//            $result = $this->Transaction_details->retrieveItem($value[]);
-//        }
-        $page_template = "./views/stock/retrive.php";
         require_once './views/_templates/masterPage.php';
     }
 
