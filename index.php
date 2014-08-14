@@ -5,12 +5,12 @@ define('BASE_PATH', dirname(__FILE__));
 // DB login info
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'bonnie');
+define('DB_PASSWORD', 'Numerico_2013');
 define('DB_DBASE', 'db_mlm');
 
 
 /*
- * define('DB_HOST', 'localhost');
+define('DB_HOST', 'localhost');
 define('DB_USER', 'nisclien_bonnie');
 define('DB_PASSWORD', 'souparnomajumder');
 define('DB_DBASE', 'nisclien_mlm');
@@ -129,9 +129,9 @@ Class RouteEngine extends Core {
                 $this->openingstock->create();
                 break;
             
-            case "/stock/productStock":
+            case "/stock/retrieve":
                 $this->load->_CLASS("stock");
-                $this->stock->productStock();
+                $this->stock->retrieve();
                 break;
 
 

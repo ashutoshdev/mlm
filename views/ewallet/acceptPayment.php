@@ -23,7 +23,7 @@
                         <table id="example1" class="table table-bordered table-striped">
                             <thead>
                                 <tr>
-                                    <th>Id</th>
+                                    <th>Transaction Id</th>
                                     <th>User Name</th>
                                     <th>Debit</th>
                                     <th>Credit</th>

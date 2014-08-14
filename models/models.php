@@ -118,6 +118,17 @@ class Transaction_details extends Model {
                 . "note = '" . $note . "' ";
         $this->db->ExecuteSQL($sql);
     }
+    
+    public function retrieveItem($item_id) {
+
+        $sql = "select * from company_transaction_details where item_id = '".$item_id."' ";
+        echo $sql;
+        $result = $this->db->executeSQL($sql);
+        return $result;
+
+    }
+    
+    
 
 }
 
@@ -426,4 +437,30 @@ class Members_model extends Model {
         return $result;
     }
 
+}
+
+
+class Stock_model extends Model{
+    
+    public function retrieve($date_from , $date_to){
+        $sql="SELECT item_id,item_name,SUM(stock) AS stock FROM (
+            SELECT item_master.item_id AS item_id , item_name , quantity AS stock FROM opening_stock
+            JOIN item_master 
+            ON item_master.item_id = opening_stock.item_id
+            WHERE stock_date >='2014-04-01' AND stock_date <= '2015-04-01'
+            UNION ALL
+            SELECT item_master.item_id AS item_id, item_name, stock_debit-stock_credit AS stock FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
+            )x
+            GROUP BY item_id,item_name
+            ";
+       
+        $result = $this->db->ExecuteSQL($sql);        
+        return $result;
+        
+    }
+    
+    
 }

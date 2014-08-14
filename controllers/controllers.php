@@ -104,9 +104,32 @@ class Stock extends Controller {
         if (!$_SESSION['user_id']) {
             header("location: /members/logout/");
         }
-        $this->load->_CLASS("ItemMaster_model");
-        $this->load->_CLASS("OpeningStock_model");
-        $this->load->_CLASS("Transaction_details");
+        $this->load->_CLASS("Stock_model");
+    }
+
+
+    public function retrieve() {
+        
+        $result=array();
+        
+        if (sizeof($_POST)) {
+            $date_range = $_POST['date_range'];
+            $exp_date = explode(" ", $date_range);
+            
+            $from_date = $exp_date[0];
+            $to_date = $exp_date[2];
+            
+            $exp_from = explode("/", $from_date);
+            $f_from = $exp_from[2]."-".$exp_from[0]."-".$exp_from[1];
+            $exp_to = explode("/", $to_date);
+            $f_to = $exp_to[2]."-".$exp_to[0]."-".$exp_to[1];
+            //print_r($f_to); die;
+            $result = $this->stock_model->retrieve($f_from,$f_to);
+            
+        }
+        $page_template = "./views/stock/retrieve.php";
+        require_once './views/_templates/masterPage.php';
+        //require_once './views/_templates/dateRange.php';
     }
 
     public function productStock() {
@@ -409,6 +432,8 @@ class Users extends Controller {
             $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
             $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
 
+
+
             $this->retrieve();
         }
 
@@ -423,6 +448,7 @@ class Users extends Controller {
 
         $user_index = $_SESSION["user_index"] == 0 ? 1 : $_SESSION["user_index"];
         $this->max_user_index = $this->users_model->getMaxUserIndex();
+
 
 
         $this->index_arr[] = $user_index;
