@@ -218,10 +218,12 @@ class Users_model extends Model {
         return $this->db->lastInsertID();
     }
 
-    public function retrieve($index=  array()) {
-        if(count($index )){
+    public function retrieve($index= array()) {
+        if(count($index)){
+            
          $index=  implode(",", $index);
-         $sql="SELECT * FROM user Where user_left_right_index IN (".$index.") ORDER BY user_left_right_index;";
+         $sql="SELECT * FROM user Where user_left_right_index IN(".$index.") ORDER BY user_left_right_index";
+         //echo $sql;
         }
         else{
             $sql="SELECT * FROM user;";

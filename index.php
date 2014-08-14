@@ -124,6 +124,13 @@ Class RouteEngine extends Core {
                 $this->users->retrieve();
                 break;
             
+            case "/users/retrieve_ajaxify":
+
+                $this->load->_CLASS("Users");
+                $user_index=$_GET["param"];                
+                $this->users->retrieve_ajaxify($user_index);
+                break;
+            
             case "/openingstock/create":
                 $this->load->_CLASS("OpeningStock");
                 $this->openingstock->create();
