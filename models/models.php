@@ -219,8 +219,14 @@ class Users_model extends Model {
     }
 
     public function retrieve($index=  array()) {
+        if(count($index )){
          $index=  implode(",", $index);
          $sql="SELECT * FROM user Where user_left_right_index IN (".$index.") ORDER BY user_left_right_index;";
+        }
+        else{
+            $sql="SELECT * FROM user;";
+        }
+         
          $result = $this->db->ExecuteSQL($sql);
          return $result;
     }

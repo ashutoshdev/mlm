@@ -437,16 +437,8 @@ class Users extends Controller {
             $this->retrieve();
         }
 
+        $html = $this->users_model->retrieve();
 
-
-        /*
-          if($_SESSION["user_id"]== 1)
-          $html = $this->users_model->retrieve();
-          else
-          $html=$this->user_model->retrieve();
-
-
-         */
 
         $page_template = "./views/users/create.php";
         require_once './views/_templates/masterPage.php';
@@ -454,13 +446,13 @@ class Users extends Controller {
 
     public function retrieve() {
 
+        $user_index = $_SESSION["user_index"] == 0 ? 1 : $_SESSION["user_index"];
+        $this->max_user_index = $this->users_model->getMaxUserIndex();
 
-        $user_index=$_SESSION["user_index"]== 0 ? 1 : $_SESSION["user_index"];
-        $this->max_user_index = $this->users_model->getMaxUserIndex(); 
 
-        
-        $this->index_arr[]=$user_index;
-        $this->generateUserIndex($user_index);       
+
+        $this->index_arr[] = $user_index;
+        $this->generateUserIndex($user_index);
 
         $result = $this->users_model->retrieve($this->index_arr);
         $page_template = "./views/users/retrieve.php";
@@ -472,16 +464,15 @@ class Users extends Controller {
         $left_index = $index * 2;
         $right_index = $index * 2 + 1;
 
-        if (2 * $index <= $this->max_user_index){
+        if (2 * $index <= $this->max_user_index) {
             $this->generateUserIndex($left_index);
             $this->index_arr[] = $index * 2;
         }
-            
-        if (2 * $index + 1 <= $this->max_user_index){
+
+        if (2 * $index + 1 <= $this->max_user_index) {
             $this->generateUserIndex($right_index);
             $this->index_arr[] = $index * 2 + 1;
-        }        
-        
+        }
     }
 
 }

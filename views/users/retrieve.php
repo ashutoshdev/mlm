@@ -19,46 +19,45 @@
                         <h3 class="box-title">Users Details</h3>
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
-          
-                        
+
+
 
                         <?php
-                        
-                        
-                        function indent($tier){
-                            
-                            $str="";
-                            
-                            for($i=0;$i<=$tier;$i++){
+
+                        function indent($tier) {
+
+                            $str = "";
+
+                            for ($i = 0; $i <= $tier; $i++) {
                                 $str.="----";
                             }
-                            
+
                             return $str;
-                            
                         }
 
+                        function displayUser($result, $parent_index, $tier) {
+                            
+                            
+                            //echo pow(2, $tier) .  " to " .pow(2, $tier + 1) . "<br/>";
 
+                            for ($i = pow(2, $tier); $i < pow(2, $tier + 1); $i++):
 
-                        function displayUser($result,$start, $tier, $flag) {
+                                if ($i <= $result[count($result)-1]["user_left_right_index"]) {
 
-                            for ($i = $start; $i <= pow(2, $tier)-1; $i++):
-
-                                if ($i < count($result)) {
-                                    echo indent($tier). $result[$i]["user_name"]."<br/>";
-                                } else {
-                                    $flag = 1;
-                                    break;
+                                    
+                                    if ($parent_index * 2 == $result[$i - 1]["user_left_right_index"] || (($parent_index * 2) + 1) == $result[$i - 1]["user_left_right_index"]) {
+                                        echo indent($tier) . $result[$i - 1]["user_name"] . "<br/>";
+                                    }
+                                    
+                                    displayUser($result, $i, $tier + 1);
                                 }
 
+
                             endfor;
-                            
-                            if (!$flag) {
-                                displayUser($result, pow(2, $tier) ,$tier + 1, $flag);
-                            }                           
-                            
+
                         }
 
-                        displayUser($result, 0,0, 0);
+                        displayUser($result, 0, 0);
                         ?>
 
                     </div><!-- /.box-body -->                    
