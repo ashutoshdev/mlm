@@ -9,6 +9,14 @@ define('DB_PASSWORD', 'bonnie');
 define('DB_DBASE', 'db_mlm');
 
 
+/*
+ * define('DB_HOST', 'localhost');
+define('DB_USER', 'nisclien_bonnie');
+define('DB_PASSWORD', 'souparnomajumder');
+define('DB_DBASE', 'nisclien_mlm');
+ */
+
+
 
 include_once './_core/class.Core.php'; '';
 include_once './_core/class.MySQL.php';
