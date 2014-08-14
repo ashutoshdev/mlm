@@ -74,12 +74,16 @@
                             <button type="submit" class="btn btn-primary" name = "SUB"> Ok </button>
                         </div>
                         </form>
+                        <b>From Date: </b><?php echo $from_date; ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+                        <b>To Date: </b><?php echo $to_date; ?>
             <table id="example1" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>Item Id</th>
                         <th>Item Name</th>
-                        <th>Stock</th>
+                        <th>Opening</th>
+                        <th>Sale</th>
+                        <th>Purchase</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -89,7 +93,9 @@
                         <tr>
                             <td><?php echo $value["item_id"] ?></td>
                             <td><?php echo $value["item_name"] ?></td>
-                            <td><?php echo $value["stock"] ?></td>
+                            <td><?php echo $value["opening"] ?></td>
+                            <td><?php echo $value["sale"] ?></td>
+                            <td><?php echo $value["purchase"] ?></td>
                         </tr>
                         <?php
                     }

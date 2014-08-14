@@ -1,3 +1,33 @@
+<script src="./../assets/jquery-1.10.1.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    function ajaxChildUser(user){
+        
+        $.ajax({
+            url: "/users/retrieve_ajaxify?param="+user,
+            type: "GET",
+            success: function(data) {
+                //alert(data);
+                var htmls="<ul>";
+                var myArray = jQuery.parseJSON(data);
+                for (var p in myArray) {
+                    if(myArray[p].user_left_right_index%2 == 0){
+                        var set = "(L)";
+                    }else{
+                        var set = "(R)";
+                    }
+                    htmls += "<li><span onclick = \"return ajaxChildUser('"+myArray[p].user_left_right_index+"');\" style = 'cursor: pointer;'><img src = './../assets/img/Male.png'>"+myArray[p].user_name+set+"</span><span id = 'clild_"+myArray[p].user_left_right_index+"' ></span></li>";
+                }
+                
+                htmls += "</ul>";
+                
+                //var htmls = "<ul><li>"+myArray[0].user_name+"</li><li>"+myArray[1].user_name+"</li></ul>";
+                $("#clild_"+user).html(htmls);
+                //alert(htmls);
+            }
+        });
+    }
+    
+</script>
 <aside class="right-side">
     <!-- Content Header (Page header) -->
     <section class="content-header">
@@ -20,11 +50,20 @@
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
 
-
-
+                        
                         <?php
+                        
+                        
+                        //var_dump($this->result[0]);
+                        
+                        echo "<ul>
+                                <li><span onclick = \"return ajaxChildUser('".$result[0]["user_left_right_index"]."');\" style = 'cursor: pointer;'>"
+                                . "<img src = './../assets/img/Male.png'><br>".$result[0]["user_name"]."</span>"
+                                . "<span id = 'clild_".$result[0]["user_left_right_index"]."' ></span></li>"
+                                . "</ul>";
+                        
 
-                        function indent($tier) {
+                        /*function indent($tier) {
 
                             $str = "";
 
@@ -46,7 +85,7 @@
 
                                     
                                     if ($parent_index * 2 == $result[$i - 1]["user_left_right_index"] || (($parent_index * 2) + 1) == $result[$i - 1]["user_left_right_index"]) {
-                                        echo indent($tier) . $result[$i - 1]["user_name"] . "<br/>";
+                                        echo "<span onclick = \"return ajaxChildUser('".$result[$i - 1]["user_left_right_index"]."');\" >".indent($tier) . $result[$i - 1]["user_name"] . "</span><br/>";
                                     }
                                     
                                     displayUser($result, $i, $tier + 1);
@@ -57,9 +96,9 @@
 
                         }
 
-                        displayUser($result, 0, 0);
+                        displayUser($result, 0, 0); */
                         ?>
-
+<!--                        <span onclick="return ajaxChildUser('4');" >click test</span>-->
                     </div><!-- /.box-body -->                    
                 </div>
             </div>

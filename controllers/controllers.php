@@ -94,24 +94,24 @@ class Stock extends Controller {
         $this->load->_CLASS("Stock_model");
     }
 
-
     public function retrieve() {
-        
-        $result=array();
-        
+
+        $result = array();
+
         if (sizeof($_POST)) {
             $date_range = $_POST['date_range'];
             $exp_date = explode(" ", $date_range);
-            
+
             $from_date = $exp_date[0];
             $to_date = $exp_date[2];
-            
+
             $exp_from = explode("/", $from_date);
-            $f_from = $exp_from[2]."-".$exp_from[0]."-".$exp_from[1];
+            $f_from = $exp_from[2] . "-" . $exp_from[0] . "-" . $exp_from[1];
             $exp_to = explode("/", $to_date);
+
             $f_to = $exp_to[2]."-".$exp_to[0]."-".$exp_to[1];
             $result = $this->stock_model->retrieve($f_from,$f_to);
-            
+
         }
         
         $page_template = "./views/stock/retrieve.php";
@@ -403,18 +403,35 @@ class Users extends Controller {
     }
 
     public function retrieve() {
-
+        
+        
         $user_index = $_SESSION["user_index"] == 0 ? 1 : $_SESSION["user_index"];
-        $this->max_user_index = $this->users_model->getMaxUserIndex();
+        //$this->max_user_index = $this->users_model->getMaxUserIndex();
 
 
 
-        $this->index_arr[] = $user_index;
-        $this->generateUserIndex($user_index);
+        //$this->index_arr[] = $user_index;
+        //$this->generateUserIndex($user_index);
 
-        $result = $this->users_model->retrieve($this->index_arr);
+
+        $result=$this->users_model->retrieve(array($user_index));
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
+        
+        
+        
+    }
+
+    public function retrieve_ajaxify($u_index) {
+
+        
+        $left_index=$u_index*2;
+        $righ_index=$u_index*2 +1;
+        
+        
+        $result=$this->users_model->retrieve(array($left_index,$righ_index));
+        echo json_encode($result);
+        
     }
 
     public function generateUserIndex($index) {
