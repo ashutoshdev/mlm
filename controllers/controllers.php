@@ -12,6 +12,7 @@ class Item extends Controller {
         }
 
         $this->load->_CLASS("ItemMaster_model");
+        $this->load->_CLASS("OpeningStock_model");
     }
 
     public function create() {
@@ -23,7 +24,10 @@ class Item extends Controller {
             $item_name = $_POST['product_name'];
             $item_type = $_POST["item_type"];
             $item_price = $_POST['price'];
-            $this->itemmaster_model->create($item_name, $item_type, $item_price);
+            $quantity = $_POST['quantity'];
+            $date = date("Y-m-d");
+            $item_id = $this->itemmaster_model->create($item_name, $item_type, $item_price);
+            $this->openingstock_model->create($item_id, $quantity, $date);
         }
 
         $page_template = "./views/item/create.php";
@@ -361,6 +365,7 @@ class Users extends Controller {
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
         $this->load->_CLASS("ItemMaster_model");
+        $this->load->_CLASS("Stock_model");
 
         //instantiating the instance variables
         $this->max_user_index = 0;
@@ -374,25 +379,35 @@ class Users extends Controller {
             $username = $_POST["username"];
             $useremail = $_POST["useremail"];
             $password = $_POST["password"];
+            $pin = $_POST["pin"];
             $introducer = $_POST["introducer"];
-            $int_pos = $this->users_model->retrieveUserIndex($introducer);
-            $position = (2 * $int_pos) + $_POST["position"];
-            $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
+            $date = date("Y-m-d");
+            $result = $this->stock_model->retrievePinWise($date,$date,$pin);
+            //print_r($result[0]); die;
+            if(($result[0]['opening'] - $result[0]['sale']) >0){
+                $int_pos = $this->users_model->retrieveUserIndex($introducer);
+                $position = (2 * $int_pos) + $_POST["position"];
+                $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
 
-            $transaction_date = date("Y-m-d");
-            $head_account = $introducer;
+                $transaction_date = date("Y-m-d");
+                $head_account = $introducer;
 
-            $item = $this->itemmaster_model->retrievePin();
-            $transaction_id = $this->transaction_model->createId();
-            $debit = $item["item_price"];
-            $credit = 0;
+                $item = $this->itemmaster_model->retrievePin($pin);
+                
+                $transaction_id = $this->transaction_model->createId();
+                $debit = $item["item_price"];
+                $credit = 0;
 
-            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
-            $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
+                $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
+                $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
+            
+                $this->retrieve();
+            }else{
+                $error = "Pin Not valid. Register User unsuccessful..";
+            }
 
 
-
-            $this->retrieve();
+            
         }
 
         $html = $this->users_model->retrieve();

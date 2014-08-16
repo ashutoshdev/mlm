@@ -38,6 +38,10 @@
                                 <label>Product Price</label>
                                 <input type="text" class="form-control" placeholder="Price .." name = "price"/>
                             </div>
+                            <div class="form-group">
+                                <label>Product Opening Quantity</label>
+                                <input type="text" class="form-control" value ="1" name = "quantity"/>
+                            </div>
 
                         </div>
 
