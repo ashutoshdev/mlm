@@ -23,9 +23,7 @@
                     <!-- form start -->
                     <form role="form" action="" method="post">
                         <div class="box-body">
-                            <div class="form-group">
-                                <label><span style = "color: red;"><?php echo $error; ?></span></label>
-                            </div>
+                            
                             <div class="form-group">
                                 <label>Introducer</label>
                                 <select name="introducer" class="form-control">
@@ -53,12 +51,6 @@
                                 <label>Password</label>
                                 <input type="password" class="form-control" placeholder=" .." name = "password"/>
                             </div>
-                            <div class="form-group">
-                                <label>Apply valid pin</label>
-                                <input type="text" class="form-control" placeholder=" .." name = "pin"/>
-                            </div>
-
-
                         </div>
 
                         <div class="box-footer">

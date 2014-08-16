@@ -379,35 +379,33 @@ class Users extends Controller {
             $username = $_POST["username"];
             $useremail = $_POST["useremail"];
             $password = $_POST["password"];
-            $pin = $_POST["pin"];
             $introducer = $_POST["introducer"];
             $date = date("Y-m-d");
-            $result = $this->stock_model->retrievePinWise($date,$date,$pin);
             //print_r($result[0]); die;
-            if(($result[0]['opening'] - $result[0]['sale']) >0){
-                $int_pos = $this->users_model->retrieveUserIndex($introducer);
-                $position = (2 * $int_pos) + $_POST["position"];
-                $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
-
-                $transaction_date = date("Y-m-d");
-                $head_account = $introducer;
-
-                $item = $this->itemmaster_model->retrievePin($pin);
-                
-                $transaction_id = $this->transaction_model->createId();
-                $debit = $item["item_price"];
-                $credit = 0;
-
-                $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
-                $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
             
-                $this->retrieve();
-            }else{
-                $error = "Pin Not valid. Register User unsuccessful..";
+            $int_pos = $this->users_model->retrieveUserIndex($introducer);
+            $position = (2 * $int_pos) + $_POST["position"];
+            $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
+
+            $transaction_date = date("Y-m-d");
+            $head_account = $introducer;
+
+            $items = $this->itemmaster_model->retrieveTransactionPin();
+            foreach ($items as $item){
+                $result = $this->stock_model->retrievePinWise($date,$date,$item['item_id']);
+                if(($result[0]['opening'] - $result[0]['sale']) >0){
+                    $transaction_id = $this->transaction_model->createId();
+                    $debit = $item["item_price"];
+                    $credit = 0;
+
+                    $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
+                    $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
+
+                    $this->retrieve();
+                    break;
+                }
             }
-
-
-            
+             
         }
 
         $html = $this->users_model->retrieve();

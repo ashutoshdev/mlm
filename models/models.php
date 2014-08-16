@@ -316,14 +316,16 @@ class ItemMaster_model extends Model {
         return $result;
     }
 
-    public function retrievePin($pin = NULL) {
-        if($pin){
-            $sql = "SELECT * FROM item_master WHERE item_category='PIN' AND item_id = '".$pin."'";
-        }else{
-            $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";
-        }
+    public function retrievePin() {
+        $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";  
         $result = $this->db->ExecuteSQL($sql);
         return $result[0];
+    }
+    
+    public function retrieveTransactionPin() {
+        $sql = "SELECT * FROM item_master WHERE item_category='PIN'";  
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
     }
 
 }
