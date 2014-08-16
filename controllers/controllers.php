@@ -81,6 +81,7 @@ class OpeningStock extends Controller {
         $page_template = "./views/openingstock/create.php";
         require_once './views/_templates/masterPage.php';
     }
+
 }
 
 class Stock extends Controller {
@@ -109,11 +110,10 @@ class Stock extends Controller {
             $f_from = $exp_from[2] . "-" . $exp_from[0] . "-" . $exp_from[1];
             $exp_to = explode("/", $to_date);
 
-            $f_to = $exp_to[2]."-".$exp_to[0]."-".$exp_to[1];
-            $result = $this->stock_model->retrieve($f_from,$f_to);
-
+            $f_to = $exp_to[2] . "-" . $exp_to[0] . "-" . $exp_to[1];
+            $result = $this->stock_model->retrieve($f_from, $f_to);
         }
-        
+
         $page_template = "./views/stock/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -163,11 +163,6 @@ class Package extends Controller {
     public function retrieve() {
 
         $result = $this->package_model->retrieve();
-
-        /* foreach ($result as $val) {
-          $item_res[$val['package_id']] = $this->packageDetails_model->retrievePackageItem($val['package_id']);
-          print_r($item_res); die;
-          } */
         $page_template = "./views/package/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
@@ -361,8 +356,8 @@ class Users extends Controller {
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
         $this->load->_CLASS("ItemMaster_model");
+        $this->load->_CLASS("Stock_model");
 
-        //instantiating the instance variables
         $this->max_user_index = 0;
         $this->index_arr = array();
     }
@@ -383,16 +378,17 @@ class Users extends Controller {
             $head_account = $introducer;
 
             $item = $this->itemmaster_model->retrievePin();
-            $transaction_id = $this->transaction_model->createId();
-            $debit = $item["item_price"];
-            $credit = 0;
 
-            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
-            $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
+            if ($item) {
 
+                $transaction_id = $this->transaction_model->createId();
+                $debit = $item["item_price"];
+                $credit = 0;
+                $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
+                $this->transaction_details->create($transaction_id, $transaction_date, $item["item_id"], '0', '1', $debit, "");
 
-
-            $this->retrieve();
+                $this->retrieve();
+            }
         }
 
         $html = $this->users_model->retrieve();
@@ -403,35 +399,42 @@ class Users extends Controller {
     }
 
     public function retrieve() {
-        
-        
+
         $user_index = $_SESSION["user_index"] == 0 ? 1 : $_SESSION["user_index"];
-        //$this->max_user_index = $this->users_model->getMaxUserIndex();
+        $result = $this->users_model->retrieve(array($user_index));
+
+        $this->max_user_index = $this->users_model->getMaxUserIndex();
+        
+        $this->generateUserIndex($user_index*2);
+        $left_arr=  $this->index_arr;
+        $left_arr[]=$user_index*2;
+        
+        $this->index_arr=  array();        
+        $this->generateUserIndex($user_index*2+1);
+        $right_arr=  $this->index_arr;
+        $right_arr[]=$user_index*2+1;
+        
+        
+        var_dump($right_arr);
+        echo "<br/>";
+        var_dump($left_arr);
+        echo '<br/>';
+
+        
+        //$binary_commission = $this->users_model->countNode($this->index_arr);
 
 
-
-        //$this->index_arr[] = $user_index;
-        //$this->generateUserIndex($user_index);
-
-
-        $result=$this->users_model->retrieve(array($user_index));
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
-        
-        
-        
     }
 
     public function retrieve_ajaxify($u_index) {
 
-        
-        $left_index=$u_index*2;
-        $righ_index=$u_index*2 +1;
-        
-        
-        $result=$this->users_model->retrieve(array($left_index,$righ_index));
+        $left_index = $u_index * 2;
+        $righ_index = $u_index * 2 + 1;
+
+        $result = $this->users_model->retrieve(array($left_index, $righ_index));
         echo json_encode($result);
-        
     }
 
     public function generateUserIndex($index) {

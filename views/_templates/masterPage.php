@@ -4,14 +4,14 @@
         <meta charset="UTF-8">
         <title>Admin | Dashboard</title>
         <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-        
-        
-        
+
+
+
         <!-- bootstrap 3.0.2 -->
         <link href="./../assets/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
         <!-- font Awesome -->
         <link href="./../assets/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-        
+
         <link href="./../assets/css/font-awesome.css" rel="stylesheet" type="text/css" />
         <!-- DATA TABLES -->
         <link href="./../css/datatables/dataTables.bootstrap.css" rel="stylesheet" type="text/css" />
@@ -21,7 +21,7 @@
         <!-- Theme style -->
         <link href="./../assets/css/AdminLTE.css" rel="stylesheet" type="text/css" />
 
-        
+
         <link href="./../assets/css/ionicons.min.css" rel="stylesheet" type="text/css" />
         <!-- daterange picker -->
         <link href="./../assets/css/daterangepicker/daterangepicker-bs3.css" rel="stylesheet" type="text/css" />
@@ -31,7 +31,7 @@
         <link href="./../assets/css/colorpicker/bootstrap-colorpicker.min.css" rel="stylesheet"/>
         <!-- Bootstrap time Picker -->
         <link href="./../assets/css/timepicker/bootstrap-timepicker.min.css" rel="stylesheet"/>
-        
+
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -41,7 +41,7 @@
     </head>
     <body class="skin-blue">
         <!-- header logo: style can be found in header.less -->
-        
+
         <header class="header">
             <a href="../../index.html" class="logo">
                 <!-- Add the class icon to your logo image or logo icon to add the margining -->
@@ -288,14 +288,14 @@
                 </div>
             </nav>
         </header>
-        
+
         <div class="wrapper row-offcanvas row-offcanvas-left">
             <!-- Left side column. contains the logo and sidebar -->
             <aside class="left-side sidebar-offcanvas">
-                
-                
-            <!-- sidebar: style can be found in sidebar.less -->
-            <section class="sidebar">
+
+
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
                     <!-- Sidebar user panel -->
                     <div class="user-panel">
                         <div class="pull-left image">
@@ -333,28 +333,28 @@
                             <ul class="treeview-menu">
                                 <li><a href="/ewallet/retrieve"><i class="fa fa-angle-double-right"></i> E wallet</a></li>
                                 <li><a href="/ewallet/create"><i class="fa fa-angle-double-right"></i> Apply Pin(payment)</a></li>
-                <?php
-                    if($_SESSION['user_role'] == "ADMIN"){
-                ?>    
-                                <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
-                <?php
-                    }
-                ?>
-                            
+                                <?php
+                                if ($_SESSION['user_role'] == "ADMIN") {
+                                    ?>    
+                                    <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
+                                    <?php
+                                }
+                                ?>
+
                             </ul>
                         </li>
-                <?php
-                    if($_SESSION['user_role'] == "ADMIN"){
-                ?>
-                    
-                        <li>
-                            <a href="/openingstock/create">
-                                <i class="fa fa-dashboard"></i> <span>opening stock</span>
-                            </a>
-                        </li>
-                <?php
-                    }
-                ?>
+                        <?php
+                        if ($_SESSION['user_role'] == "ADMIN") {
+                            ?>
+
+                            <li>
+                                <a href="/openingstock/create">
+                                    <i class="fa fa-dashboard"></i> <span>opening stock</span>
+                                </a>
+                            </li>
+                            <?php
+                        }
+                        ?>
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>
@@ -365,37 +365,37 @@
                                 <li><a href="/stock/retrieve"><i class="fa fa-angle-double-right"></i> Stock Details</a></li>
                             </ul>
                         </li>
-                        
-                <?php
-                    if($_SESSION['user_role'] == "ADMIN"){
-                ?>        
-                        
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>Product </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/item/create"><i class="fa fa-angle-double-right"></i> Add Product</a></li>
-                                <li><a href="/item/retrieve"><i class="fa fa-angle-double-right"></i> Show Product</a></li>
-                            </ul>
-                        </li>
-                        
-                        <li class="treeview">
-                            <a href="#">
-                                <i class="fa fa-bar-chart-o"></i>
-                                <span>Package </span>
-                                <i class="fa fa-angle-left pull-right"></i>
-                            </a>
-                            <ul class="treeview-menu">
-                                <li><a href="/package/create"><i class="fa fa-angle-double-right"></i> Add Package</a></li>
-                                <li><a href="/package/retrieve"><i class="fa fa-angle-double-right"></i> Show Package</a></li>
-                            </ul>
-                        </li>
-                <?php
-                    }
-                ?>
+
+                        <?php
+                        if ($_SESSION['user_role'] == "ADMIN") {
+                            ?>        
+
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    <span>Product </span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="/item/create"><i class="fa fa-angle-double-right"></i> Add Product</a></li>
+                                    <li><a href="/item/retrieve"><i class="fa fa-angle-double-right"></i> Show Product</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="treeview">
+                                <a href="#">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    <span>Package </span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li><a href="/package/create"><i class="fa fa-angle-double-right"></i> Add Package</a></li>
+                                    <li><a href="/package/retrieve"><i class="fa fa-angle-double-right"></i> Show Package</a></li>
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                        ?>
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>
@@ -404,10 +404,10 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="/transaction/create"><i class="fa fa-angle-double-right"></i> Create Transaction</a></li>
-                                
+
                             </ul>
                         </li>
-                        
+
                         <li class="treeview">
                             <a href="#">
                                 <i class="fa fa-bar-chart-o"></i>
@@ -417,33 +417,51 @@
                             <ul class="treeview-menu">
                                 <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Register Users </a></li>
                                 <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Users Details </a></li>
-                                
+
                             </ul>
                         </li>
+                        
+                        
+                        
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <span> Commission </span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Binary Commission </a></li>
+                                <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Trinary Commission </a></li>
+
+                            </ul>
+                        </li>
+                        
+                        
+                        
                     </ul>
                 </section>
                 <!-- /.sidebar -->
-                
-                
+
+
             </aside>
 
-            
-                <?php require_once($page_template); ?>
-                               
+
+            <?php require_once($page_template); ?>
+
         </div><!-- ./wrapper -->
         <!-- jQuery 2.0.2 -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
         <!-- Bootstrap -->
         <script src="./../assets/js/bootstrap.min.js" type="text/javascript"></script>
-         <!-- DATA TABES SCRIPT -->
+        <!-- DATA TABES SCRIPT -->
         <script src="./../assets/js/plugins/datatables/jquery.dataTables.js" type="text/javascript"></script>
         <script src="./../assets/js/plugins/datatables/dataTables.bootstrap.js" type="text/javascript"></script>
-        
+
         <!-- AdminLTE App -->
         <script src="./../assets/js/AdminLTE/app.js" type="text/javascript"></script>
         <!-- AdminLTE for demo purposes -->
         <script src="./../assets/js/AdminLTE/demo.js" type="text/javascript"></script>        
-        
+
         <script src="./../assets/js/plugins/input-mask/jquery.inputmask.js" type="text/javascript"></script>
         <script src="./../assets/js/plugins/input-mask/jquery.inputmask.date.extensions.js" type="text/javascript"></script>
         <script src="./../assets/js/plugins/input-mask/jquery.inputmask.extensions.js" type="text/javascript"></script>
@@ -453,7 +471,7 @@
         <script src="./../assets/js/plugins/colorpicker/bootstrap-colorpicker.min.js" type="text/javascript"></script>
         <!-- bootstrap time picker -->
         <script src="./../assets/js/plugins/timepicker/bootstrap-timepicker.min.js" type="text/javascript"></script>
-        
-        
+
+
     </body>
 </html>
