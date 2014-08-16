@@ -414,16 +414,19 @@ class Users extends Controller {
         $right_arr=  $this->index_arr;
         $right_arr[]=$user_index*2+1;
         
-        
-        var_dump($right_arr);
-        echo "<br/>";
-        var_dump($left_arr);
-        echo '<br/>';
+         //echo $this->users_model->countNode($left_arr)."<br/>";
+         //echo $this->users_model->countNode($right_arr)."<br/>";
+         $left_tree=$this->users_model->countNode($left_arr);
+         $right_tree=$this->users_model->countNode($right_arr);
 
-        
-        //$binary_commission = $this->users_model->countNode($this->index_arr);
-
-
+        if($left_tree > $right_tree ){
+            $binary_commission=$right_tree*500;
+            
+        } 
+         else{
+             $binary_commission=$left_tree*500;
+         }
+         
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
