@@ -69,10 +69,9 @@ class Ewallet_model extends Model {
 
     public function update($accept) {
 
-        foreach ($accept as $value) {
-            $sql = "UPDATE company_transaction_master SET status ='1' WHERE transaction_id='" . $value . "';";
-            $this->db->ExecuteSQL($sql);
-        }
+        $sql = "UPDATE company_transaction_master SET status ='1' WHERE transaction_id='" . $accept . "';";
+        $this->db->ExecuteSQL($sql);
+     
     }
 
 }
@@ -495,13 +494,13 @@ class Stock_model extends Model {
     }
 
     public function retrievePin($date) {
-        $sql = "SELECT item_id,item_name, item_price, SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase , SUM(opening + purchase - sale) AS closing
+        $sql = "SELECT * FROM (SELECT item_id,item_name, item_price, SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase , SUM(opening + purchase - sale) AS closing
             FROM (
             SELECT item_master.item_id AS item_id , item_name , item_price, quantity AS opening , 0 AS sale , 0 AS purchase 
             FROM opening_stock
             JOIN item_master 
             ON item_master.item_id = opening_stock.item_id
-            WHERE item_type='PIN'            
+            WHERE item_category='PIN'            
 
             UNION ALL
             
@@ -510,7 +509,7 @@ class Stock_model extends Model {
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
             WHERE transaction_date <'" . $date . "'
-            AND item_type='PIN'
+            AND item_category='PIN'
             
             UNION ALL            
             
@@ -519,7 +518,7 @@ class Stock_model extends Model {
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
             WHERE transaction_date >='" . $date . "' AND transaction_date <='" . $date . "'
-            AND item_type='PIN'
+            AND item_category='PIN'
 
             UNION ALL            
             
@@ -528,14 +527,13 @@ class Stock_model extends Model {
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
             WHERE transaction_date >='" . $date . "' AND transaction_date <='" . $date . "'
-            AND item_type='PIN'
+            AND item_category='PIN'
             
             )x
             GROUP BY item_id,item_name, item_price
-            WHERE closing>0 ORDER BY item_id LIMIT 0,1";
+            ORDER BY item_id )y WHERE closing >0 LIMIT 0,1;";
 
         $result = $this->db->ExecuteSQL($sql);
-        echo $sql;
         return $result[0];
     }
 

@@ -103,7 +103,7 @@ class Stock extends Controller {
 
         $result = array();
 
-        if (sizeof($_POST)) {
+        if ($_POST['date_range']) {
             $date_range = $_POST['date_range'];
             $exp_date = explode(" ", $date_range);
 
@@ -221,6 +221,7 @@ class Ewallet extends Controller {
         $this->load->_CLASS("Transaction_model");
         $this->load->_CLASS("Transaction_master");
         $this->load->_CLASS("Transaction_details");
+        $this->load->_CLASS("Stock_model");
     }
 
     public function create() {
@@ -241,7 +242,7 @@ class Ewallet extends Controller {
 
             $this->transaction_master->create($transaction_id, $transaction_date, $_POST['bank_tran_id'], $head_account, $client_account_id, $debit, $credit, $note, $transaction_type, $status);
 
-            $this->transaction_details->create($transaction_id, $transaction_date, "I000004", "0", "1", $totprice, $note);
+            //$this->transaction_details->create($transaction_id, $transaction_date, "I000004", "0", "1", $totprice, $note);
         }
 
         $page_template = "./views/ewallet/create.php";
@@ -257,9 +258,24 @@ class Ewallet extends Controller {
 
     public function acceptPayment() {
 
-        if (sizeof($_POST))
-            $this->ewallet_model->update($_POST["accept"]);
+        if (sizeof($_POST)){
+            
+            $date = date("Y-m-d");
+            
+            foreach ($_POST["accept"] as $value => $t_date) {
+                
+                $result = $this->stock_model->retrievePin($date);
+               
+                
+                $debit = $result["item_price"];
+                $credit = 0;
 
+                //$this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
+                $this->transaction_details->create($value, $t_date, $result["item_id"], '0', '1', $debit, "");
+                $this->ewallet_model->update($value);
+            }
+        }
+        
         $result = $this->ewallet_model->retrieve();
         $page_template = "./views/ewallet/acceptPayment.php";
         require_once './views/_templates/masterPage.php';

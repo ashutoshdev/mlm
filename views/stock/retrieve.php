@@ -40,13 +40,15 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Advanced Form Elements
-            <small>Preview</small>
+            
+            Stock
+
+            <small>Date Range For Stock</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">Forms</a></li>
-            <li class="active">Advanced Elements</li>
+            <li><a href="#">Stock</a></li>
+            <li class="active">Date Range</li>
         </ol>
     </section>
 
@@ -56,13 +58,13 @@
             <div class="col-md-6">
                 <div class="box box-primary">
                     <div class="box-header">
-                        <h3 class="box-title">Date picker</h3>
+                        <h3 class="box-title">Date Range For Stock</h3>
                     </div>
                     <div class="box-body">
                         <!-- Date range -->
                         <form role="form" method="POST">
                             <div class="form-group">
-                                <label>Date range:</label>
+                                <label>Date Range:</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
@@ -74,6 +76,10 @@
                                 <button type="submit" class="btn btn-primary" name = "SUB"> Ok </button>
                             </div>
                         </form>
+            <?php
+                if($result){
+            ?>
+                
                         <b>From Date: </b><?php echo $from_date; ?> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
                         <b>To Date: </b><?php echo $to_date; ?>
                         <table id="example1" class="table table-bordered table-striped">
@@ -104,7 +110,9 @@
                                 ?>
                             </tbody>
                         </table>
-
+            <?php
+                }
+            ?>
                     </div><!-- /.box-body -->
                 </div><!-- /.box -->
 
