@@ -291,12 +291,12 @@ class ItemMaster_model extends Model {
         else:
             $item_id = $this->createItemId($lastItemId);
         endif;
-        
+
         $sql = "INSERT INTO `item_master` SET "
-                    . "`item_id`='" . $item_id . "' , "
-                    . "`item_name` = '$product' , "
-                    . "`item_category` = '" . $item_type . "' , "
-                    . "`item_price`='" . $item_price . "' ";
+                . "`item_id`='" . $item_id . "' , "
+                . "`item_name` = '$product' , "
+                . "`item_category` = '" . $item_type . "' , "
+                . "`item_price`='" . $item_price . "' ";
         $this->db->ExecuteSQL($sql);
         return $item_id;
     }
@@ -315,13 +315,13 @@ class ItemMaster_model extends Model {
     }
 
     public function retrievePin() {
-        $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";  
+        $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";
         $result = $this->db->ExecuteSQL($sql);
         return $result[0];
     }
-    
+
     public function retrieveTransactionPin() {
-        $sql = "SELECT * FROM item_master WHERE item_category='PIN'";  
+        $sql = "SELECT * FROM item_master WHERE item_category='PIN'";
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
@@ -450,7 +450,7 @@ class Stock_model extends Model {
     }
 
     public function retrieve($date_from, $date_to) {
-        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
+        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase , SUM(opening + purchase - sale) AS closing
             FROM (
             SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
             FROM opening_stock
@@ -485,19 +485,20 @@ class Stock_model extends Model {
             )x
             GROUP BY item_id,item_name";
 
+        echo $sql;
+        
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
 
-    
-    public function retrievePinWise($date_from , $date_to, $pin){
-        $sql="SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
+    public function retrievePinWise($date_from, $date_to, $pin) {
+        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
             FROM (
             SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
             FROM opening_stock
             JOIN item_master 
             ON item_master.item_id = opening_stock.item_id
-            WHERE item_master.item_id = '".$pin."'
+            WHERE item_master.item_id = '" . $pin . "'
             
             UNION ALL
             
@@ -505,8 +506,8 @@ class Stock_model extends Model {
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date <'".$date_from."'
-            AND item_master.item_id = '".$pin."'
+            WHERE transaction_date <'" . $date_from . "'
+            AND item_master.item_id = '" . $pin . "'
             
             UNION ALL            
             
@@ -514,8 +515,8 @@ class Stock_model extends Model {
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
-            AND item_master.item_id = '".$pin."'
+            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
+            AND item_master.item_id = '" . $pin . "'
 
 
             UNION ALL            
@@ -524,15 +525,14 @@ class Stock_model extends Model {
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
-            AND item_master.item_id = '".$pin."'
+            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
+            AND item_master.item_id = '" . $pin . "'
 
             )x
             GROUP BY item_id,item_name";
-       
-        $result = $this->db->ExecuteSQL($sql);        
+
+        $result = $this->db->ExecuteSQL($sql);
         return $result;
-        
     }
 
     public function retrievePin($date) {
@@ -572,7 +572,6 @@ class Stock_model extends Model {
             GROUP BY item_id,item_name";
 
         $result = $this->db->ExecuteSQL($sql);
-        //return $result[0];
     }
 
 }
