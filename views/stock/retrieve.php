@@ -84,6 +84,7 @@
                         <th>Opening</th>
                         <th>Sale</th>
                         <th>Purchase</th>
+                        <th>Closing</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -96,6 +97,7 @@
                             <td><?php echo $value["opening"] ?></td>
                             <td><?php echo $value["sale"] ?></td>
                             <td><?php echo $value["purchase"] ?></td>
+                            <td><?php echo $value["opening"]+$value["purchase"]-$value["sale"]; ?></td>
                         </tr>
                         <?php
                     }

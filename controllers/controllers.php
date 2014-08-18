@@ -375,8 +375,7 @@ class Users extends Controller {
             $password = $_POST["password"];
             $introducer = $_POST["introducer"];
             $date = date("Y-m-d");
-            //print_r($result[0]); die;
-            
+
             $int_pos = $this->users_model->retrieveUserIndex($introducer);
             $position = (2 * $int_pos) + $_POST["position"];
             $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
@@ -385,9 +384,9 @@ class Users extends Controller {
             $head_account = $introducer;
 
             $items = $this->itemmaster_model->retrieveTransactionPin();
-            foreach ($items as $item){
-                $result = $this->stock_model->retrievePinWise($date,$date,$item['item_id']);
-                if(($result[0]['opening'] - $result[0]['sale']) >0){
+            foreach ($items as $item) {
+                $result = $this->stock_model->retrievePinWise($date, $date, $item['item_id']);
+                if (($result[0]['opening'] - $result[0]['sale']) > 0) {
                     $transaction_id = $this->transaction_model->createId();
                     $debit = $item["item_price"];
                     $credit = 0;
@@ -399,7 +398,6 @@ class Users extends Controller {
                     break;
                 }
             }
-
         }
 
         $html = $this->users_model->retrieve();
@@ -415,29 +413,25 @@ class Users extends Controller {
         $result = $this->users_model->retrieve(array($user_index));
 
         $this->max_user_index = $this->users_model->getMaxUserIndex();
-        
-        $this->generateUserIndex($user_index*2);
-        $left_arr=  $this->index_arr;
-        $left_arr[]=$user_index*2;
-        
-        $this->index_arr=  array();        
-        $this->generateUserIndex($user_index*2+1);
-        $right_arr=  $this->index_arr;
-        $right_arr[]=$user_index*2+1;
-        
-         //echo $this->users_model->countNode($left_arr)."<br/>";
-         //echo $this->users_model->countNode($right_arr)."<br/>";
-         $left_tree=$this->users_model->countNode($left_arr);
-         $right_tree=$this->users_model->countNode($right_arr);
 
-        if($left_tree > $right_tree ){
-            $binary_commission=$right_tree*500;
-            
-        } 
-         else{
-             $binary_commission=$left_tree*500;
-         }
-         
+        $this->generateUserIndex($user_index * 2);
+        $left_arr = $this->index_arr;
+        $left_arr[] = $user_index * 2;
+
+        $this->index_arr = array();
+        $this->generateUserIndex($user_index * 2 + 1);
+        $right_arr = $this->index_arr;
+        $right_arr[] = $user_index * 2 + 1;
+
+        $left_tree = $this->users_model->countNode($left_arr);
+        $right_tree = $this->users_model->countNode($right_arr);
+
+        if ($left_tree > $right_tree) {
+            $binary_commission = $right_tree * 500;
+        } else {
+            $binary_commission = $left_tree * 500;
+        }
+
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
