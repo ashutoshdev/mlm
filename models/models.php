@@ -71,7 +71,6 @@ class Ewallet_model extends Model {
 
         $sql = "UPDATE company_transaction_master SET status ='1' WHERE transaction_id='" . $accept . "';";
         $this->db->ExecuteSQL($sql);
-     
     }
 
 }

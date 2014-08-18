@@ -239,10 +239,7 @@ class Ewallet extends Controller {
             $status = 0;
 
             $transaction_id = $this->transaction_model->createId();
-
             $this->transaction_master->create($transaction_id, $transaction_date, $_POST['bank_tran_id'], $head_account, $client_account_id, $debit, $credit, $note, $transaction_type, $status);
-
-            //$this->transaction_details->create($transaction_id, $transaction_date, "I000004", "0", "1", $totprice, $note);
         }
 
         $page_template = "./views/ewallet/create.php";
@@ -258,24 +255,19 @@ class Ewallet extends Controller {
 
     public function acceptPayment() {
 
-        if (sizeof($_POST)){
-            
-            $date = date("Y-m-d");
-            
+        if (sizeof($_POST)) {
+
             foreach ($_POST["accept"] as $value => $t_date) {
-                
-                $result = $this->stock_model->retrievePin($date);
-               
-                
+
+                $result = $this->stock_model->retrievePin(date("Y-m-d"));
                 $debit = $result["item_price"];
                 $credit = 0;
 
-                //$this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
                 $this->transaction_details->create($value, $t_date, $result["item_id"], '0', '1', $debit, "");
                 $this->ewallet_model->update($value);
             }
         }
-        
+
         $result = $this->ewallet_model->retrieve();
         $page_template = "./views/ewallet/acceptPayment.php";
         require_once './views/_templates/masterPage.php';
@@ -396,26 +388,26 @@ class Users extends Controller {
             $position = (2 * $int_pos) + $_POST["position"];
             $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
             //print_r($client_account_id); die;
-            $link = "./assets/users/".$client_account_id.".jpg";
+            $link = "./assets/users/" . $client_account_id . ".jpg";
             copy($_FILES['img']["tmp_name"], $link);
-            
+
             $transaction_date = date("Y-m-d");
             $head_account = $introducer;
             $this->users_model->updateUsers($client_account_id, $link);
             //$items = $this->itemmaster_model->retrieveTransactionPin();
             //foreach ($items as $item) {
-                $result = $this->stock_model->retrievePin($date);
-               
-                    $transaction_id = $this->transaction_model->createId();
-                    $debit = $result["item_price"];
-                    $credit = 0;
+            $result = $this->stock_model->retrievePin($date);
 
-                    $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
-                    $this->transaction_details->create($transaction_id, $transaction_date, $result["item_id"], '0', '1', $debit, "");
+            $transaction_id = $this->transaction_model->createId();
+            $debit = $result["item_price"];
+            $credit = 0;
 
-                    $this->retrieve();
-                    //break;
-                //}
+            $this->transaction_master->create($transaction_id, $transaction_date, "0", $head_account, $client_account_id, $debit, $credit, "", "REGISTRATION", "1");
+            $this->transaction_details->create($transaction_id, $transaction_date, $result["item_id"], '0', '1', $debit, "");
+
+            $this->retrieve();
+            //break;
+            //}
             //}
         }
 
@@ -454,25 +446,19 @@ class Users extends Controller {
         $page_template = "./views/users/retrieve.php";
         require_once './views/_templates/masterPage.php';
     }
-    
+
     public function ternary() {
-        
-        
+
+
         $user_index = $_SESSION["user_index"] == 0 ? 1 : $_SESSION["user_index"];
         //$this->max_user_index = $this->users_model->getMaxUserIndex();
-
-
-
         //$this->index_arr[] = $user_index;
         //$this->generateUserIndex($user_index);
 
 
-        $result=$this->users_model->retrieve(array($user_index));
+        $result = $this->users_model->retrieve(array($user_index));
         $page_template = "./views/users/ternary.php";
         require_once './views/_templates/masterPage.php';
-        
-        
-        
     }
 
     public function retrieve_ajaxify($u_index) {
