@@ -287,19 +287,18 @@ class ItemMaster_model extends Model {
 
 
         if (!$lastItemId):
-            $sql = "INSERT INTO `item_master` SET "
-                    . "`item_id`='I000001' , "
-                    . "`item_name` = '$product' , "
-                    . "`item_category` = '" . $item_type . "' , "
-                    . "`item_price`='" . $item_price . "' ";
+            $item_id = "I000001";
         else:
-            $sql = "INSERT INTO `item_master` SET "
-                    . "`item_id`='" . $this->createItemId($lastItemId) . "' , "
+            $item_id = $this->createItemId($lastItemId);
+        endif;
+        
+        $sql = "INSERT INTO `item_master` SET "
+                    . "`item_id`='" . $item_id . "' , "
                     . "`item_name` = '$product' , "
                     . "`item_category` = '" . $item_type . "' , "
                     . "`item_price`='" . $item_price . "' ";
-        endif;
         $this->db->ExecuteSQL($sql);
+        return $item_id;
     }
 
     public function retrieve($pid = NULL) {
@@ -316,9 +315,15 @@ class ItemMaster_model extends Model {
     }
 
     public function retrievePin() {
-        $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";
+        $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";  
         $result = $this->db->ExecuteSQL($sql);
         return $result[0];
+    }
+    
+    public function retrieveTransactionPin() {
+        $sql = "SELECT * FROM item_master WHERE item_category='PIN'";  
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
     }
 
 }
@@ -482,6 +487,52 @@ class Stock_model extends Model {
 
         $result = $this->db->ExecuteSQL($sql);
         return $result;
+    }
+
+    
+    public function retrievePinWise($date_from , $date_to, $pin){
+        $sql="SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
+            FROM (
+            SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
+            FROM opening_stock
+            JOIN item_master 
+            ON item_master.item_id = opening_stock.item_id
+            WHERE item_master.item_id = '".$pin."'
+            
+            UNION ALL
+            
+            SELECT item_master.item_id AS item_id, item_name, stock_debit-stock_credit AS opening , 0 AS sale , 0 AS purchase 
+            FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date <'".$date_from."'
+            AND item_master.item_id = '".$pin."'
+            
+            UNION ALL            
+            
+            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , stock_credit AS sale , 0 AS purchase 
+            FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
+            AND item_master.item_id = '".$pin."'
+
+
+            UNION ALL            
+            
+            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , 0 AS sale , stock_debit AS purchase 
+            FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
+            AND item_master.item_id = '".$pin."'
+
+            )x
+            GROUP BY item_id,item_name";
+       
+        $result = $this->db->ExecuteSQL($sql);        
+        return $result;
+        
     }
 
     public function retrievePin($date) {

@@ -23,6 +23,7 @@
                     <!-- form start -->
                     <form role="form" action="" method="post">
                         <div class="box-body">
+                            
                             <div class="form-group">
                                 <label>Introducer</label>
                                 <select name="introducer" class="form-control">
@@ -50,8 +51,6 @@
                                 <label>Password</label>
                                 <input type="password" class="form-control" placeholder=" .." name = "password"/>
                             </div>
-
-
                         </div>
 
                         <div class="box-footer">
