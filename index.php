@@ -124,6 +124,11 @@ Class RouteEngine extends Core {
                 $this->users->retrieve();
                 break;
             
+            case "/users/ternary":
+                $this->load->_CLASS("Users");
+                $this->users->ternary();
+                break;
+            
             case "/users/retrieve_ajaxify":
 
                 $this->load->_CLASS("Users");

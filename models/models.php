@@ -217,6 +217,11 @@ class Users_model extends Model {
         $this->db->ExecuteSQL($sql);
         return $this->db->lastInsertID();
     }
+    
+    public function updateUsers($client_account_id, $link) {
+        $sql = "UPDATE `user` SET `image` = '".$link."' WHERE `user_id` = '".$client_account_id."' ";
+        $this->db->ExecuteSQL($sql);
+    }
 
     public function retrieve($index= array()) {
         if(count($index)){
@@ -236,7 +241,6 @@ class Users_model extends Model {
     public function retrieveUserIndex($int) {
         $sql = "SELECT	user_left_right_index FROM user where user_id = '" . $int . "' ";
         $result = $this->db->ExecuteSQL($sql);
-        echo $sql;
         return $result[0]['user_left_right_index'];
     }
     

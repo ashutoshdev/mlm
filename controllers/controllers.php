@@ -381,15 +381,18 @@ class Users extends Controller {
             $password = $_POST["password"];
             $introducer = $_POST["introducer"];
             $date = date("Y-m-d");
-            //print_r($result[0]); die;
+            
             
             $int_pos = $this->users_model->retrieveUserIndex($introducer);
             $position = (2 * $int_pos) + $_POST["position"];
             $client_account_id = $this->users_model->create($introducer, $_SESSION["user_id"], $username, $useremail, $password, $position);
-
+            //print_r($client_account_id); die;
+            $link = "./assets/users/".$client_account_id.".jpg";
+            copy($_FILES['img']["tmp_name"], $link);
+            
             $transaction_date = date("Y-m-d");
             $head_account = $introducer;
-
+            $this->users_model->updateUsers($client_account_id, $link);
             $items = $this->itemmaster_model->retrieveTransactionPin();
             foreach ($items as $item){
                 $result = $this->stock_model->retrievePinWise($date,$date,$item['item_id']);
@@ -429,6 +432,26 @@ class Users extends Controller {
 
         $result=$this->users_model->retrieve(array($user_index));
         $page_template = "./views/users/retrieve.php";
+        require_once './views/_templates/masterPage.php';
+        
+        
+        
+    }
+    
+    public function ternary() {
+        
+        
+        $user_index = $_SESSION["user_index"] == 0 ? 1 : $_SESSION["user_index"];
+        //$this->max_user_index = $this->users_model->getMaxUserIndex();
+
+
+
+        //$this->index_arr[] = $user_index;
+        //$this->generateUserIndex($user_index);
+
+
+        $result=$this->users_model->retrieve(array($user_index));
+        $page_template = "./views/users/ternary.php";
         require_once './views/_templates/masterPage.php';
         
         

@@ -332,11 +332,15 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="/ewallet/retrieve"><i class="fa fa-angle-double-right"></i> E wallet</a></li>
-                                <li><a href="/ewallet/create"><i class="fa fa-angle-double-right"></i> Apply Pin(payment)</a></li>
+                                
                 <?php
                     if($_SESSION['user_role'] == "ADMIN"){
                 ?>    
                                 <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
+                <?php
+                    }else{
+                ?>
+                                <li><a href="/ewallet/create"><i class="fa fa-angle-double-right"></i> Apply Pin(payment)</a></li>
                 <?php
                     }
                 ?>
@@ -417,6 +421,7 @@
                             <ul class="treeview-menu">
                                 <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Register Users </a></li>
                                 <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Users Details </a></li>
+                                <li><a href="/users/ternary"><i class="fa fa-angle-double-right"></i> Users Ternary </a></li>
                                 
                             </ul>
                         </li>
