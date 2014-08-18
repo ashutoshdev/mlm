@@ -118,17 +118,13 @@ class Transaction_details extends Model {
                 . "note = '" . $note . "' ";
         $this->db->ExecuteSQL($sql);
     }
-    
+
     public function retrieveItem($item_id) {
 
-        $sql = "select * from company_transaction_details where item_id = '".$item_id."' ";
-        echo $sql;
+        $sql = "select * from company_transaction_details where item_id = '" . $item_id . "' ";
         $result = $this->db->executeSQL($sql);
         return $result;
-
     }
-    
-    
 
 }
 
@@ -223,19 +219,16 @@ class Users_model extends Model {
         $this->db->ExecuteSQL($sql);
     }
 
-    public function retrieve($index= array()) {
-        if(count($index)){
-            
-         $index=  implode(",", $index);
-         $sql="SELECT * FROM user Where user_left_right_index IN(".$index.") ORDER BY user_left_right_index";
-         //echo $sql;
+    public function retrieve($index = array()) {
+        if (count($index)) {
+            $index = implode(",", $index);
+            $sql = "SELECT * FROM user Where user_left_right_index IN(" . $index . ") ORDER BY user_left_right_index";
+        } else {
+            $sql = "SELECT * FROM user;";
         }
-        else{
-            $sql="SELECT * FROM user;";
-        }
-         
-         $result = $this->db->ExecuteSQL($sql);
-         return $result;
+
+        $result = $this->db->ExecuteSQL($sql);
+        return $result;
     }
 
     public function retrieveUserIndex($int) {
@@ -243,12 +236,18 @@ class Users_model extends Model {
         $result = $this->db->ExecuteSQL($sql);
         return $result[0]['user_left_right_index'];
     }
-    
-    
-    public function getMaxUserIndex(){
-        $sql="SELECT MAX(user_left_right_index) AS user_index FROM user;";
-        $result=$this->db->ExecuteSQL($sql);
+
+    public function getMaxUserIndex() {
+        $sql = "SELECT MAX(user_left_right_index) AS user_index FROM user;";
+        $result = $this->db->ExecuteSQL($sql);
         return $result[0]['user_index'];
+    }
+
+    public function countNode($index = array()) {
+        $index = implode(",", $index);
+        $sql = "SELECT COUNT(*) AS count FROM user Where user_left_right_index IN(" . $index . ");";
+        $result = $this->db->ExecuteSQL($sql);
+        return $result[0]['count'];
     }
 
 }
@@ -413,7 +412,6 @@ class packageDetails_model extends Model {
         $sql = "select p.*, i.item_name from package_details p"
                 . "LEFT JOIN item_master i on i.item_id = p.item_id"
                 . "WHERE p.package_id = '" . $pid . "' ";
-        echo $sql;
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
@@ -450,11 +448,14 @@ class Members_model extends Model {
 
 }
 
+class Stock_model extends Model {
 
-class Stock_model extends Model{
-    
-    public function retrieve($date_from , $date_to){
-        $sql="SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
+    public function __construct() {
+        parent::__construct();
+    }
+
+    public function retrieve($date_from, $date_to) {
+        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
             FROM (
             SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
             FROM opening_stock
@@ -467,7 +468,7 @@ class Stock_model extends Model{
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date <'".$date_from."'
+            WHERE transaction_date <'" . $date_from . "'
             
             UNION ALL            
             
@@ -475,7 +476,7 @@ class Stock_model extends Model{
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
+            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
 
 
             UNION ALL            
@@ -484,15 +485,15 @@ class Stock_model extends Model{
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='".$date_from."' AND transaction_date <='".$date_to."'
+            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
 
             )x
             GROUP BY item_id,item_name";
-       
-        $result = $this->db->ExecuteSQL($sql);        
+
+        $result = $this->db->ExecuteSQL($sql);
         return $result;
-        
     }
+
     
     public function retrievePinWise($date_from , $date_to, $pin){
         $sql="SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
@@ -538,14 +539,45 @@ class Stock_model extends Model{
         return $result;
         
     }
-    
-    
+
     public function retrievePin($date) {
-        /*$result=  $this->retrieve($date_from, $date_to);
-        $sql = "SELECT * FROM item_master WHERE item_category='PIN' limit 0,1;";
+        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
+            FROM (
+            SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
+            FROM opening_stock
+            JOIN item_master 
+            ON item_master.item_id = opening_stock.item_id
+            
+            UNION ALL
+            
+            SELECT item_master.item_id AS item_id, item_name, stock_debit-stock_credit AS opening , 0 AS sale , 0 AS purchase 
+            FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date <'" . $date_from . "'
+            
+            UNION ALL            
+            
+            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , stock_credit AS sale , 0 AS purchase 
+            FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
+
+
+            UNION ALL            
+            
+            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , 0 AS sale , stock_debit AS purchase 
+            FROM company_transaction_details
+            JOIN item_master
+            ON item_master.item_id = company_transaction_details.item_id
+            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
+
+            )x
+            GROUP BY item_id,item_name";
+
         $result = $this->db->ExecuteSQL($sql);
-        return $result[0];*/
+        //return $result[0];
     }
-    
-    
+
 }
