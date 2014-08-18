@@ -484,8 +484,6 @@ class Stock_model extends Model {
 
             )x
             GROUP BY item_id,item_name";
-
-        echo $sql;
         
         $result = $this->db->ExecuteSQL($sql);
         return $result;
