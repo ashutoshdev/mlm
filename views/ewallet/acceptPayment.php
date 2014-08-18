@@ -41,7 +41,7 @@
                                         <td><?php echo $value["debit"] ?></td>
                                         <td><?php echo $value["credit"] ?></td>
                                         <td><?php echo $value["note"] ?></td>
-                                        <td><input type="checkbox" value="<?php echo $value["transaction_id"] ?>" name="accept[]" <?php if ($value["status"]) { ?> checked="true" <?php } ?>  /></td>
+                                        <td><input type="checkbox" value="<?php echo $value["transaction_date"] ?>" name="accept[<?php echo $value["transaction_id"] ?>]" <?php if ($value["status"]) { ?> checked="true" <?php } ?>  /></td>
                                     </tr>
                                     <?php
                                 }

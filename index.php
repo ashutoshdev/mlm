@@ -5,7 +5,7 @@ define('BASE_PATH', dirname(__FILE__));
 // DB login info
 define('DB_HOST', 'localhost');
 define('DB_USER', 'root');
-define('DB_PASSWORD', 'bonnie');
+define('DB_PASSWORD', 'Numerico_2013');
 define('DB_DBASE', 'db_mlm');
 
 
@@ -122,6 +122,11 @@ Class RouteEngine extends Core {
             case "/users/retrieve":
                 $this->load->_CLASS("Users");
                 $this->users->retrieve();
+                break;
+            
+            case "/users/ternary":
+                $this->load->_CLASS("Users");
+                $this->users->ternary();
                 break;
             
             case "/users/retrieve_ajaxify":

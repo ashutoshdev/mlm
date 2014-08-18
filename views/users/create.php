@@ -21,7 +21,8 @@
                         <h3 class="box-title"> Register Users </h3>
                     </div>
                     <!-- form start -->
-                    <form role="form" action="" method="post">
+                    
+                    <form role="form" action="" method="post" enctype= "multipart/form-data">
                         <div class="box-body">
                             
                             <div class="form-group">
@@ -50,6 +51,10 @@
                             <div class="form-group">
                                 <label>Password</label>
                                 <input type="password" class="form-control" placeholder=" .." name = "password"/>
+                            </div>
+                            <div class="form-group">
+                                <label>Image</label>
+                                <input type="file"  name = "img"/>
                             </div>
                         </div>
 

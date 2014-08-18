@@ -332,14 +332,20 @@
                             </a>
                             <ul class="treeview-menu">
                                 <li><a href="/ewallet/retrieve"><i class="fa fa-angle-double-right"></i> E wallet</a></li>
+
+                                
+                <?php
+                    if($_SESSION['user_role'] == "ADMIN"){
+                ?>    
+                                <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
+                <?php
+                    }else{
+                ?>
                                 <li><a href="/ewallet/create"><i class="fa fa-angle-double-right"></i> Apply Pin(payment)</a></li>
-                                <?php
-                                if ($_SESSION['user_role'] == "ADMIN") {
-                                    ?>    
-                                    <li><a href="/ewallet/acceptPayment"><i class="fa fa-angle-double-right"></i> Accept Payment</a></li>
-                                    <?php
-                                }
-                                ?>
+                <?php
+                    }
+                ?>
+                            
 
                             </ul>
                         </li>
@@ -430,9 +436,16 @@
                                 <i class="fa fa-angle-left pull-right"></i>
                             </a>
                             <ul class="treeview-menu">
+<<<<<<< HEAD
+                                <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Register Users </a></li>
+                                <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Users Details </a></li>
+                                <li><a href="/users/ternary"><i class="fa fa-angle-double-right"></i> Users Ternary </a></li>
+                                
+=======
                                 <li><a href="/users/create"><i class="fa fa-angle-double-right"></i> Binary Commission </a></li>
                                 <li><a href="/users/retrieve"><i class="fa fa-angle-double-right"></i> Trinary Commission </a></li>
 
+>>>>>>> f025aba6b1a10347ec5e20ce841353674f521506
                             </ul>
                         </li>
                         

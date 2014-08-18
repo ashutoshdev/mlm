@@ -69,10 +69,9 @@ class Ewallet_model extends Model {
 
     public function update($accept) {
 
-        foreach ($accept as $value) {
-            $sql = "UPDATE company_transaction_master SET status ='1' WHERE transaction_id='" . $value . "';";
-            $this->db->ExecuteSQL($sql);
-        }
+        $sql = "UPDATE company_transaction_master SET status ='1' WHERE transaction_id='" . $accept . "';";
+        $this->db->ExecuteSQL($sql);
+     
     }
 
 }
@@ -212,6 +211,11 @@ class Users_model extends Model {
 
         $this->db->ExecuteSQL($sql);
         return $this->db->lastInsertID();
+    }
+
+    public function updateUsers($client_account_id, $link) {
+        $sql = "UPDATE `user` SET `image` = '" . $link . "' WHERE `user_id` = '" . $client_account_id . "' ";
+        $this->db->ExecuteSQL($sql);
     }
 
     public function retrieve($index = array()) {
@@ -484,92 +488,53 @@ class Stock_model extends Model {
 
             )x
             GROUP BY item_id,item_name";
-        
-        $result = $this->db->ExecuteSQL($sql);
-        return $result;
-    }
-
-    public function retrievePinWise($date_from, $date_to, $pin) {
-        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
-            FROM (
-            SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
-            FROM opening_stock
-            JOIN item_master 
-            ON item_master.item_id = opening_stock.item_id
-            WHERE item_master.item_id = '" . $pin . "'
-            
-            UNION ALL
-            
-            SELECT item_master.item_id AS item_id, item_name, stock_debit-stock_credit AS opening , 0 AS sale , 0 AS purchase 
-            FROM company_transaction_details
-            JOIN item_master
-            ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date <'" . $date_from . "'
-            AND item_master.item_id = '" . $pin . "'
-            
-            UNION ALL            
-            
-            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , stock_credit AS sale , 0 AS purchase 
-            FROM company_transaction_details
-            JOIN item_master
-            ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
-            AND item_master.item_id = '" . $pin . "'
-
-
-            UNION ALL            
-            
-            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , 0 AS sale , stock_debit AS purchase 
-            FROM company_transaction_details
-            JOIN item_master
-            ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
-            AND item_master.item_id = '" . $pin . "'
-
-            )x
-            GROUP BY item_id,item_name";
 
         $result = $this->db->ExecuteSQL($sql);
         return $result;
     }
 
     public function retrievePin($date) {
-        $sql = "SELECT item_id,item_name,SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase 
+        $sql = "SELECT * FROM (SELECT item_id,item_name, item_price, SUM(opening) AS opening, SUM(sale) AS sale , SUM(purchase) AS purchase , SUM(opening + purchase - sale) AS closing
             FROM (
-            SELECT item_master.item_id AS item_id , item_name , quantity AS opening , 0 AS sale , 0 AS purchase 
+            SELECT item_master.item_id AS item_id , item_name , item_price, quantity AS opening , 0 AS sale , 0 AS purchase 
             FROM opening_stock
             JOIN item_master 
             ON item_master.item_id = opening_stock.item_id
-            
+            WHERE item_category='PIN'            
+
             UNION ALL
             
-            SELECT item_master.item_id AS item_id, item_name, stock_debit-stock_credit AS opening , 0 AS sale , 0 AS purchase 
+            SELECT item_master.item_id AS item_id, item_name, item_price, stock_debit-stock_credit AS opening , 0 AS sale , 0 AS purchase 
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date <'" . $date_from . "'
+            WHERE transaction_date <'" . $date . "'
+            AND item_category='PIN'
             
             UNION ALL            
             
-            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , stock_credit AS sale , 0 AS purchase 
+            SELECT item_master.item_id AS item_id, item_name, item_price, 0 AS opening , stock_credit AS sale , 0 AS purchase 
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
-
+            WHERE transaction_date >='" . $date . "' AND transaction_date <='" . $date . "'
+            AND item_category='PIN'
 
             UNION ALL            
             
-            SELECT item_master.item_id AS item_id, item_name, 0 AS opening , 0 AS sale , stock_debit AS purchase 
+            SELECT item_master.item_id AS item_id, item_name, item_price, 0 AS opening , 0 AS sale , stock_debit AS purchase 
             FROM company_transaction_details
             JOIN item_master
             ON item_master.item_id = company_transaction_details.item_id
-            WHERE transaction_date >='" . $date_from . "' AND transaction_date <='" . $date_to . "'
-
+            WHERE transaction_date >='" . $date . "' AND transaction_date <='" . $date . "'
+            AND item_category='PIN'
+            
             )x
-            GROUP BY item_id,item_name";
+            GROUP BY item_id,item_name, item_price
+            ORDER BY item_id )y WHERE closing >0 LIMIT 0,1;";
 
         $result = $this->db->ExecuteSQL($sql);
+        return $result[0];
     }
 
 }
